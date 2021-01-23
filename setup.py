@@ -7,7 +7,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='dweet2ser',
+    name='dweet2ser_conductor',
     version='0.0.1',
     author='Zach Henry',
     author_email='zhenry9@gmail.com',
@@ -25,7 +25,7 @@ setuptools.setup(
         'Natural Language :: English',
     ],
     install_requires=[
-        # 'dweepy',  packaging modified dweepy source with dweet2ser for now
+        # 'dweepy',  packaging modified dweepy source with dweet2ser_conductor for now
         'requests >= 2, < 3',
         'pySerial',
         'colorama',
@@ -36,8 +36,8 @@ setuptools.setup(
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [
-            'dweet2ser = dweet2ser.__main__:main',
-            'dweet2ser-setup = dweet2ser.__main__:setup'
+            'dweet2ser_conductor = dweet2ser_conductor.__main__:main',
+            'dweet2ser_conductor-setup = dweet2ser_conductor.__main__:setup'
         ]
     },
     zip_safe=False,

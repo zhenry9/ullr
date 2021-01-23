@@ -3,29 +3,40 @@ import threading
 import time
 
 import requests
+from colorama import Fore, Style
 from urllib3.exceptions import ProtocolError
 
-from dweet2ser import dweepy
+from dweet2ser_conductor import dweepy
+
+
+class DeadConnectionError(Exception):
+    pass
 
 
 class RemoteDevice(object):
-    def __init__(self, thing_id, thing_key, from_dce_kw, from_dte_kw, mode, bucket, name="Unnamed Remote Device"):
+    def __init__(self, thing_id, thing_key, mode, name="Unnamed Remote Device"):
         self.name = name
+        self.type = "dweet"
+        self.type_color = "cyan"
         self.thing_id = thing_id
+        self.locked = False
         self.thing_key = thing_key
+        self.mute = False
+        if thing_key is not None:
+            self.locked = True
         self.mode = mode
 
-        if mode == 'DTE':
-            self.write_kw = from_dte_kw
-            self.read_kw = from_dce_kw
+        if mode == 'DCE':
+            self.write_kw = "from_pc"
+            self.read_kw = "from_device"
         else:
-            self.write_kw = from_dce_kw
-            self.read_kw = from_dte_kw
+            self.write_kw = "from_device"
+            self.read_kw = "from_pc"
 
-        self._bucket = bucket
         self._session = requests.Session()
         self._last_message = ''
         self._kill_signal = "kill"
+        self.exc = False
 
     def write(self, message):
         self._send_dweet({self.write_kw: message})
@@ -36,20 +47,19 @@ class RemoteDevice(object):
 
         except dweepy.DweepyError as e:
             print(e)
-            timestamp = str(datetime.datetime.now())
+            timestamp = Fore.LIGHTBLACK_EX + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + Style.RESET_ALL
             print(timestamp + ":\tTrying again...")
             time.sleep(2)
             return self._send_dweet(content)
 
         except (ConnectionError, ProtocolError, OSError) as e:
             print(e.response)
-            timestamp = str(datetime.datetime.now())
-            print(timestamp + ":\tConnection closed by dweet, restarting (from send dweet):")
-            self._bucket.put('crash', block=False)
-            self._restart_session()
-            return self._send_dweet(content)
+            timestamp = Fore.LIGHTBLACK_EX + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + Style.RESET_ALL
+            print(timestamp + ": Connection closed by dweet, restarting (from send dweet):")
+            self.exc = True
+            return
 
-    def _restart_session(self):
+    def restart_session(self):
         self._session = requests.Session()
 
     def listen(self):
@@ -57,28 +67,12 @@ class RemoteDevice(object):
         keepalive_thread.daemon = True
         keepalive_thread.start()
 
-        listen_thread = threading.Thread(target=self._listen_for_dweets)
-        listen_thread.daemon = True
-        listen_thread.start()
-
-        # TODO: Fix ugly bad clunky way of catching crashes
-        while True:
-            if self._bucket.get() == 'crash':
-                timestamp = str(datetime.datetime.now())
-                print(timestamp + ":\tListen thread crashed, restarting.")
-                # retrieve the last dweet and send to serial, in case it was missed during crash
-                yield self.get_last_message()
-                # kill any listen threads that are still alive and not crashed
-                self._kill_listen_streams()
-                time.sleep(.01)
-                listen_thread = threading.Thread(target=self._listen_for_dweets)
-                listen_thread.daemon = True
-                listen_thread.start()
+        for message in self._listen_for_dweets():
+            yield message
 
     def _listen_for_dweets(self):
         """ makes a call to dweepy to start a listening stream. error handling needs work
         """
-
         def catch_closed_connection():
             while True:
                 try:
@@ -86,22 +80,23 @@ class RemoteDevice(object):
                                                                timeout=90000, session=self._session):
                         content = dweet["content"]
                         if self.read_kw in content:
-                            if content[self.read_kw] == self._kill_signal:
+                            message = content[self.read_kw]
+                            if message == self._kill_signal:
                                 return
-                            yield content[self.read_kw]
+                            yield message
 
                 # if you get an error because dweet closed the connection, open it again.
                 except (ConnectionError, ProtocolError, OSError) as e:
                     print(e.response)
                     timestamp = str(datetime.datetime.now())
                     print(timestamp + ":\tConnection closed by dweet, restarting:")
-                    self._restart_session()
+                    self.restart_session()
                     yield self.get_last_message()
 
                 else:
                     timestamp = str(datetime.datetime.now())
                     print(timestamp + ":\tDweet listening thread died, restarting:")
-                    self._restart_session()
+                    self.restart_session()
                     yield self.get_last_message()
 
         return catch_closed_connection()
@@ -113,9 +108,14 @@ class RemoteDevice(object):
         """ dweet.io seems to close the connection after 60 seconds of inactivity.
                     This sends a dummy payload every 45s to avoid that.
                 """
-        while True:
+        while not self.exc:
             time.sleep(45)
             self._send_dweet({"keepalive": 1})
 
     def get_last_message(self):
-        return dweepy.get_latest_dweet_for(self.thing_id, key=self.thing_key, session=self._session)
+        message = ''
+        dweet = dweepy.get_latest_dweet_for(self.thing_id, key=self.thing_key, session=self._session)
+        content = dweet[0]["content"]
+        if self.read_kw in content:
+            message = content[self.read_kw]
+        return message

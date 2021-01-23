@@ -63,7 +63,7 @@ class DweetConfiguration(object):
                 return self._create_user_file(self.user_config_file)
         else:
             print("User config file does not exist.")
-            filepath = os.path.join(self.home_path, '.config', 'dweet2ser', self.file_name)
+            filepath = os.path.join(self.home_path, '.config', 'dweet2ser_conductor', self.file_name)
             return self._create_user_file(filepath)
 
     def _create_user_file(self, path):
