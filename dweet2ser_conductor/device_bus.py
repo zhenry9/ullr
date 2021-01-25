@@ -1,10 +1,10 @@
 import threading
 import time
-from datetime import datetime
 
 from termcolor import colored
 from colorama import init as colorama_init, Fore, Style
 
+from dweet2ser_conductor import timestamp
 
 colorama_init()
 
@@ -79,19 +79,17 @@ class DeviceBus(object):
             message = str(message)
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
 
-            timestamp = Fore.LIGHTBLACK_EX + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + Style.RESET_ALL
-
-            print(f"\n{timestamp}: Received {colored(device.type, device.type_color)} message from {device.name}:"
+            print(f"\n{timestamp()}Received {colored(device.type, device.type_color)} message from {device.name}:"
                   f"\t{Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
 
             if device.mode == "DTE":
                 for d in self.dce_devices:
                     d.write(message)
-                    print(f"{timestamp}: Written to {colored(d.type, d.type_color)}: {d.name}")
+                    print(f"{timestamp()}Written to {colored(d.type, d.type_color)}: {d.name}")
             elif device.mode == "DCE":
                 for d in self.dte_devices:
                     d.write(message)
-                    print(f"{timestamp}: Written to {colored(d.type, d.type_color)}: {d.name}")
+                    print(f"{timestamp()}Written to {colored(d.type, d.type_color)}: {d.name}")
             else:
                 print("Mode not found")
 

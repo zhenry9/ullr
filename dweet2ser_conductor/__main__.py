@@ -35,7 +35,6 @@ def add_device():
     return BUS.add_device(d)
 
 
-
 def process_input(cmd, ):
     if cmd == "info":
         return BUS.print_status()

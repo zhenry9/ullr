@@ -6,7 +6,7 @@ import requests
 from colorama import Fore, Style
 from urllib3.exceptions import ProtocolError
 
-from dweet2ser_conductor import dweepy
+from dweet2ser_conductor import dweepy, timestamp
 
 
 class DeadConnectionError(Exception):
@@ -47,15 +47,13 @@ class RemoteDevice(object):
 
         except dweepy.DweepyError as e:
             print(e)
-            timestamp = Fore.LIGHTBLACK_EX + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + Style.RESET_ALL
-            print(timestamp + ":\tTrying again...")
+            print(f"{timestamp()} Trying again...")
             time.sleep(2)
             return self._send_dweet(content)
 
         except (ConnectionError, ProtocolError, OSError) as e:
             print(e.response)
-            timestamp = Fore.LIGHTBLACK_EX + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + Style.RESET_ALL
-            print(timestamp + ": Connection closed by dweet, restarting (from send dweet):")
+            print(f"{timestamp()}Connection closed by dweet, restarting (from send dweet)")
             self.exc = True
             return
 
@@ -88,14 +86,13 @@ class RemoteDevice(object):
                 # if you get an error because dweet closed the connection, open it again.
                 except (ConnectionError, ProtocolError, OSError) as e:
                     print(e.response)
-                    timestamp = str(datetime.datetime.now())
-                    print(timestamp + ":\tConnection closed by dweet, restarting:")
+                    print(f"{timestamp()}Connection closed by dweet, restarting:")
                     self.restart_session()
                     yield self.get_last_message()
 
                 else:
                     timestamp = str(datetime.datetime.now())
-                    print(timestamp + ":\tDweet listening thread died, restarting:")
+                    print(f"{timestamp()}Dweet listening thread died, restarting:")
                     self.restart_session()
                     yield self.get_last_message()
 
