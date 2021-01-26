@@ -1,11 +1,11 @@
-
 import threading
 import time
 
 import requests
+from termcolor import colored
 from urllib3.exceptions import ProtocolError
 
-from dweet2ser_conductor import dweepy, timestamp
+from dweet2ser_conductor import dweepy, timestamp, internet_connection
 
 
 class DeadConnectionError(Exception):
@@ -35,24 +35,37 @@ class RemoteDevice(object):
         self._session = requests.Session()
         self._last_message = ''
         self._kill_signal = "kill"
+        self._message_queue = []
         self.exc = False
 
     def write(self, message):
-        self._send_dweet({self.write_kw: message})
+        if internet_connection():
+            self._send_dweet({self.write_kw: message})
+            message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
+            print(f"{timestamp()}{colored(self.type.capitalize(), self.type_color)} to {self.name}: {message_decoded}")
+        else:
+            print(f"{timestamp()}No connection to {self.name}. Saving message.")
+            self._message_queue.append(message)
+            self.exc = True
+
+    def send_message_queue(self):
+        while len(self._message_queue) > 0:
+            self.write(self._message_queue.pop(0))
+            time.sleep(1.2)  # avoid exceeding dweet.io's 1s rate limit
 
     def _send_dweet(self, content):
         try:
             dweepy.dweet_for(self.thing_id, content, key=self.thing_key, session=self._session)
 
         except dweepy.DweepyError as e:
-            print(timestamp() + e)
+            print(timestamp() + str(e))
             print(f"{timestamp()}Trying again...")
-            time.sleep(2)
+            time.sleep(1.5)
             return self._send_dweet(content)
 
         except (ConnectionError, ProtocolError, OSError) as e:
-            print(e.response)
-            print(f"{timestamp()}Connection closed by dweet, restarting (from send dweet)")
+            print(timestamp() + str(e))
+            print(f"{timestamp()}Connection to {self.name} lost.")
             self.exc = True
             return
 
@@ -70,31 +83,27 @@ class RemoteDevice(object):
     def _listen_for_dweets(self):
         """ makes a call to dweepy to start a listening stream. error handling needs work
         """
-        def catch_closed_connection():
-            while True:
-                try:
-                    for dweet in dweepy.listen_for_dweets_from(self.thing_id, key=self.thing_key,
-                                                               timeout=90000, session=self._session):
-                        content = dweet["content"]
-                        if self.read_kw in content:
-                            message = content[self.read_kw]
-                            if message == self._kill_signal:
-                                return
-                            yield message
+        while internet_connection():
+            try:
+                for dweet in dweepy.listen_for_dweets_from(self.thing_id, key=self.thing_key,
+                                                           timeout=90000, session=self._session):
+                    content = dweet["content"]
+                    if self.read_kw in content:
+                        message = content[self.read_kw]
+                        if message == self._kill_signal:
+                            print(f"{timestamp()}Listen stream for {self.name} closed.")
+                            return
+                        yield message
 
-                # if you get an error because dweet closed the connection, open it again.
-                except (ConnectionError, ProtocolError, OSError) as e:
-                    print(e.response)
-                    print(f"{timestamp()}Connection closed by dweet, restarting:")
-                    self.restart_session()
-                    yield self.get_last_message()
-
-                else:
-                    print(f"{timestamp()}Dweet listening thread died, restarting:")
-                    self.restart_session()
-                    yield self.get_last_message()
-
-        return catch_closed_connection()
+            # if you get an error because dweet closed the connection, open it again.
+            except (ConnectionError, ProtocolError, OSError) as e:
+                print(timestamp() + str(e))
+                print(f"{timestamp()}Connection closed by dweet, restarting.")
+                self.restart_session()
+                yield self.get_last_message()
+        print(f"{timestamp()}Listen stream for {self.name} closed.")
+        self.exc = True
+        return
 
     def kill_listen_stream(self):
         self._send_dweet({self.read_kw: self._kill_signal})
@@ -109,8 +118,9 @@ class RemoteDevice(object):
 
     def get_last_message(self):
         message = ''
-        dweet = dweepy.get_latest_dweet_for(self.thing_id, key=self.thing_key, session=self._session)
-        content = dweet[0]["content"]
-        if self.read_kw in content:
-            message = content[self.read_kw]
+        if internet_connection():
+            dweet = dweepy.get_latest_dweet_for(self.thing_id, key=self.thing_key, session=self._session)
+            content = dweet[0]["content"]
+            if self.read_kw in content:
+                message = content[self.read_kw]
         return message

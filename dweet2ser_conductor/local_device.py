@@ -2,6 +2,9 @@
 import time
 
 import serial
+from termcolor import colored
+
+from dweet2ser_conductor import timestamp
 
 
 class LocalDevice(object):
@@ -21,6 +24,8 @@ class LocalDevice(object):
         if type(message) is not str:  # make sure the message is a string
             message = str(message)
         message_bytes = bytes.fromhex(message)  # convert dweet string into bytes for RS232.
+        message_decoded = message_bytes.decode('latin-1').rstrip()
+        print(f"{timestamp()}{colored(self.type.capitalize(), self.type_color)} message to {self.name}: {message_decoded}")
         return self.serial_port.write(message_bytes)
 
     def listen(self):

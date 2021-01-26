@@ -4,7 +4,7 @@ import time
 from termcolor import colored
 from colorama import init as colorama_init, Fore, Style
 
-from dweet2ser_conductor import timestamp
+from dweet2ser_conductor import timestamp, internet_connection
 
 colorama_init()
 
@@ -104,11 +104,11 @@ class DeviceBus(object):
             if device.mode == "DTE":
                 for d in self.dce_devices:
                     d.write(message)
-                    print(f"{timestamp()}Written to {colored(d.type, d.type_color)}: {d.name}.")
+
             elif device.mode == "DCE":
                 for d in self.dte_devices:
                     d.write(message)
-                    print(f"{timestamp()}Written to {colored(d.type, d.type_color)}: {d.name}.")
+
             else:
                 print("Mode not found")
 
@@ -117,20 +117,22 @@ class DeviceBus(object):
     def _check_for_crashed_threads(self):
         while True:
             for d in self.dce_devices:
-                if d.exc:
+                if d.exc and internet_connection():
                     # if the thread had an exception, start a new one
                     self._restart_thread(d)
             for d in self.dte_devices:
-                if d.exc:
+                if d.exc and internet_connection():
                     # if the thread had an exception, start a new one
                     self._restart_thread(d)
             time.sleep(.01)
 
     def _restart_thread(self, device):
-        print(f"{timestamp()}Listen thread for {device.name} crashed, restarting.")
+        print(f"{timestamp()}Reconnecting to {device.name}.")
         device.exc = False
         device.restart_session()
-        self.listen_threads[device.name] = threading.Thread(target=self._listen_stream, args=[device])
-        self.listen_threads[device.name].daemon = True
-        self.listen_threads[device.name].start()
+        device.send_message_queue()
+        if not device.mute:
+            self.listen_threads[device.name] = threading.Thread(target=self._listen_stream, args=[device])
+            self.listen_threads[device.name].daemon = True
+            self.listen_threads[device.name].start()
         return
