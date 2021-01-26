@@ -17,7 +17,6 @@ except ImportError:
 # third-party imports
 import requests
 
-
 # base url for all requests
 BASE_URL = 'https://dweet.io'
 
@@ -86,7 +85,7 @@ def get_dweets_for(thing_name, key=None, session=None):
         params = {'key': key}
     else:
         params = None
-    return _request('get', '/get/dweets/for/{0}'.format(thing_name), params=params, session=None)
+    return _request('get', '/get/dweets/for/{0}'.format(thing_name), params=params, session=session)
 
 
 def remove_lock(lock, key, session=None):
@@ -127,3 +126,10 @@ def remove_alert(thing_name, key, session=None):
     """Remove an alert for the given thing
     """
     return _request('get', '/remove/alert/for/{0}'.format(thing_name), params={'key': key}, session=session)
+
+
+def get_stored_dweets_for(thing_name, key, date, hour='', response_type='', session=None):
+    """Get stored dweets for the given thing during the given time.
+    """
+    return _request('get', '/get/stored/dweets/for/{0}'.format(thing_name),
+                    params={'key': key, 'date': date, 'hour': hour, 'responseType': response_type}, session=session)
