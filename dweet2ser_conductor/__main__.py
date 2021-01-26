@@ -74,6 +74,8 @@ def idle():
 
 
 def main():
+    # TODO: setup config file functionality. Should load devices from file unless cl arg not to.
+    #   Should be able to save current setup to config file
     print("\t\t*************************************************")
     print("\t\t**               " + colored("Dweet", "cyan") + " to " + colored("Serial", "red") + "               **")
     print("\t\t**                by Zach Henry                **")

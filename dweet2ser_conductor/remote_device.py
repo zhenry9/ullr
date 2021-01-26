@@ -124,3 +124,7 @@ class RemoteDevice(object):
             if self.read_kw in content:
                 message = content[self.read_kw]
         return message
+
+# TODO Create function to retrieve dweets from storage after a connection loss.
+#   Basic idea: store time of last_message_received from listen.
+#   On connection restore, pull all dweets from today and yield all where "created" > last_message_received
