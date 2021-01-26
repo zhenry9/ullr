@@ -45,8 +45,8 @@ class RemoteDevice(object):
             dweepy.dweet_for(self.thing_id, content, key=self.thing_key, session=self._session)
 
         except dweepy.DweepyError as e:
-            print(e)
-            print(f"{timestamp()} Trying again...")
+            print(timestamp() + e)
+            print(f"{timestamp()}Trying again...")
             time.sleep(2)
             return self._send_dweet(content)
 

@@ -92,13 +92,13 @@ class DeviceBus(object):
         print(self.listen_threads)
 
     def _listen_stream(self, device):
-        print(f"{timestamp()}Listen stream started for {device.name}.")
+        print(f"\n{timestamp()}Listen stream started for {device.name}.")
 
         for message in device.listen():
             message = str(message)
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
 
-            print(f"{timestamp()}Received {colored(device.type, device.type_color)} message from {device.name}:"
+            print(f"\n{timestamp()}Received {colored(device.type, device.type_color)} message from {device.name}:"
                   f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
 
             if device.mode == "DTE":
