@@ -63,6 +63,25 @@ class DeviceBus(object):
             self.listen_threads[device.name].start()
         return True
 
+    def remove_device(self, device_name):
+        found = False
+        for d in self.dce_devices:
+            if d.name == device_name:
+                found = True
+                d.kill_listen_stream()
+                self.dce_devices.remove(d)
+                print(f"{timestamp()}Device '{d.name}' removed.")
+
+        for d in self.dte_devices:
+            if d.name == device_name:
+                found = True
+                d.kill_listen_stream()
+                self.dte_devices.remove(d)
+                print(f"{timestamp()}Device '{d.name}' removed.")
+
+        if not found:
+            print("Device not found.")
+
     def print_status(self):
         print("\nDCE Devices")
         _print_device_list(self.dce_devices)
@@ -73,23 +92,23 @@ class DeviceBus(object):
         print(self.listen_threads)
 
     def _listen_stream(self, device):
-        print("Listen stream started")  # test message
+        print(f"{timestamp()}Listen stream started for {device.name}.")
 
         for message in device.listen():
             message = str(message)
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
 
-            print(f"\n{timestamp()}Received {colored(device.type, device.type_color)} message from {device.name}:"
-                  f"\t{Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
+            print(f"{timestamp()}Received {colored(device.type, device.type_color)} message from {device.name}:"
+                  f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
 
             if device.mode == "DTE":
                 for d in self.dce_devices:
                     d.write(message)
-                    print(f"{timestamp()}Written to {colored(d.type, d.type_color)}: {d.name}")
+                    print(f"{timestamp()}Written to {colored(d.type, d.type_color)}: {d.name}.")
             elif device.mode == "DCE":
                 for d in self.dte_devices:
                     d.write(message)
-                    print(f"{timestamp()}Written to {colored(d.type, d.type_color)}: {d.name}")
+                    print(f"{timestamp()}Written to {colored(d.type, d.type_color)}: {d.name}.")
             else:
                 print("Mode not found")
 
@@ -100,17 +119,18 @@ class DeviceBus(object):
             for d in self.dce_devices:
                 if d.exc:
                     # if the thread had an exception, start a new one
-                    d.exc = False
-                    d.restart_session()
-                    self.listen_threads[d.name] = threading.Thread(target=self._listen_stream, args=[d])
-                    self.listen_threads[d.name].daemon = True
-                    self.listen_threads[d.name].start()
+                    self._restart_thread(d)
             for d in self.dte_devices:
                 if d.exc:
                     # if the thread had an exception, start a new one
-                    d.exc = False
-                    d.restart_session()
-                    self.listen_threads[d.name] = threading.Thread(target=self._listen_stream, args=[d])
-                    self.listen_threads[d.name].daemon = True
-                    self.listen_threads[d.name].start()
+                    self._restart_thread(d)
             time.sleep(.01)
+
+    def _restart_thread(self, device):
+        print(f"{timestamp()}Listen thread for {device.name} crashed, restarting.")
+        device.exc = False
+        device.restart_session()
+        self.listen_threads[device.name] = threading.Thread(target=self._listen_stream, args=[device])
+        self.listen_threads[device.name].daemon = True
+        self.listen_threads[device.name].start()
+        return

@@ -1,15 +1,14 @@
 import sys
 
-# 3rd party imports
 import time
 
-from colorama import init
+from colorama import init as colorama_init
 from termcolor import colored
 
 from dweet2ser_conductor import remote_device, local_device, device_bus
 
 # colorama call
-init()
+colorama_init()
 
 BUS = device_bus.DeviceBus()
 
@@ -17,22 +16,38 @@ BUS = device_bus.DeviceBus()
 def add_device():
     name = input("\nDevice Name: ")
     location = input("Location (1.local 2.remote): ")
-    mode = input("Type (DCE/DTE): ")
+    mode = input("Type (DCE/DTE): ").upper()
+    d = None
 
     if location == "1":
         port = input("Port: ")
-        d = local_device.LocalDevice(port, mode, name)
+        try:
+            d = local_device.LocalDevice(port, mode, name)
+        except Exception as e:
+            print(e)
+
     elif location == "2":
         thing_id = input("Thing ID: ")
         key = input("Thing Key: ")
         if key == "None" or key == "":
             key = None
-        d = remote_device.RemoteDevice(thing_id, key, mode, name)
+        try:
+            d = remote_device.RemoteDevice(thing_id, key, mode, name)
+        except Exception as e:
+            print(e)
     else:
         print("Invalid input")
         return
+    if d:
+        BUS.add_device(d)
+    return
 
-    return BUS.add_device(d)
+
+def remove_device():
+    BUS.print_status()
+    device = input("\nDevice to remove: ")
+    BUS.remove_device(device)
+    return
 
 
 def process_input(cmd, ):
@@ -42,10 +57,13 @@ def process_input(cmd, ):
         return BUS.print_threads()
     if cmd == "add":
         return add_device()
+    if cmd == "remove":
+        return remove_device()
     else:
         # print command help
         print("\tType 'info' to display session info.\n"
-              "\tType 'add' to add a device."
+              "\tType 'add' to add a device.\n"
+              "\tType 'remove' to remove a device."
               )
         return
 
@@ -70,6 +88,7 @@ def main():
         if cmd == 'exit':
             break
         process_input(cmd)
+        time.sleep(.0001)
 
 
 if __name__ == "__main__":

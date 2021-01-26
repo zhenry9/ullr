@@ -1,9 +1,8 @@
-import datetime
+
 import threading
 import time
 
 import requests
-from colorama import Fore, Style
 from urllib3.exceptions import ProtocolError
 
 from dweet2ser_conductor import dweepy, timestamp
@@ -91,14 +90,13 @@ class RemoteDevice(object):
                     yield self.get_last_message()
 
                 else:
-                    timestamp = str(datetime.datetime.now())
                     print(f"{timestamp()}Dweet listening thread died, restarting:")
                     self.restart_session()
                     yield self.get_last_message()
 
         return catch_closed_connection()
 
-    def _kill_listen_streams(self):
+    def kill_listen_stream(self):
         self._send_dweet({self.read_kw: self._kill_signal})
 
     def _keepalive(self):

@@ -1,6 +1,5 @@
 
-import threading
-from queue import Queue
+import time
 
 import serial
 
@@ -14,7 +13,6 @@ class LocalDevice(object):
         self.port_name = port
         self.mode = mode
         self.serial_port = serial.Serial(self.port_name)
-        self._buffer = Queue()
         self._last_message = ''
         self.mute = False
         self.exc = False
@@ -29,13 +27,18 @@ class LocalDevice(object):
         """listens to serial port, yields what it hears
         """
         ser = self.serial_port
-        # TODO: find a way to listen to serial without an infinite loop
-        # TODO: verify readline() will work with data other than CP540
-        while True:
+
+        # TODO: test with a variety of devices and protocols
+        while not self.mute:
             if ser.in_waiting > 0:
-                ser_data = ser.readline()
+                ser_data = ser.read(ser.in_waiting)
                 self._last_message = ser_data.hex()
                 yield ser_data.hex()
+            else:
+                time.sleep(0.0001)
+
+    def kill_listen_stream(self):
+        self.mute = True
 
     def get_last_message(self):
         return self._last_message
