@@ -1,116 +1,122 @@
 import os
 from configparser import ConfigParser, NoSectionError
 
+from local_device import LocalDevice
+from remote_device import RemoteDevice
+from settings import sys_stamp
 
-class DweetConfiguration(object):
 
-    def __init__(self):
+class Dweet2serConfiguration(object):
+
+    def __init__(self, bus):
         self.parser = ConfigParser()
-        self.home_path = os.path.expanduser('~')
-        self.file_name = "config.ini"
-        self.default_config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), self.file_name)
-        self.user_config_file = ''
-        self._verify_defaults()
-        self._update_parser()
-
-    def setup(self):
-        self._verify_defaults()
-        self._verify_user_file()
-        return
-
-    def _update_parser(self):
-        self.parser.read(self.default_config_file)
-        self.user_config_file = self.parser.get("DEFAULT", "user_config_file")
-        self.parser.read(self.user_config_file)
-        return
-
-    def _verify_defaults(self):
-        if not os.path.exists(self.default_config_file):
-            print(f"\nDefault file not found. Creating at {self.default_config_file}")
-            self._write_defaults()
+        self.bus = bus
+        home_path = os.path.expanduser('~')
+        # check if we're on linux running as superuser, then choose more appropriate directory
+        if home_path == "/root":
+            home_path = "/etc"
         else:
-            print(f"\nDefault config file found at {self.default_config_file}")
-        return
+            home_path = os.path.join(home_path, '.config')
+        file_name = "config.ini"
+        self.default_config_file = os.path.join(home_path, 'dweet2ser', file_name)
 
-    def _write_defaults(self):
-        # reset parser
-        self.parser = ConfigParser()
-        self.parser['DEFAULT'] = {"DCE_port": "/dev/ttyUSB0",
-                                  "DTE_port": "COM50",
-                                  "pc_keyword": "from_PC",
-                                  "device_keyword": "from_device",
-                                  "thing_id": "dweet2ser_default",
-                                  "key": "None",
-                                  "user_config_file": ''
-                                  }
-        self.parser.add_section("User")
+    def add_devices_from_config(self):
+        """ Attempt to add all the devices listed in the default config.ini file.
+
+        """
+        if self._load_default_file():
+            devices = self.parser.sections()
+            # make sure there is actually something in config
+            if len(devices) > 0:
+                print(f"{sys_stamp}Loading devices from config.")
+                for d in devices:
+                    try:
+                        name = d
+                        location = self.parser[d]["location"]
+                        dev_type = self.parser[d]["type"]
+                        if location == "local":
+                            port = self.parser[d]["port"]
+                            try:
+                                dev = LocalDevice(port, dev_type, name)
+                                self.bus.add_device(dev)
+                            except Exception as e:
+                                print(f"{sys_stamp}Failed to add device '{name}' from default config: {e}")
+                        elif location == "remote":
+                            thing_name = self.parser[d]["thing_name"]
+                            if self.parser[d]["key"] == "" or self.parser[d]["key"].lower().strip() == "none":
+                                key = None
+                            else:
+                                key = self.parser[d]["key"]
+                            try:
+                                dev = RemoteDevice(thing_name, key, dev_type, name)
+                                self.bus.add_device(dev)
+                            except Exception as e:
+                                print(f"{sys_stamp}Failed to add device '{name}' from default config: {e}")
+                        else:
+                            print(f"{sys_stamp}Failed to add device '{name}' from default config: "
+                                  f"invalid location '{location}'")
+                    except Exception as exc:
+                        print(f"{sys_stamp}Invalid config file format: {exc}")
+
+    def save_current_to_file(self):
+        """ Save the current device bus to default config file
+
+        """
+        self.parser = ConfigParser()  # clear any settings in the parser
+        self._add_defaults_to_parser()
+
+        # add DCE settings to parser
+        for dev in self.bus.dce_devices:
+            self.parser.add_section(dev.name)
+            self.parser[dev.name]["type"] = "DCE"
+            if type(dev).__name__ == "LocalDevice":
+                self.parser[dev.name]["location"] = "local"
+                self.parser[dev.name]["port"] = dev.port_name
+            if type(dev).__name__ == "RemoteDevice":
+                self.parser[dev.name]["location"] = "remote"
+                self.parser[dev.name]["thing_name"] = dev.thing_id
+                self.parser[dev.name]["key"] = str(dev.thing_key)
+
+        # add DTE settings to parser
+        for dev in self.bus.dte_devices:
+            self.parser.add_section(dev.name)
+            self.parser[dev.name]["type"] = "DTE"
+            if type(dev).__name__ == "LocalDevice":
+                self.parser[dev.name]["location"] = "local"
+                self.parser[dev.name]["port"] = dev.port_name
+            if type(dev).__name__ == "RemoteDevice":
+                self.parser[dev.name]["location"] = "remote"
+                self.parser[dev.name]["thing_name"] = dev.thing_id
+                self.parser[dev.name]["key"] = str(dev.thing_key)
+
+        os.makedirs(os.path.dirname(self.default_config_file), exist_ok=True)
         with open(self.default_config_file, 'w') as configfile:
             self.parser.write(configfile)
-        return self._update_parser()
 
-    def _write_user_file_path(self, path):
-        self.parser["DEFAULT"]["user_config_file"] = path
-        with open(self.default_config_file, 'w') as configfile:
-            return self.parser.write(configfile)
+        print(f"{sys_stamp}Settings saved to config file: {self.default_config_file}")
 
-    def _verify_user_file(self):
-        if os.path.exists(self.user_config_file):
-            print(f"User config file found at {self.user_config_file}")
-            resp = input("  Overwrite? (y/n):")
-            if resp == "n":
-                return
-            else:
-                return self._create_user_file(self.user_config_file)
-        else:
-            print("User config file does not exist.")
-            filepath = os.path.join(self.home_path, '.config', 'dweet2ser_conductor', self.file_name)
-            return self._create_user_file(filepath)
-
-    def _create_user_file(self, path):
-
-        print(f"Writing user config file to: {path}\n"
-              f"\nHit enter to accept defaults.")
-        keys = ["thing_id",
-                "key",
-                "DCE_port",
-                "DTE_port",
-                "pc_keyword",
-                "device_keyword",
-                ]
-        defaults = {}
-        for i in range(0, len(keys)):
-            defaults[keys[i]] = self.parser.get("DEFAULT", keys[i])
-
-        currents = {}
-        for i in range(0, len(keys)):
+    def _load_default_file(self):
+        if os.path.exists(self.default_config_file):
+            print(f"{sys_stamp}Found config file at {self.default_config_file}.")
             try:
-                currents[keys[i]] = self.parser.get("User", keys[i])
-            except NoSectionError:
-                currents[keys[i]] = ''
+                self.parser.read(self.default_config_file)
+                return True
+            except Exception as e:
+                print(f"{sys_stamp}Failed to read config file: {e}")
+                return False
 
-        inputs = {
-            'thing_id': input(f"  Enter thing name (default:{defaults['thing_id']}, current:{currents['thing_id']}):  "),
-            'key': input(f"  Enter thing key if locked (default:{defaults['key']}, current:{currents['key']}):  "),
-            'DCE_port': input(
-                f"  Enter default DCE serial port (default:{defaults['DCE_port']}, current:{currents['DCE_port']}):  "),
-            'DTE_port': input(
-                f"  Enter default DTE serial port (default:{defaults['DTE_port']}, current:{currents['DTE_port']}):  "),
-            'pc_keyword': input(
-                f"  Enter PC keyword (default:{defaults['pc_keyword']}, current:{currents['pc_keyword']}):  "),
-            'device_keyword': input(
-                f"  Enter device keyword (default:{defaults['device_keyword']}, current:{currents['device_keyword']})  :")}
+        else:
+            self._add_defaults_to_parser()
+            print(f"{sys_stamp}Config file not found. Creating empty file at: {self.default_config_file}")
+            os.makedirs(os.path.dirname(self.default_config_file), exist_ok=True)
+            with open(self.default_config_file, 'w') as configfile:
+                self.parser.write(configfile)
+            return False
 
-        self._write_user_file_path(path)
-        self.parser = ConfigParser()
-        self.parser.add_section("User")
-
-        for key in keys:
-            if inputs[key] != '':
-                self.parser["User"][key] = inputs[key]
-
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, 'w') as configfile:
-            self.parser.write(configfile)
-
-        print(f"\nUser config file successfully written to: {path}")
-        return self._update_parser()
+    def _add_defaults_to_parser(self):
+        self.parser["DEFAULT"] = {"type": "",
+                                  "location": "",
+                                  "port": "",
+                                  "thing_name": "dweet2ser_default",
+                                  "key": "None"
+                                  }

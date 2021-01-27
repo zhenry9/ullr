@@ -5,7 +5,8 @@ import requests
 from termcolor import colored
 from urllib3.exceptions import ProtocolError
 
-from dweet2ser_conductor import dweepy, timestamp, internet_connection
+from dweet2ser_conductor import dweepy
+from settings import timestamp, internet_connection
 
 
 class DeadConnectionError(Exception):
@@ -40,16 +41,19 @@ class RemoteDevice(object):
 
     def write(self, message):
         if internet_connection():
+            # check for a connection before trying to send to dweet
             self._send_dweet({self.write_kw: message})
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
-            print(f"{timestamp()}{colored(self.type.capitalize(), self.type_color)} to {self.name}: {message_decoded}")
+            print(f"{timestamp()}{colored(self.type.capitalize(), self.type_color)} sent to {self.name}: {message_decoded}")
         else:
-            print(f"{timestamp()}No connection to {self.name}. Saving message.")
+            # if there's no connection save the message to resend on reconnect
+            print(f"{timestamp()}No connection to {self.name}. Saving message to queue.")
             self._message_queue.append(message)
             self.exc = True
 
     def send_message_queue(self):
         while len(self._message_queue) > 0:
+            print(f"{timestamp()}Sending queued messages.")
             self.write(self._message_queue.pop(0))
             time.sleep(1.2)  # avoid exceeding dweet.io's 1s rate limit
 

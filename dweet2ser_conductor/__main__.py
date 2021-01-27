@@ -6,11 +6,12 @@ from colorama import init as colorama_init
 from termcolor import colored
 
 from dweet2ser_conductor import remote_device, local_device, device_bus
+from setup_config import Dweet2serConfiguration
 
-# colorama call
 colorama_init()
 
 BUS = device_bus.DeviceBus()
+CFG = Dweet2serConfiguration(BUS)
 
 
 def add_device():
@@ -59,11 +60,14 @@ def process_input(cmd, ):
         return add_device()
     if cmd == "remove":
         return remove_device()
+    if cmd == "save":
+        return CFG.save_current_to_file()
     else:
         # print command help
         print("\tType 'info' to display session info.\n"
               "\tType 'add' to add a device.\n"
-              "\tType 'remove' to remove a device."
+              "\tType 'remove' to remove a device.\n"
+              "\tType 'save' to save the current configuration as default."
               )
         return
 
@@ -74,12 +78,13 @@ def idle():
 
 
 def main():
-    # TODO: setup config file functionality. Should load devices from file unless cl arg not to.
-    #   Should be able to save current setup to config file
+
     print("\t\t*************************************************")
     print("\t\t**               " + colored("Dweet", "cyan") + " to " + colored("Serial", "red") + "               **")
     print("\t\t**                by Zach Henry                **")
     print("\t\t*************************************************")
+
+    CFG.add_devices_from_config()
 
     while True:
         cmd = ''
