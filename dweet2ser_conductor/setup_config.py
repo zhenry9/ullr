@@ -3,7 +3,7 @@ from configparser import ConfigParser
 
 from local_device import LocalDevice
 from remote_device import RemoteDevice
-from settings import sys_stamp, CONFIG_DEFAULTS
+from settings import sys_stamp, CONFIG_DEFAULTS, DEFAULT_CONFIG_FILE
 
 
 class Dweet2serConfiguration(object):
@@ -11,23 +11,8 @@ class Dweet2serConfiguration(object):
     def __init__(self, bus):
         self.parser = ConfigParser()
         self.bus = bus
-        home_path = os.path.expanduser('~')
-        # check if we're on linux running as superuser, then choose more appropriate directory
-        if home_path == "/root":
-            home_path = "/etc"
-        else:
-            home_path = os.path.join(home_path, '.config')
-        file_name = "config.ini"
-        self.default_config_file = os.path.join(home_path, 'dweet2ser', file_name)
 
-    def add_devices_from_default(self):
-        """ Attempt to add all the devices listed in the default config.ini file.
-
-        """
-        if self._load_config_file(self.default_config_file):
-            self._add_devices()
-
-    def add_devices_from_file(self, file):
+    def add_devices_from_file(self, file=DEFAULT_CONFIG_FILE):
         """ Attempt to add devices from an arbitrary file
 
         """
@@ -65,7 +50,7 @@ class Dweet2serConfiguration(object):
                     else:
                         key = self.parser[d]["key"]
                     try:
-                        dev = RemoteDevice(thing_name, key, dev_type, name, mute)
+                        dev = RemoteDevice(thing_name, dev_type, key, name, mute)
                         self.bus.add_device(dev)
                         print(f"{sys_stamp}Added {location} {dev_type} device '{name}' from config.")
                     except Exception as e:
@@ -105,21 +90,23 @@ class Dweet2serConfiguration(object):
                 self.parser[dev.name]["thing_name"] = dev.thing_id
                 self.parser[dev.name]["key"] = str(dev.thing_key)
 
-        os.makedirs(os.path.dirname(self.default_config_file), exist_ok=True)
+        os.makedirs(os.path.dirname(DEFAULT_CONFIG_FILE), exist_ok=True)
 
-        with open(self.default_config_file, 'w') as configfile:
+        with open(DEFAULT_CONFIG_FILE, 'w') as configfile:
             configfile.write("\n; The settings in the [DEFAULT] section reference the vaules set in 'settings.py' "
                              "in the package directory."
                              "\n; They should be here for config file stability."
                              "\n; If you would like to change these default settings permanently, "
                              "you should do so in settings.py, not here."
                              "\n; Make sure you know what you're doing.\n\n")
-        with open(self.default_config_file, 'a') as configfile:
+        with open(DEFAULT_CONFIG_FILE, 'a') as configfile:
             self.parser.write(configfile)
 
-        print(f"{sys_stamp}Settings saved to config file: {self.default_config_file}")
+        print(f"{sys_stamp}Settings saved to config file: {DEFAULT_CONFIG_FILE}")
 
     def _load_config_file(self, file):
+        if not os.path.isabs(file):
+            file = os.path.join(os.getcwd(), file)
         if os.path.exists(file):
             print(f"{sys_stamp}Found config file at {file}.")
             try:
@@ -133,10 +120,10 @@ class Dweet2serConfiguration(object):
         else:
             self._add_defaults_to_parser()
             print(f"{sys_stamp}Config file {file} not found.")
-            if file == self.default_config_file:
+            if file == DEFAULT_CONFIG_FILE:
                 print(f"{sys_stamp}Creating empty default file at: {file}")
-                os.makedirs(os.path.dirname(self.default_config_file), exist_ok=True)
-                with open(self.default_config_file, 'w') as configfile:
+                os.makedirs(os.path.dirname(DEFAULT_CONFIG_FILE), exist_ok=True)
+                with open(DEFAULT_CONFIG_FILE, 'w') as configfile:
                     self.parser.write(configfile)
             return False
 

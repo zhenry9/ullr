@@ -1,3 +1,4 @@
+import argparse
 import sys
 
 import time
@@ -6,6 +7,7 @@ from colorama import init as colorama_init
 from termcolor import colored
 
 from dweet2ser_conductor import remote_device, local_device, device_bus
+from settings import sys_stamp
 from setup_config import Dweet2serConfiguration
 
 colorama_init()
@@ -18,12 +20,17 @@ def add_device():
     name = input("\nDevice Name: ")
     location = input("Location (1.local 2.remote): ")
     mode = input("Type (DCE/DTE): ").upper()
+    mute = input("Mute device? (y/n): ")
+    if mute.upper().strip() == "Y" or mute.upper().strip() == "YES":
+        mute = True
+    else:
+        mute = False
     d = None
 
     if location == "1":
         port = input("Port: ")
         try:
-            d = local_device.LocalDevice(port, mode, name)
+            d = local_device.LocalDevice(port, mode, name, mute)
         except Exception as e:
             print(e)
 
@@ -33,7 +40,7 @@ def add_device():
         if key == "None" or key == "":
             key = None
         try:
-            d = remote_device.RemoteDevice(thing_id, key, mode, name)
+            d = remote_device.RemoteDevice(thing_id, mode, key, name, mute)
         except Exception as e:
             print(e)
     else:
@@ -78,13 +85,39 @@ def idle():
 
 
 def main():
+    arg_parser = argparse.ArgumentParser(description="An interface for networking R232 devices using dweet.io.")
+    arg_parser.add_argument("--file", type=str, help="Specify config file to use, overriding defaults.")
+    arg_parser.add_argument("--empty", action='store_true', help="Start dweet2ser with no devices. "
+                                                                 "Useful for fixing broken config files "
+                                                                 "or creating new ones.")
+    arg_parser.add_argument("--override", metavar=('MODE', 'PORT', 'THING_NAME'), action="store", type=str, nargs=3,
+                            help="Setup a basic connection with command line arguments."
+                                 "\ne.g. --override DCE /dev/ttyUSB0 dweet2ser_default.")
+    args = arg_parser.parse_args()
 
     print("\t\t*************************************************")
     print("\t\t**               " + colored("Dweet", "cyan") + " to " + colored("Serial", "red") + "               **")
     print("\t\t**                by Zach Henry                **")
     print("\t\t*************************************************")
 
-    CFG.add_devices_from_default()
+    if args.override:
+        if args.override[0].upper() == "DTE":
+            other_mode = "DCE"
+        else:
+            other_mode = "DTE"
+        try:
+            local = local_device.LocalDevice(args.override[1], args.override[0])
+            remote = remote_device.RemoteDevice(args.override[2], other_mode)
+            BUS.add_device(local)
+            BUS.add_device(remote)
+        except Exception as e:
+            print(f"{sys_stamp}Override failed: {e}")
+
+    elif args.file:
+        CFG.add_devices_from_file(args.file)
+
+    elif not args.empty:
+        CFG.add_devices_from_file()
 
     while True:
         cmd = ''

@@ -92,6 +92,7 @@ class DeviceBus(object):
         print(self.listen_threads)
 
     def _listen_stream(self, device):
+        time.sleep(.0001)  # try to be more threadsafe
         print(f"{timestamp()}Listen stream started for {device.name}.")
 
         for message in device.listen():

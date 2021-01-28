@@ -14,7 +14,7 @@ class DeadConnectionError(Exception):
 
 
 class RemoteDevice(object):
-    def __init__(self, thing_id, thing_key, mode, name="Unnamed Remote Device", mute=False):
+    def __init__(self, thing_id, mode, thing_key=None, name="Remote Device", mute=False):
         self.name = name
         self.type = "dweet"
         self.type_color = "cyan"

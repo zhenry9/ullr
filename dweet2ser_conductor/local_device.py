@@ -9,7 +9,7 @@ from settings import timestamp
 
 class LocalDevice(object):
 
-    def __init__(self, port, mode, name="Unnamed Local Device", mute=False):
+    def __init__(self, port, mode, name="Local Device", mute=False):
         self.name = name
         self.type = "serial"
         self.type_color = "red"
