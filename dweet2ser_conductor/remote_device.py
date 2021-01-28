@@ -14,14 +14,14 @@ class DeadConnectionError(Exception):
 
 
 class RemoteDevice(object):
-    def __init__(self, thing_id, thing_key, mode, name="Unnamed Remote Device"):
+    def __init__(self, thing_id, thing_key, mode, name="Unnamed Remote Device", mute=False):
         self.name = name
         self.type = "dweet"
         self.type_color = "cyan"
         self.thing_id = thing_id
         self.locked = False
         self.thing_key = thing_key
-        self.mute = False
+        self.mute = mute
         if thing_key is not None:
             self.locked = True
         self.mode = mode

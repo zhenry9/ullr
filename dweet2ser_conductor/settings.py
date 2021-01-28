@@ -5,13 +5,20 @@ from colorama import init as colorama_init, Fore, Style
 
 colorama_init()
 
+# defaults when writing new configuration
+CONFIG_DEFAULTS = {"type": "",
+                   "location": "",
+                   "port": "",
+                   "thing_name": "dweet2ser_default",
+                   "key": "None",
+                   "mute": "False"
+                   }
+
+sys_stamp = "[ " + Fore.LIGHTBLACK_EX + "sys" + Style.RESET_ALL + " ] "
+
 
 def timestamp():
     return "[" + Fore.LIGHTBLACK_EX + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + Style.RESET_ALL + "] "
-
-
-stamp_length = len(timestamp())
-sys_stamp = "[ " + Fore.LIGHTBLACK_EX + "sys" + Style.RESET_ALL + " ] "
 
 
 def internet_connection(host="8.8.8.8", port=53, timeout=3):

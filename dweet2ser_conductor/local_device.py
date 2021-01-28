@@ -9,7 +9,7 @@ from settings import timestamp
 
 class LocalDevice(object):
 
-    def __init__(self, port, mode, name="Unnamed Local Device"):
+    def __init__(self, port, mode, name="Unnamed Local Device", mute=False):
         self.name = name
         self.type = "serial"
         self.type_color = "red"
@@ -17,7 +17,7 @@ class LocalDevice(object):
         self.mode = mode
         self.serial_port = serial.Serial(self.port_name)
         self._last_message = ''
-        self.mute = False
+        self.mute = mute
         self.exc = False
 
     def write(self, message):
@@ -25,7 +25,7 @@ class LocalDevice(object):
             message = str(message)
         message_bytes = bytes.fromhex(message)  # convert dweet string into bytes for RS232.
         message_decoded = message_bytes.decode('latin-1').rstrip()
-        print(f"{timestamp()}{colored(self.type.capitalize(), self.type_color)} message to {self.name}: {message_decoded}")
+        print(f"{timestamp()}{colored(self.type.capitalize(), self.type_color)} message sent to {self.name}: {message_decoded}")
         return self.serial_port.write(message_bytes)
 
     def listen(self):

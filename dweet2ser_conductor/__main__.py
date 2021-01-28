@@ -84,7 +84,7 @@ def main():
     print("\t\t**                by Zach Henry                **")
     print("\t\t*************************************************")
 
-    CFG.add_devices_from_config()
+    CFG.add_devices_from_default()
 
     while True:
         cmd = ''

@@ -92,7 +92,7 @@ class DeviceBus(object):
         print(self.listen_threads)
 
     def _listen_stream(self, device):
-        print(f"\n{timestamp()}Listen stream started for {device.name}.")
+        print(f"{timestamp()}Listen stream started for {device.name}.")
 
         for message in device.listen():
             message = str(message)
