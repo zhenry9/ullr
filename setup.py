@@ -7,7 +7,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='dweet2ser_conductor',
+    name='dweet2ser',
     version='0.0.1',
     author='Zach Henry',
     author_email='zhenry9@gmail.com',
@@ -36,7 +36,7 @@ setuptools.setup(
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [
-            'dweet2ser_conductor = dweet2ser_conductor.__main__:main',
+            'dweet2ser = dweet2ser.__main__:main',
         ]
     },
     zip_safe=False,
