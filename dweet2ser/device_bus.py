@@ -96,10 +96,10 @@ class DeviceBus(object):
 
         for message in device.listen():
             message = str(message)
-            message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
+            message_decoded = bytes.fromhex(message).decode('latin-1').rstrip().replace('\n', '<NL>').replace('\r', '')
 
             s_print(f"\n{timestamp()}Received {colored(device.type, device.type_color)} message from {device.name}:"
-                  f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
+                    f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
 
             if device.mode == "DTE":
                 for d in self.dce_devices:
