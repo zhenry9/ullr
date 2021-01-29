@@ -8,7 +8,7 @@ from termcolor import colored
 
 from dweet2ser import remote_device, local_device, device_bus
 from dweet2ser.settings import sys_stamp
-from setup_config import Dweet2serConfiguration
+from dweet2ser.setup_config import Dweet2serConfiguration
 
 colorama_init()
 
