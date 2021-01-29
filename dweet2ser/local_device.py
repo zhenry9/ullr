@@ -36,6 +36,7 @@ class LocalDevice(object):
         # TODO: test with a variety of devices and protocols
         while not self.mute:
             if ser.in_waiting > 0:
+                time.sleep(.1)
                 ser_data = ser.read(ser.in_waiting)
                 self._last_message = ser_data.hex()
                 yield ser_data.hex()
