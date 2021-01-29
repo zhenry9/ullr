@@ -4,7 +4,7 @@ import time
 from termcolor import colored
 from colorama import init as colorama_init, Fore, Style
 
-from settings import timestamp, internet_connection
+from dweet2ser/settings import timestamp, internet_connection
 
 colorama_init()
 
