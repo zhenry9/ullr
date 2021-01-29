@@ -86,11 +86,12 @@ def idle():
 
 def main():
     arg_parser = argparse.ArgumentParser(description="An interface for networking R232 devices using dweet.io.")
-    arg_parser.add_argument("--file", type=str, help="Specify config file to use, overriding defaults.")
-    arg_parser.add_argument("--empty", action='store_true', help="Start dweet2ser with no devices. "
+    options = arg_parser.add_mutually_exclusive_group()
+    options.add_argument("--file", type=str, help="Specify config file to use, overriding defaults.")
+    options.add_argument("--empty", action='store_true', help="Start dweet2ser with no devices. "
                                                                  "Useful for fixing broken config files "
                                                                  "or creating new ones.")
-    arg_parser.add_argument("--override", metavar=('MODE', 'PORT', 'THING_NAME'), action="store", type=str, nargs=3,
+    options.add_argument("--override", metavar=('MODE', 'PORT', 'THING_NAME'), action="store", type=str, nargs=3,
                             help="Setup a basic connection with command line arguments."
                                  "\ne.g. --override DCE /dev/ttyUSB0 dweet2ser_default.")
     args = arg_parser.parse_args()

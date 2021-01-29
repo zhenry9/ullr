@@ -37,7 +37,6 @@ setuptools.setup(
     entry_points={
         'console_scripts': [
             'dweet2ser_conductor = dweet2ser_conductor.__main__:main',
-            'dweet2ser_conductor-setup = dweet2ser_conductor.__main__:setup'
         ]
     },
     zip_safe=False,

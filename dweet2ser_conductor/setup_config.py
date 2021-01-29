@@ -77,6 +77,7 @@ class Dweet2serConfiguration(object):
                 self.parser[dev.name]["location"] = "remote"
                 self.parser[dev.name]["thing_name"] = dev.thing_id
                 self.parser[dev.name]["key"] = str(dev.thing_key)
+            self.parser[dev.name]["mute"] = dev.mute
 
         # add DTE settings to parser
         for dev in self.bus.dte_devices:
@@ -89,6 +90,7 @@ class Dweet2serConfiguration(object):
                 self.parser[dev.name]["location"] = "remote"
                 self.parser[dev.name]["thing_name"] = dev.thing_id
                 self.parser[dev.name]["key"] = str(dev.thing_key)
+            self.parser[dev.name]["mute"] = dev.mute
 
         os.makedirs(os.path.dirname(DEFAULT_CONFIG_FILE), exist_ok=True)
 
