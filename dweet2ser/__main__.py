@@ -124,13 +124,13 @@ def main():
     while True:
         cmd = ''
         try:
-            cmd = s_input("\nType 'exit' to exit or ENTER for help.\n")
+            time.sleep(.0001)
+            cmd = input("\nType 'exit' to exit or ENTER for help.\n")
         except EOFError:  # if ran as a daemon, make sure we don't reach EOF prematurely
             idle()
         if cmd == 'exit':
             break
         process_input(cmd)
-        time.sleep(.0001)
 
 
 if __name__ == "__main__":
