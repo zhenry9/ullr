@@ -7,7 +7,7 @@ from colorama import init as colorama_init
 from termcolor import colored
 
 from dweet2ser import remote_device, local_device, device_bus
-from dweet2ser.settings import sys_stamp
+from dweet2ser.settings import sys_stamp, s_print
 from dweet2ser.setup_config import Dweet2serConfiguration
 
 colorama_init()
@@ -32,7 +32,7 @@ def add_device():
         try:
             d = local_device.LocalDevice(port, mode, name, mute)
         except Exception as e:
-            print(e)
+            s_print(e)
 
     elif location == "2":
         thing_id = input("Thing ID: ")
@@ -42,9 +42,9 @@ def add_device():
         try:
             d = remote_device.RemoteDevice(thing_id, mode, key, name, mute)
         except Exception as e:
-            print(e)
+            s_print(e)
     else:
-        print("Invalid input")
+        s_print("Invalid input")
         return
     if d:
         BUS.add_device(d)
@@ -71,11 +71,11 @@ def process_input(cmd, ):
         return CFG.save_current_to_file()
     else:
         # print command help
-        print("\tType 'info' to display session info.\n"
-              "\tType 'add' to add a device.\n"
-              "\tType 'remove' to remove a device.\n"
-              "\tType 'save' to save the current configuration as default."
-              )
+        s_print("\tType 'info' to display session info.\n"
+                "\tType 'add' to add a device.\n"
+                "\tType 'remove' to remove a device.\n"
+                "\tType 'save' to save the current configuration as default."
+                )
         return
 
 
@@ -89,17 +89,18 @@ def main():
     options = arg_parser.add_mutually_exclusive_group()
     options.add_argument("--file", type=str, help="Specify config file to use, overriding defaults.")
     options.add_argument("--empty", action='store_true', help="Start dweet2ser with no devices. "
-                                                                 "Useful for fixing broken config files "
-                                                                 "or creating new ones.")
+                                                              "Useful for fixing broken config files "
+                                                              "or creating new ones.")
     options.add_argument("--override", metavar=('MODE', 'PORT', 'THING_NAME'), action="store", type=str, nargs=3,
-                            help="Setup a basic connection with command line arguments."
-                                 "\ne.g. --override DCE /dev/ttyUSB0 dweet2ser_default.")
+                         help="Setup a basic connection with command line arguments."
+                              "\ne.g. --override DCE /dev/ttyUSB0 dweet2ser_default.")
     args = arg_parser.parse_args()
 
-    print("\t\t*************************************************")
-    print("\t\t**               " + colored("Dweet", "cyan") + " to " + colored("Serial", "red") + "               **")
-    print("\t\t**                by Zach Henry                **")
-    print("\t\t*************************************************")
+    s_print("\t\t*************************************************")
+    s_print("\t\t**               " + colored("Dweet", "cyan") + " to " +
+            colored("Serial", "red") + "               **")
+    s_print("\t\t**                by Zach Henry                **")
+    s_print("\t\t*************************************************")
 
     if args.override:
         if args.override[0].upper() == "DTE":
@@ -112,7 +113,7 @@ def main():
             BUS.add_device(local)
             BUS.add_device(remote)
         except Exception as e:
-            print(f"{sys_stamp}Override failed: {e}")
+            s_print(f"{sys_stamp}Override failed: {e}")
 
     elif args.file:
         CFG.add_devices_from_file(args.file)

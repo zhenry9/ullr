@@ -3,7 +3,7 @@ from configparser import ConfigParser
 
 from dweet2ser.local_device import LocalDevice
 from dweet2ser.remote_device import RemoteDevice
-from dweet2ser.settings import sys_stamp, CONFIG_DEFAULTS, DEFAULT_CONFIG_FILE
+from dweet2ser.settings import sys_stamp, CONFIG_DEFAULTS, DEFAULT_CONFIG_FILE, s_print
 
 
 class Dweet2serConfiguration(object):
@@ -20,13 +20,13 @@ class Dweet2serConfiguration(object):
             try:
                 self._add_devices()
             except Exception as exc:
-                print(f"{sys_stamp}Invalid config file format: {exc}")
+                s_print(f"{sys_stamp}Invalid config file format: {exc}")
 
     def _add_devices(self):
         devices = self.parser.sections()
         # make sure there is actually something in config
         if len(devices) > 0:
-            print(f"{sys_stamp}Loading devices from config.")
+            s_print(f"{sys_stamp}Loading devices from config.")
             for d in devices:
                 name = d
                 location = self.parser[d]["location"]
@@ -40,9 +40,9 @@ class Dweet2serConfiguration(object):
                     try:
                         dev = LocalDevice(port, dev_type, name, mute)
                         self.bus.add_device(dev)
-                        print(f"{sys_stamp}Added {location} {dev_type} device '{name}' from config.")
+                        s_print(f"{sys_stamp}Added {location} {dev_type} device '{name}' from config.")
                     except Exception as e:
-                        print(f"{sys_stamp}Failed to add device '{name}' from default config: {e}")
+                        s_print(f"{sys_stamp}Failed to add device '{name}' from default config: {e}")
                 elif location == "remote":
                     thing_name = self.parser[d]["thing_name"]
                     if self.parser[d]["key"] == "" or self.parser[d]["key"].lower().strip() == "none":
@@ -52,12 +52,12 @@ class Dweet2serConfiguration(object):
                     try:
                         dev = RemoteDevice(thing_name, dev_type, key, name, mute)
                         self.bus.add_device(dev)
-                        print(f"{sys_stamp}Added {location} {dev_type} device '{name}' from config.")
+                        s_print(f"{sys_stamp}Added {location} {dev_type} device '{name}' from config.")
                     except Exception as e:
-                        print(f"{sys_stamp}Failed to add device '{name}' from default config: {e}")
+                        s_print(f"{sys_stamp}Failed to add device '{name}' from default config: {e}")
                 else:
-                    print(f"{sys_stamp}Failed to add device '{name}' from default config: "
-                          f"invalid location '{location}'")
+                    s_print(f"{sys_stamp}Failed to add device '{name}' from default config: "
+                            f"invalid location '{location}'")
 
     def save_current_to_file(self):
         """ Save the current device bus to default config file
@@ -104,26 +104,26 @@ class Dweet2serConfiguration(object):
         with open(DEFAULT_CONFIG_FILE, 'a') as configfile:
             self.parser.write(configfile)
 
-        print(f"{sys_stamp}Settings saved to config file: {DEFAULT_CONFIG_FILE}")
+        s_print(f"{sys_stamp}Settings saved to config file: {DEFAULT_CONFIG_FILE}")
 
     def _load_config_file(self, file):
         if not os.path.isabs(file):
             file = os.path.join(os.getcwd(), file)
         if os.path.exists(file):
-            print(f"{sys_stamp}Found config file at {file}.")
+            s_print(f"{sys_stamp}Found config file at {file}.")
             try:
                 self.parser = ConfigParser()
                 self.parser.read(file)
                 return True
             except Exception as e:
-                print(f"{sys_stamp}Failed to read config file: {e}")
+                s_print(f"{sys_stamp}Failed to read config file: {e}")
                 return False
 
         else:
             self._add_defaults_to_parser()
-            print(f"{sys_stamp}Config file {file} not found.")
+            s_print(f"{sys_stamp}Config file {file} not found.")
             if file == DEFAULT_CONFIG_FILE:
-                print(f"{sys_stamp}Creating empty default file at: {file}")
+                s_print(f"{sys_stamp}Creating empty default file at: {file}")
                 os.makedirs(os.path.dirname(DEFAULT_CONFIG_FILE), exist_ok=True)
                 with open(DEFAULT_CONFIG_FILE, 'w') as configfile:
                     self.parser.write(configfile)
