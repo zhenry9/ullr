@@ -4,7 +4,7 @@ import time
 import serial
 from termcolor import colored
 
-from dweet2ser/settings import timestamp
+from dweet2ser.settings import timestamp
 
 
 class LocalDevice(object):
