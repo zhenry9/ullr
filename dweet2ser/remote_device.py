@@ -6,7 +6,7 @@ from termcolor import colored
 from urllib3.exceptions import ProtocolError
 
 from dweet2ser import dweepy
-from settings import timestamp, internet_connection
+from dweet2ser/settings import timestamp, internet_connection
 
 
 class DeadConnectionError(Exception):
