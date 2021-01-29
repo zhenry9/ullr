@@ -1,10 +1,13 @@
 import datetime
 import os
 import socket
+from threading import Lock
 
 from colorama import init as colorama_init, Fore, Style
 
 colorama_init()
+
+s_print_lock = Lock()
 
 
 def _get_default_config_file():
@@ -50,3 +53,7 @@ def internet_connection(host="8.8.8.8", port=53, timeout=3):
         #  print(ex)
         return False
 
+def s_print(*a, **b):
+    """Thread safe print function"""
+    with s_print_lock:
+        print(*a, **b)

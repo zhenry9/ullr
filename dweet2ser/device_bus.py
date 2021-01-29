@@ -4,7 +4,7 @@ import time
 from termcolor import colored
 from colorama import init as colorama_init, Fore, Style
 
-from dweet2ser.settings import timestamp, internet_connection
+from dweet2ser.settings import timestamp, internet_connection, s_print
 
 colorama_init()
 
@@ -92,14 +92,13 @@ class DeviceBus(object):
         print(self.listen_threads)
 
     def _listen_stream(self, device):
-        time.sleep(.0001)  # try to be more threadsafe
-        print(f"{timestamp()}Listen stream started for {device.name}.")
+        s_print(f"{timestamp()}Listen stream started for {device.name}.")
 
         for message in device.listen():
             message = str(message)
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
 
-            print(f"\n{timestamp()}Received {colored(device.type, device.type_color)} message from {device.name}:"
+            s_print(f"\n{timestamp()}Received {colored(device.type, device.type_color)} message from {device.name}:"
                   f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
 
             if device.mode == "DTE":
@@ -111,7 +110,7 @@ class DeviceBus(object):
                     d.write(message)
 
             else:
-                print("Mode not found")
+                s_print("Mode not found")
 
         return True
 
@@ -128,7 +127,7 @@ class DeviceBus(object):
             time.sleep(.01)
 
     def _restart_thread(self, device):
-        print(f"{timestamp()}Reconnecting to {device.name}.")
+        s_print(f"{timestamp()}Reconnecting to {device.name}.")
         device.exc = False
         device.restart_session()
         device.send_message_queue()
