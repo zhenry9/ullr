@@ -63,4 +63,4 @@ def s_print(*a, **b):
 def s_input(*a, **b):
     """Thread safe print function"""
     with s_print_lock:
-        input(*a, **b)
+        return input(*a, **b)
