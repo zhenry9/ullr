@@ -53,7 +53,14 @@ def internet_connection(host="8.8.8.8", port=53, timeout=3):
         #  print(ex)
         return False
 
+
 def s_print(*a, **b):
     """Thread safe print function"""
     with s_print_lock:
         print(*a, **b)
+
+
+def s_input(*a, **b):
+    """Thread safe print function"""
+    with s_print_lock:
+        input(*a, **b)

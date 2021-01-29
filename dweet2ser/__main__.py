@@ -7,7 +7,7 @@ from colorama import init as colorama_init
 from termcolor import colored
 
 from dweet2ser import remote_device, local_device, device_bus
-from dweet2ser.settings import sys_stamp, s_print
+from dweet2ser.settings import sys_stamp, s_print, s_input
 from dweet2ser.setup_config import Dweet2serConfiguration
 
 colorama_init()
@@ -124,7 +124,7 @@ def main():
     while True:
         cmd = ''
         try:
-            cmd = input("\nType 'exit' to exit or ENTER for help.\n")
+            cmd = s_input("\nType 'exit' to exit or ENTER for help.\n")
         except EOFError:  # if ran as a daemon, make sure we don't reach EOF prematurely
             idle()
         if cmd == 'exit':
