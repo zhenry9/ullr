@@ -1,3 +1,4 @@
+import datetime
 import threading
 import time
 
@@ -37,14 +38,17 @@ class RemoteDevice(object):
         self._last_message = ''
         self._kill_signal = "kill"
         self._message_queue = []
+        self._started_on_day = datetime.datetime.utcnow().strftime("%Y-%m-%d")
         self.exc = False
+        self.listening = False
 
     def write(self, message):
         if internet_connection():
             # check for a connection before trying to send to dweet
             self._send_dweet({self.write_kw: message})
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
-            s_print(f"{timestamp()}{colored(self.type.capitalize(), self.type_color)} sent to {self.name}: {message_decoded}")
+            s_print(f"{timestamp()}{colored(self.type.capitalize(), self.type_color)} sent to {self.name}: "
+                    f"{message_decoded}")
         else:
             # if there's no connection save the message to resend on reconnect
             s_print(f"{timestamp()}No connection to {self.name}. Saving message to queue.")
@@ -77,6 +81,7 @@ class RemoteDevice(object):
         self._session = requests.Session()
 
     def listen(self):
+        self.listening = True
         keepalive_thread = threading.Thread(target=self._keepalive)
         keepalive_thread.daemon = True
         keepalive_thread.start()
@@ -87,11 +92,12 @@ class RemoteDevice(object):
     def _listen_for_dweets(self):
         """ makes a call to dweepy to start a listening stream. error handling needs work
         """
-        while internet_connection():
+        while internet_connection() and self.listening:
             try:
                 for dweet in dweepy.listen_for_dweets_from(self.thing_id, key=self.thing_key,
                                                            timeout=90000, session=self._session):
                     content = dweet["content"]
+                    self._last_message = dweet
                     if self.read_kw in content:
                         message = content[self.read_kw]
                         if message == self._kill_signal:
@@ -111,12 +117,13 @@ class RemoteDevice(object):
 
     def kill_listen_stream(self):
         self._send_dweet({self.read_kw: self._kill_signal})
+        self.listening = False
 
     def _keepalive(self):
         """ dweet.io seems to close the connection after 60 seconds of inactivity.
-                    This sends a dummy payload every 45s to avoid that.
-                """
-        while not self.exc:
+            This sends a dummy payload every 45s to avoid that.
+        """
+        while self.listening and not self.exc:
             time.sleep(45)
             self._send_dweet({"keepalive": 1})
 
@@ -128,6 +135,12 @@ class RemoteDevice(object):
             if self.read_kw in content:
                 message = content[self.read_kw]
         return message
+
+    @staticmethod
+    def _get_dweet_time(dweet):
+        created = dweet["created"].replace("T", " ").replace("Z", "")
+        dweet_time = datetime.datetime.fromisoformat(created)
+        return dweet_time
 
 # TODO Create function to retrieve dweets from storage after a connection loss.
 #   Basic idea: store time of last_message_received from listen.

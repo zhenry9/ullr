@@ -19,6 +19,7 @@ class LocalDevice(object):
         self._last_message = ''
         self.mute = mute
         self.exc = False
+        self.listening = False
 
     def write(self, message):
         if type(message) is not str:  # make sure the message is a string
@@ -32,11 +33,12 @@ class LocalDevice(object):
         """listens to serial port, yields what it hears
         """
         ser = self.serial_port
+        self.listening = True
 
         # TODO: test with a variety of devices and protocols
-        while not self.mute:
+        while self.listening:
             if ser.in_waiting > 0:
-                time.sleep(.1)
+                time.sleep(.01)
                 ser_data = ser.read(ser.in_waiting)
                 self._last_message = ser_data.hex()
                 yield ser_data.hex()
@@ -44,7 +46,7 @@ class LocalDevice(object):
                 time.sleep(0.0001)
 
     def kill_listen_stream(self):
-        self.mute = True
+        self.listening = False
 
     def get_last_message(self):
         return self._last_message
