@@ -5,7 +5,7 @@ import requests
 from termcolor import colored
 from urllib3.exceptions import ProtocolError
 
-from dweet2ser_conductor import dweepy
+from dweet2ser import dweepy
 from settings import timestamp, internet_connection
 
 
