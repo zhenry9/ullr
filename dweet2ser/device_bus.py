@@ -128,6 +128,7 @@ class DeviceBus(object):
 
     def _restart_thread(self, device):
         s_print(f"{timestamp()}Reconnecting to {device.name}.")
+        device.kill_listen_stream()
         device.exc = False
         device.restart_session()
         device.send_message_queue()
