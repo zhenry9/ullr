@@ -24,34 +24,71 @@ If you don't have a Python environment on your computer, you can download the fi
 The source code is always available at [https://github.com/zhenry9/dweet2ser](https://github.com/zhenry9/dweet2ser).
 
 ## Configuration
-Modify config.txt to suit your needs. Locked dweet.io things are supported.
+Modify `config.ini` to suit your needs, or configure interactively.
 
 ## Usage
 
+dweet2ser borrows terminology from the original RS232 protocol. "DCE" stands for Device Communication Equipment. These 
+are devices like sensors or synchronized timers. "DTE" stands for Device Terminal Equipment. These are computers, or 
+software instances. dweet2ser facilitates the connection of DCE devices to DTE devices using dweet.io and local serial 
+ports. Every message received from a DCE device is written to every DTE device, and every message received from a DTE 
+device is written to every DCE device. dweet2ser allows for connecting an arbitrary number of devices, either local or 
+remote. In this way it is possible to connect one DCE device to many computers, or many DCE devices to one serial port.
+
+### Default
+`dweet2ser`
+
+If dweet2ser is run without command line options, it will attempt to load devices from the default config file. This
+will be '~/.config/dweet2ser/config.ini', or '/etc/dweet2ser/config.ini' if run as superuser. 
+If you are running dweet2ser for the first time or with an empty config file, no devices will be loaded.
+
+### Empty
+`dweet2ser --empty`
+
+This will ignore the default config file and start dweet2ser without any device loaded. This is useful for fixing bad
+config files, or creating new ones from scratch.
+
+### From file
+`dweet2ser --file FILENAME`
+
+This will attempt to start dweet2ser by loading the devices specified in an arbitrary config file at FILENAME.
+
+### Override
+`dweet2ser --override MODE PORT THING_NAME`
+
+This allows dweet2ser to be configured for a simple connection directly from the command line. MODE is the type of device
+connected to the local serial port PORT, either DCE or DTE. THING_NAME is the dweet.io name of the device on the other
+side of the connection. For example, to set up a connection to a DCE device connected to a Raspberry Pi:
+
+```dweet2ser --override DCE /dev/ttyUSB0 dweet2ser_default```
+
+This starts dweet2ser listening for messages from a DCE device on Linux port '/dev/ttyUSB0'. Any messages it receives will
+be sent to dweet.io using the thing name 'dweet2ser_default'. It will also listen for incoming messages from 
+'dweet2ser_default', and write them to the serial port.
+
+To set up the same connection on the PC side:
+
+```dweet2ser --override DTE COM20 dweet2ser_default```
+
+This will listen for dweet.io messages from 'dweet2ser_default' and write them to the Windows port 'COM20'. It will also
+ send any messages received from 'COM20' to dweet.io using the name 'dweet2ser_default'.
+
 ### Display help page
 
-`dweet2ser -h`
+`dweet2ser --help`
   
 This prints out the help page for command line options.
 
-### On the device side of the connection:
-  
-`dweet2ser DCE -p /dev/tty0`
- 
-This opens an instance of dweet2ser in DCE mode on the linux port /dev/tty0. If you don't specify a port, the default from config.txt will be used. DCE mode means we are on the device side, sending data to the PC (DTE) side.
-
-### On the PC side of the connection:
-  
-`dweet2ser DTE -p COM50`
-
-This opens an instance of dweet2ser in DTE mode on Windows port COM50. If you don't specify a port, the default from config.txt will be used. DTE mode means we are on the PC side, listening to data from the device (DCE) side.
 
 ### Virtual COM ports
-On the PC (DTE) side you'll need to set up a virtual null modem to allow dweet2ser to communicate with the target software. This is just a pair of com ports connected to each other. dweet2ser connects to one port, and your software application connects to the other. 
+On the PC (DTE) side you'll need to set up a virtual null modem to allow dweet2ser to communicate with the target software. 
+This is just a pair of com ports connected to each other. dweet2ser connects to one port, and your software application 
+connects to the other. 
 
 On Windows this can be accomplished with [com0com](http://com0com.sourceforge.net/).
 
-In the above example, we could use com0com to create a virtual null modem with ports COM50 and COM51. dweet2ser would connect to COM50, and the PC software to COM51.
+In the above example, we could use com0com to create a virtual null modem with ports COM20 and COM21. 
+dweet2ser would connect to COM50, and the PC software to COM51.
 
 ## Licensing and Copyright
 MIT License
