@@ -8,7 +8,9 @@ from dweet2ser.settings import timestamp, s_print
 
 
 class LocalDevice(object):
-
+    """
+    A device connected to a serial port on the local machine.
+    """
     def __init__(self, port, mode, name="Local Device", mute=False):
         self.name = name
         self.type = "serial"
@@ -21,7 +23,10 @@ class LocalDevice(object):
         self.exc = False
         self.listening = False
 
-    def write(self, message):
+    def write(self, message: str):
+        """
+        Receives a hex string, converts to bytes and writes to the serial port.
+        """
         if type(message) is not str:  # make sure the message is a string
             message = str(message)
         message_bytes = bytes.fromhex(message)  # convert dweet string into bytes for RS232.
@@ -38,7 +43,7 @@ class LocalDevice(object):
         # TODO: test with a variety of devices and protocols
         while self.listening:
             if ser.in_waiting > 0:
-                time.sleep(.1)
+                time.sleep(.1) # wait until all the data is in the buffer
                 ser_data = ser.read(ser.in_waiting)
                 self._last_message = ser_data.hex()
                 yield ser_data.hex()
@@ -46,7 +51,13 @@ class LocalDevice(object):
                 time.sleep(0.0001)
 
     def kill_listen_stream(self):
+        """
+        Stops any threads listening to the serial port.
+        """
         self.listening = False
 
     def get_last_message(self):
+        """
+        Returns the last message read from the serial port.
+        """
         return self._last_message

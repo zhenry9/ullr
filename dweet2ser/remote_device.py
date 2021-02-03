@@ -15,6 +15,9 @@ class DeadConnectionError(Exception):
 
 
 class RemoteDevice(object):
+    """
+    Implementation of a serial device remotely connected with dweet.io
+    """
     def __init__(self, thing_id, mode, thing_key=None, name="Remote Device", mute=False):
         self.name = name
         self.type = "dweet"
@@ -27,10 +30,10 @@ class RemoteDevice(object):
             self.locked = True
         self.mode = mode
 
-        if mode == 'DCE':
+        if mode == 'DCE':  # if this is a DCE (device), set the dweet.io keywords appropriately
             self.write_kw = "from_pc"
             self.read_kw = "from_device"
-        else:
+        else:  # if this is a DTE (computer), the dweet.io keywords should be reversed.
             self.write_kw = "from_device"
             self.read_kw = "from_pc"
 
@@ -43,6 +46,10 @@ class RemoteDevice(object):
         self.listening = False
 
     def write(self, message):
+        """
+        Tries to send a dweet message to the remote device. If there's no internet connection it saves
+        the message to a queue.
+        """
         if internet_connection():
             # check for a connection before trying to send to dweet
             self._send_dweet({self.write_kw: message})
@@ -56,7 +63,10 @@ class RemoteDevice(object):
             self.exc = True
 
     def send_message_queue(self):
-        while len(self._message_queue) > 0:
+        """
+        Attempt to send queued messages.
+        """
+        while len(self._message_queue) > 0 and internet_connection():
             s_print(f"{timestamp()}Sending queued messages.")
             self.write(self._message_queue.pop(0))
             time.sleep(1.2)  # avoid exceeding dweet.io's 1s rate limit
@@ -78,10 +88,19 @@ class RemoteDevice(object):
             return
 
     def restart_session(self):
+        """
+        Gets a new Session from requests.
+        """
         self._session = requests.Session()
 
     def listen(self):
+        """
+        Calls the listen/for/dweets/from function of dweet.io and yields messages from the chunked
+        HTTP response.
+        """
         self.listening = True
+        # Start a thread to send a message to dweet every 45 seconds.
+        # This is necessary because dweet.io closes the listen response after 60s of inactivity.
         keepalive_thread = threading.Thread(target=self._keepalive)
         keepalive_thread.daemon = True
         keepalive_thread.start()
@@ -116,6 +135,9 @@ class RemoteDevice(object):
         return
 
     def kill_listen_stream(self):
+        """
+        Attempts to manually end the chunked HTTP listening stream.
+        """
         self._send_dweet({self.read_kw: self._kill_signal})
         self.listening = False
 
@@ -128,6 +150,9 @@ class RemoteDevice(object):
             self._send_dweet({"keepalive": 1})
 
     def get_last_message(self):
+        """
+        Tries to recover the last message sent to dweet.
+        """
         message = ''
         if internet_connection():
             dweet = dweepy.get_latest_dweet_for(self.thing_id, key=self.thing_key, session=self._session)
@@ -138,6 +163,9 @@ class RemoteDevice(object):
 
     @staticmethod
     def _get_dweet_time(dweet):
+        """
+        For future dweet recovery implementation.
+        """
         created = dweet["created"].replace("T", " ").replace("Z", "")
         dweet_time = datetime.datetime.fromisoformat(created)
         return dweet_time

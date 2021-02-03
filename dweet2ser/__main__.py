@@ -1,6 +1,5 @@
 import argparse
 import sys
-
 import time
 
 from colorama import init as colorama_init
@@ -17,10 +16,10 @@ CFG = Dweet2serConfiguration(BUS)
 
 
 def add_device():
-    name = input("\nDevice Name: ")
-    location = input("Location (1.local 2.remote): ")
-    mode = input("Type (DCE/DTE): ").upper()
-    mute = input("Mute device? (y/n): ")
+    name = s_input("\nDevice Name: ")
+    location = s_input("Location (1.local 2.remote): ")
+    mode = s_input("Type (DCE/DTE): ").upper()
+    mute = s_input("Mute device? (y/n): ")
     if mute.upper().strip() == "Y" or mute.upper().strip() == "YES":
         mute = True
     else:
@@ -28,15 +27,15 @@ def add_device():
     d = None
 
     if location == "1":
-        port = input("Port: ")
+        port = s_input("Port: ")
         try:
             d = local_device.LocalDevice(port, mode, name, mute)
         except Exception as e:
             s_print(e)
 
     elif location == "2":
-        thing_id = input("Thing ID: ")
-        key = input("Thing Key: ")
+        thing_id = s_input("Thing ID: ")
+        key = s_input("Thing Key: ")
         if key == "None" or key == "":
             key = None
         try:
@@ -53,7 +52,7 @@ def add_device():
 
 def remove_device():
     BUS.print_status()
-    device = input("\nDevice to remove: ")
+    device = s_input("\nDevice to remove: ")
     BUS.remove_device(device)
     return
 
@@ -125,7 +124,7 @@ def main():
         cmd = ''
         try:
             time.sleep(.0001)
-            cmd = input("\nType 'exit' to exit or ENTER for help.\n")
+            cmd = s_input("\nType 'exit' to exit or ENTER for help.\n")
         except EOFError:  # if ran as a daemon, make sure we don't reach EOF prematurely
             idle()
         if cmd == 'exit':

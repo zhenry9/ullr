@@ -13,7 +13,7 @@ class Dweet2serConfiguration(object):
         self.bus = bus
 
     def add_devices_from_file(self, file=DEFAULT_CONFIG_FILE):
-        """ Attempt to add devices from an arbitrary file
+        """ Attempt to add devices from an arbitrary file. If no file is given the default file is used.
 
         """
         if self._load_config_file(file):
@@ -95,7 +95,7 @@ class Dweet2serConfiguration(object):
         os.makedirs(os.path.dirname(DEFAULT_CONFIG_FILE), exist_ok=True)
 
         with open(DEFAULT_CONFIG_FILE, 'w') as configfile:
-            configfile.write("\n; The settings in the [DEFAULT] section reference the vaules set in 'settings.py' "
+            configfile.write("\n; The settings in the [DEFAULT] section reference the values set in 'settings.py' "
                              "in the package directory."
                              "\n; They should be here for config file stability."
                              "\n; If you would like to change these default settings permanently, "
