@@ -18,7 +18,8 @@ def _print_device_list(dev_list):
             "Type".ljust(10),
             "Port".ljust(15),
             "ThingName".ljust(20),
-            "Locked".ljust(6),
+            "Locked".ljust(10),
+            "Muted".ljust(10)
             ]
     header = ''
     for col in cols:
@@ -33,7 +34,11 @@ def _print_device_list(dev_list):
                   f"{num.ljust(3)}  "
                   f"{d.name.ljust(16)}  "
                   f"{colored(d.type.ljust(10), d.type_color)}  "
-                  f"{d.port_name.ljust(15)}")
+                  f"{d.port_name.ljust(15)}  "
+                  f"{''.ljust(20)}  "
+                  f"{''.ljust(10)}  "
+                  f"{str(d.mute).ljust(10)}  "
+                  )
         if type(d).__name__ == "RemoteDevice":
             print(f"\t"
                   f"{num.ljust(3)}  "
@@ -41,7 +46,8 @@ def _print_device_list(dev_list):
                   f"{colored(d.type.ljust(10), d.type_color)}  "
                   f"{''.ljust(15)}  "
                   f"{d.thing_id.ljust(20)}  "
-                  f"{str(d.locked).ljust(6)}  "
+                  f"{str(d.locked).ljust(10)}  "
+                  f"{str(d.mute).ljust(10)}  "
                   )
 
 

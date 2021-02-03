@@ -9,7 +9,8 @@ This is particularly useful for connecting to faraway devices that aren't on the
 dweet2ser allows for connecting an arbitrary number of devices to an arbitrary number of computers.
 
 dweet2ser works for connecting remotely to things like weather stations, sensors, or other devices that send 
-simple data intermittently. It is not going to work for things like modems, due to the limitations of dweet.io among other things.
+simple data intermittently. It is not going to work for things like modems or printers, due to the limitations of 
+dweet.io among other things.
 
 ## Installation
 ### Python environment
@@ -24,16 +25,20 @@ If you don't have a Python environment on your computer, you can download the fi
 The source code is always available at [https://github.com/zhenry9/dweet2ser](https://github.com/zhenry9/dweet2ser).
 
 ## Configuration
-Modify `config.ini` to suit your needs, or configure interactively.
+Modify `config.ini` to suit your needs, or configure interactively using the prompts in the software. Some example
+configurations can be seen at https://github.com/zhenry9/dweet2ser/example-configs.
 
 ## Usage
 
-dweet2ser borrows terminology from the original RS232 protocol. "DCE" stands for Device Communication Equipment. These 
-are devices like sensors or synchronized timers. "DTE" stands for Device Terminal Equipment. These are computers, or 
-software instances. dweet2ser facilitates the connection of DCE devices to DTE devices using dweet.io and local serial 
-ports. Every message received from a DCE device is written to every DTE device, and every message received from a DTE 
-device is written to every DCE device. dweet2ser allows for connecting an arbitrary number of devices, either local or 
-remote. In this way it is possible to connect one DCE device to many computers, or many DCE devices to one serial port.
+dweet2ser borrows terminology from the original RS232 protocol. "DCE" stands for Data Circuit-terminating Equipment. These 
+are the serial devices themselves, such as sensors or synchronized timers. "DTE" stands for Data Terminal Equipment. 
+These are the computers, or software instances that the DCE devices connect to. dweet2ser facilitates the connection of 
+DCE devices to DTE devices using dweet.io and local serial ports. Every message received from a DCE device is written to 
+every DTE device, and every message received from a DTE device is written to every DCE device. dweet2ser allows for 
+connecting an arbitrary number of devices, either local or remote. In this way it is possible to connect one DCE device 
+to many computers, or many DCE devices to one serial port. 
+
+dweet2ser needs to be running and individually configured on all DTE and DCE devices that are part of the connection.
 
 ### Default
 `dweet2ser`
@@ -66,7 +71,7 @@ This starts dweet2ser listening for messages from a DCE device on Linux port '/d
 be sent to dweet.io using the thing name 'dweet2ser_default'. It will also listen for incoming messages from 
 'dweet2ser_default', and write them to the serial port.
 
-To set up the same connection on the PC side:
+To set up the same connection on the DTE side:
 
 ```dweet2ser --override DTE COM20 dweet2ser_default```
 
@@ -81,9 +86,9 @@ This prints out the help page for command line options.
 
 
 ### Virtual COM ports
-On the PC (DTE) side you'll need to set up a virtual null modem to allow dweet2ser to communicate with the target software. 
-This is just a pair of com ports connected to each other. dweet2ser connects to one port, and your software application 
-connects to the other. 
+On the computer (DTE) side of the connection you'll need to set up a virtual null modem to allow dweet2ser to 
+communicate with the target software. This is just a pair of com ports connected to each other. dweet2ser connects to 
+one port, and your software application connects to the other. 
 
 On Windows this can be accomplished with [com0com](https://sourceforge.net/projects/com0com/).
 
