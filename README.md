@@ -85,7 +85,7 @@ On the PC (DTE) side you'll need to set up a virtual null modem to allow dweet2s
 This is just a pair of com ports connected to each other. dweet2ser connects to one port, and your software application 
 connects to the other. 
 
-On Windows this can be accomplished with [com0com](http://com0com.sourceforge.net/).
+On Windows this can be accomplished with [com0com](https://sourceforge.net/projects/com0com/).
 
 In the above example, we could use com0com to create a virtual null modem with ports COM20 and COM21. 
 dweet2ser would connect to COM50, and the PC software to COM51.
