@@ -17,6 +17,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/zhenry9/dweet2ser',
+    download_url='https://github.com/zhenry9/dweet2ser/archive/0.1.0.tar.gz',
     packages=setuptools.find_packages(exclude=('tests',)),
     include_package_data=True,
     classifiers=[
