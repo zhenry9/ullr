@@ -14,19 +14,19 @@ dweet.io among other things.
 
 ## Installation
 ### Python environment
-This package is not yet published on PyPI, but you can use pip to install the github repository:
   
-`pip install git+https://github.com/zhenry9/dweet2ser.git#egg=dweet2ser`
+`pip install dweet2ser`
   
 ### Windows executable
-If you don't have a Python environment on your computer, you can download the files in the `windows` folder.
+If you don't have or don't wish to use a Python environment, a Windows executable version is available on the source
+repository on GitHub.
 
 ### Get the source
 The source code is always available at [https://github.com/zhenry9/dweet2ser](https://github.com/zhenry9/dweet2ser).
 
 ## Configuration
 Modify `config.ini` to suit your needs, or configure interactively using the prompts in the software. Some example
-configurations can be seen at https://github.com/zhenry9/dweet2ser/example-configs.
+configurations can be seen in the example-configs directory in the project repository.
 
 ## Usage
 
