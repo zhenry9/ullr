@@ -1,7 +1,7 @@
 # dweet2ser
 A serial <-> dweet.io interface
 
-<img src="https://github.com/zhenry9/dweet2ser/blob/main/dweet2ser-signal-flow.png" height="300" align="middle">
+<img src="https://github.com/zhenry9/dweet2ser/raw/main/dweet2ser-signal-flow.png" height="300" align="middle">
 
 dweet2ser allows for the two-way exchange of data between serial devices and computers over the internet, 
 using the free [dweet.io](https://dweet.io) API as an intermediary. 
@@ -45,7 +45,8 @@ dweet2ser needs to be running and individually configured on all DTE and DCE dev
 
 If dweet2ser is run without command line options, it will attempt to load devices from the default config file. This
 will be '~/.config/dweet2ser/config.ini', or '/etc/dweet2ser/config.ini' if run as superuser. 
-If you are running dweet2ser for the first time or with an empty config file, no devices will be loaded.
+If you are running dweet2ser for the first time or with an empty config file, no devices will be loaded. You can add
+devices interactively using the 'add' command.
 
 ### Empty
 `dweet2ser --empty`
