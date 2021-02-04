@@ -94,7 +94,7 @@ one port, and your software application connects to the other.
 On Windows this can be accomplished with [com0com](https://sourceforge.net/projects/com0com/).
 
 In the above example, we could use com0com to create a virtual null modem with ports COM20 and COM21. 
-dweet2ser would connect to COM50, and the PC software to COM51.
+dweet2ser would connect to COM20, and the PC software to COM21.
 
 ## Licensing and Copyright
 MIT License
