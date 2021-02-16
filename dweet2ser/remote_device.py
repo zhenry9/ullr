@@ -50,17 +50,18 @@ class RemoteDevice(object):
         Tries to send a dweet message to the remote device. If there's no internet connection it saves
         the message to a queue.
         """
-        if internet_connection():
+        if internet_connection() and self._send_dweet({self.write_kw: message}):
             # check for a connection before trying to send to dweet
-            self._send_dweet({self.write_kw: message})
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
             s_print(f"{timestamp()}{colored(self.type.capitalize(), self.type_color)} sent to {self.name}: "
                     f"{message_decoded}")
+            return True
         else:
             # if there's no connection save the message to resend on reconnect
             s_print(f"{timestamp()}No connection to {self.name}. Saving message to queue.")
             self._message_queue.append(message)
             self.exc = True
+            return False
 
     def send_message_queue(self):
         """
@@ -74,6 +75,7 @@ class RemoteDevice(object):
     def _send_dweet(self, content):
         try:
             dweepy.dweet_for(self.thing_id, content, key=self.thing_key, session=self._session)
+            return True
 
         except dweepy.DweepyError as e:
             s_print(timestamp() + str(e))
@@ -85,7 +87,7 @@ class RemoteDevice(object):
             s_print(timestamp() + str(e))
             s_print(f"{timestamp()}Connection to {self.name} lost.")
             self.exc = True
-            return
+            return False
 
     def restart_session(self):
         """
