@@ -3,7 +3,8 @@ import os
 import socket
 from threading import Lock
 
-from colorama import init as colorama_init, Fore, Style
+from colorama import Fore, Style
+from colorama import init as colorama_init
 
 colorama_init()
 

@@ -3,7 +3,8 @@ from configparser import ConfigParser
 
 from dweet2ser.local_device import LocalDevice
 from dweet2ser.remote_device import RemoteDevice
-from dweet2ser.settings import sys_stamp, CONFIG_DEFAULTS, DEFAULT_CONFIG_FILE, s_print
+from dweet2ser.settings import (CONFIG_DEFAULTS, DEFAULT_CONFIG_FILE, s_print,
+                                sys_stamp)
 
 
 class Dweet2serConfiguration(object):

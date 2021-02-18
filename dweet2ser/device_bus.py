@@ -1,10 +1,11 @@
 import threading
 import time
 
+from colorama import Fore, Style
+from colorama import init as colorama_init
 from termcolor import colored
-from colorama import init as colorama_init, Fore, Style
 
-from dweet2ser.settings import timestamp, internet_connection, s_print
+from dweet2ser.settings import internet_connection, s_print, timestamp
 
 colorama_init()
 
