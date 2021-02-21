@@ -60,6 +60,7 @@ class RemoteDevice(object):
             # if there's no connection save the message to resend on reconnect
             s_print(f"{timestamp()}No connection to {self.name}. Saving message to queue.")
             self._message_queue.append(message)
+            self.exc = True
             return False
 
     def send_message_queue(self):
