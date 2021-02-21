@@ -29,6 +29,8 @@ def add_device():
     if location == "1":
         port = s_input("Port: ")
         baudrate = s_input("Baudrate: ")
+        if baudrate == "":
+            baudrate = 9600
         try:
             d = local_device.LocalDevice(
                 port=port, 

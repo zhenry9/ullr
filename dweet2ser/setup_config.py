@@ -37,7 +37,7 @@ class Dweet2serConfiguration(object):
                     mute = False
                 if location == "local":
                     port = self.parser[d]["port"]
-                    baudrate = self.parser[d]["baud"]
+                    baudrate = int(self.parser[d]["baud"])
                     try:
                         dev = LocalDevice(port, dev_type, name, mute, baudrate)
                         self.bus.add_device(dev)
@@ -74,7 +74,7 @@ class Dweet2serConfiguration(object):
             if type(dev).__name__ == "LocalDevice":
                 self.parser[dev.name]["location"] = "local"
                 self.parser[dev.name]["port"] = dev.port_name
-                self.parser[dev.name]["baudrate"] = dev.baudrate
+                self.parser[dev.name]["baud"] = dev.baudrate
             if type(dev).__name__ == "RemoteDevice":
                 self.parser[dev.name]["location"] = "remote"
                 self.parser[dev.name]["thing_name"] = dev.thing_id
@@ -88,6 +88,7 @@ class Dweet2serConfiguration(object):
             if type(dev).__name__ == "LocalDevice":
                 self.parser[dev.name]["location"] = "local"
                 self.parser[dev.name]["port"] = dev.port_name
+                self.parser[dev.name]["baud"] = str(dev.baudrate)
             if type(dev).__name__ == "RemoteDevice":
                 self.parser[dev.name]["location"] = "remote"
                 self.parser[dev.name]["thing_name"] = dev.thing_id

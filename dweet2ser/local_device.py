@@ -17,6 +17,7 @@ class LocalDevice(object):
         self.type_color = "red"
         self.port_name = port
         self.mode = mode
+        self.baudrate = baudrate
         self.serial_port = serial.Serial(port=port,
                                          baudrate=baudrate,
                                          timeout=0.1)

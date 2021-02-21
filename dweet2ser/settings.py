@@ -29,7 +29,8 @@ CONFIG_DEFAULTS = {"type": "",
                    "port": "",
                    "thing_name": "dweet2ser_default",
                    "key": "None",
-                   "mute": "False"
+                   "mute": "False",
+                   "baud": "9600"
                    }
 
 sys_stamp = "[ " + Fore.LIGHTBLACK_EX + "sys" + Style.RESET_ALL + " ] "
