@@ -11,13 +11,15 @@ class LocalDevice(object):
     """
     A device connected to a serial port on the local machine.
     """
-    def __init__(self, port, mode, name="Local Device", mute=False):
+    def __init__(self, port, mode, name="Local Device", mute=False, baudrate=9600):
         self.name = name
         self.type = "serial"
         self.type_color = "red"
         self.port_name = port
         self.mode = mode
-        self.serial_port = serial.Serial(self.port_name)
+        self.serial_port = serial.Serial(port=port,
+                                         baudrate=baudrate,
+                                         timeout=0.1)
         self._last_message = ''
         self.mute = mute
         self.exc = False
@@ -43,8 +45,7 @@ class LocalDevice(object):
         # TODO: test with a variety of devices and protocols
         while self.listening:
             if ser.in_waiting > 0:
-                time.sleep(.1) # wait until all the data is in the buffer
-                ser_data = ser.read(ser.in_waiting)
+                ser_data = ser.read(100)
                 self._last_message = ser_data.hex()
                 yield ser_data.hex()
             else:

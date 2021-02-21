@@ -60,7 +60,6 @@ class RemoteDevice(object):
             # if there's no connection save the message to resend on reconnect
             s_print(f"{timestamp()}No connection to {self.name}. Saving message to queue.")
             self._message_queue.append(message)
-            self.exc = True
             return False
 
     def send_message_queue(self):
@@ -74,18 +73,27 @@ class RemoteDevice(object):
 
     def _send_dweet(self, content):
         try:
-            dweepy.dweet_for(self.thing_id, content, key=self.thing_key, session=self._session)
+            dweepy.dweet_for(self.thing_id, content, key=self.thing_key, session=self._session, timeout=10)
             return True
 
         except dweepy.DweepyError as e:
             s_print(timestamp() + str(e))
-            s_print(f"{timestamp()}Trying again...")
-            time.sleep(1.5)
-            return self._send_dweet(content)
+            if str(e) == "Rate limit exceeded, try again in 1 second(s).":
+                s_print(f"{timestamp()}Trying again...")
+                time.sleep(1.5)
+                return self._send_dweet(content)
+            else:
+                return False
 
         except (ConnectionError, ProtocolError, OSError) as e:
             s_print(timestamp() + str(e))
             s_print(f"{timestamp()}Connection to {self.name} lost.")
+            self.exc = True
+            return False
+
+        except Exception as e:
+            s_print(f"{timestamp()}Unexpected error.")
+            s_print(timestamp() + str(e))
             self.exc = True
             return False
 

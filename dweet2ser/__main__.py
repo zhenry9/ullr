@@ -5,8 +5,8 @@ import time
 from colorama import init as colorama_init
 from termcolor import colored
 
-from dweet2ser import remote_device, local_device, device_bus
-from dweet2ser.settings import sys_stamp, s_print, s_input
+from dweet2ser import device_bus, local_device, remote_device
+from dweet2ser.settings import s_input, s_print, sys_stamp
 from dweet2ser.setup_config import Dweet2serConfiguration
 
 colorama_init()
@@ -28,8 +28,15 @@ def add_device():
 
     if location == "1":
         port = s_input("Port: ")
+        baudrate = s_input("Baudrate: ")
         try:
-            d = local_device.LocalDevice(port, mode, name, mute)
+            d = local_device.LocalDevice(
+                port=port, 
+                mode=mode,
+                name=name, 
+                mute=mute, 
+                baudrate=baudrate
+                )
         except Exception as e:
             s_print(e)
 

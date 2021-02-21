@@ -37,8 +37,9 @@ class Dweet2serConfiguration(object):
                     mute = False
                 if location == "local":
                     port = self.parser[d]["port"]
+                    baudrate = self.parser[d]["baud"]
                     try:
-                        dev = LocalDevice(port, dev_type, name, mute)
+                        dev = LocalDevice(port, dev_type, name, mute, baudrate)
                         self.bus.add_device(dev)
                         s_print(f"{sys_stamp}Added {location} {dev_type} device '{name}' from config.")
                     except Exception as e:
@@ -73,6 +74,7 @@ class Dweet2serConfiguration(object):
             if type(dev).__name__ == "LocalDevice":
                 self.parser[dev.name]["location"] = "local"
                 self.parser[dev.name]["port"] = dev.port_name
+                self.parser[dev.name]["baudrate"] = dev.baudrate
             if type(dev).__name__ == "RemoteDevice":
                 self.parser[dev.name]["location"] = "remote"
                 self.parser[dev.name]["thing_name"] = dev.thing_id
