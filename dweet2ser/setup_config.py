@@ -3,8 +3,7 @@ from configparser import ConfigParser
 
 from dweet2ser.local_device import LocalDevice
 from dweet2ser.remote_device import RemoteDevice
-from dweet2ser.settings import (CONFIG_DEFAULTS, DEFAULT_CONFIG_FILE, s_print,
-                                sys_stamp)
+from dweet2ser.settings import CONFIG_COMMENTS, sys_stamp, CONFIG_DEFAULTS, DEFAULT_CONFIG_FILE, s_print
 
 
 class Dweet2serConfiguration(object):
@@ -38,8 +37,9 @@ class Dweet2serConfiguration(object):
                     mute = False
                 if location == "local":
                     port = self.parser[d]["port"]
+                    baudrate = int(self.parser[d]["baud"])
                     try:
-                        dev = LocalDevice(port, dev_type, name, mute)
+                        dev = LocalDevice(port, dev_type, name, mute, baudrate)
                         self.bus.add_device(dev)
                         s_print(f"{sys_stamp}Added {location} {dev_type} device '{name}' from config.")
                     except Exception as e:
@@ -74,6 +74,7 @@ class Dweet2serConfiguration(object):
             if type(dev).__name__ == "LocalDevice":
                 self.parser[dev.name]["location"] = "local"
                 self.parser[dev.name]["port"] = dev.port_name
+                self.parser[dev.name]["baud"] = dev.baudrate
             if type(dev).__name__ == "RemoteDevice":
                 self.parser[dev.name]["location"] = "remote"
                 self.parser[dev.name]["thing_name"] = dev.thing_id
@@ -87,6 +88,7 @@ class Dweet2serConfiguration(object):
             if type(dev).__name__ == "LocalDevice":
                 self.parser[dev.name]["location"] = "local"
                 self.parser[dev.name]["port"] = dev.port_name
+                self.parser[dev.name]["baud"] = str(dev.baudrate)
             if type(dev).__name__ == "RemoteDevice":
                 self.parser[dev.name]["location"] = "remote"
                 self.parser[dev.name]["thing_name"] = dev.thing_id
@@ -96,12 +98,7 @@ class Dweet2serConfiguration(object):
         os.makedirs(os.path.dirname(DEFAULT_CONFIG_FILE), exist_ok=True)
 
         with open(DEFAULT_CONFIG_FILE, 'w') as configfile:
-            configfile.write("\n; The settings in the [DEFAULT] section reference the values set in 'settings.py' "
-                             "in the package directory."
-                             "\n; They should be here for config file stability."
-                             "\n; If you would like to change these default settings permanently, "
-                             "you should do so in settings.py, not here."
-                             "\n; Make sure you know what you're doing.\n\n")
+            configfile.write(CONFIG_COMMENTS)
         with open(DEFAULT_CONFIG_FILE, 'a') as configfile:
             self.parser.write(configfile)
 
@@ -115,6 +112,7 @@ class Dweet2serConfiguration(object):
             try:
                 self.parser = ConfigParser()
                 self.parser.read(file)
+                self._add_defaults_to_parser()
                 return True
             except Exception as e:
                 s_print(f"{sys_stamp}Failed to read config file: {e}")
@@ -125,10 +123,10 @@ class Dweet2serConfiguration(object):
             s_print(f"{sys_stamp}Config file {file} not found.")
             if file == DEFAULT_CONFIG_FILE:
                 s_print(f"{sys_stamp}Creating empty default file at: {file}")
-                os.makedirs(os.path.dirname(DEFAULT_CONFIG_FILE), exist_ok=True)
-                with open(DEFAULT_CONFIG_FILE, 'w') as configfile:
-                    self.parser.write(configfile)
+                self.save_current_to_file()
             return False
 
     def _add_defaults_to_parser(self):
-        self.parser["DEFAULT"] = CONFIG_DEFAULTS
+        for item in CONFIG_DEFAULTS:
+            if not self.parser.has_option("DEFAULT", item):
+                self.parser["DEFAULT"][item] = CONFIG_DEFAULTS[item]

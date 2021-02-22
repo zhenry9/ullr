@@ -44,12 +44,12 @@ def _request(method, url, session=None, **kwargs):
     return response_json['with']
 
 
-def _send_dweet(payload, url, params=None, session=None):
+def _send_dweet(payload, url, params=None, session=None, timeout=None):
     """Send a dweet to dweet.io
     """
     data = json.dumps(payload)
     headers = {'Content-type': 'application/json'}
-    return _request('post', url, data=data, headers=headers, params=params, session=session)
+    return _request('post', url, data=data, headers=headers, params=params, session=session, timeout=timeout)
 
 
 def dweet(payload, session=None):
@@ -58,14 +58,14 @@ def dweet(payload, session=None):
     return _send_dweet(payload, '/dweet', session=session)
 
 
-def dweet_for(thing_name, payload, key=None, session=None):
+def dweet_for(thing_name, payload, key=None, session=None, timeout=None):
     """Send a dweet to dweet.io for a thing with a known name
     """
     if key is not None:
         params = {'key': key}
     else:
         params = None
-    return _send_dweet(payload, '/dweet/for/{0}'.format(thing_name), params=params, session=session)
+    return _send_dweet(payload, '/dweet/for/{0}'.format(thing_name), params=params, session=session, timeout=timeout)
 
 
 def get_latest_dweet_for(thing_name, key=None, session=None):
