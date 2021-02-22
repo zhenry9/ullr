@@ -23,6 +23,13 @@ def _get_default_config_file():
 
 DEFAULT_CONFIG_FILE = _get_default_config_file()
 
+CONFIG_COMMENTS = str("\n; The settings in the [DEFAULT] section reference the values set in 'settings.py' " +
+                      "in the package directory." +
+                      "\n; They should be here for config file stability." +
+                      "\n; If you would like to change these default settings permanently, " +
+                      "you should do so in settings.py, not here." +
+                      "\n; Make sure you know what you're doing.\n\n")
+
 # defaults when writing new configuration
 CONFIG_DEFAULTS = {"type": "",
                    "location": "",
