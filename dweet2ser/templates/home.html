@@ -9,13 +9,18 @@
         <div class="menu_bar">
             <button onclick="openForm('addRemote')">Add Remote Device</button>
             <div class="form-popup" id="addRemote">
-                <form action="/add_remote" class="form-container">
-                    <h1>Add Device</h1>
+                <form action="/add_remote" method="POST" class="form-container">
+                    <h1>Add Remote</h1>
     
                     <input type="text" placeholder="Enter Name" name="name" required>
     
                     <input type="text" placeholder="Enter Dweet ID" name="thing_id" required>
                     
+                    <input type="radio" id="DCE" name="mode" value="DCE" checked>
+                    <label for="DCE">DCE</label>
+                    <input type="radio" id="DTE" name="mode" value="DTE">
+                    <label for="DTE">DTE</label>
+
                     <label>
                         <input type="checkbox" name="mute"/>Mute?
                     </label>
@@ -26,12 +31,17 @@
             </div>
             <button onclick="openForm('addLocal')">Add Local Device</button>
             <div class="form-popup" id="addLocal">
-                <form action="/add_local" class="form-container">
-                    <h1>Add Device</h1>
+                <form action="/add_local" method="POST" class="form-container">
+                    <h1>Add Local</h1>
     
                     <input type="text" placeholder="Enter Name" name="name" required>
     
                     <input type="text" placeholder="Enter Port" name="port" required>
+
+                    <input type="radio" id="DCE" name="mode" value="DCE" checked>
+                    <label for="DCE">DCE</label>
+                    <input type="radio" id="DTE" name="mode" value="DTE">
+                    <label for="DTE">DTE</label>
                     
                     <label for="baud">Baudrate:</label>
                     <select id="baud" name="baud">
@@ -52,8 +62,8 @@
         </div>
         <div class="main_window">
             <div class="status">
-                <h1>dweet2ser</h1>
-                <p>From config file: {{ file }}</p>
+                <div class="title"><h1>dweet2ser</h1></div>
+                <div class="subtitle">From config file: {{ file }}</div>
 
             </div>
             <div class="device_window">
@@ -81,16 +91,22 @@
                 </div>
                 {% endfor %}
             </div>
-            <pre class="console">
-                {{ console }}
-            </pre>
+            <div class="console" id="console">
+                {% for line in console %}
+                <pre>{{ line }}</pre>
+                {% endfor %}
+            </div>
         </div>
         
         
 
         <script>
-            var autoscroll_elements = ["timing_tape", "console"]
+            var autoscroll_elements = ["timing_tape div", "console"]
             function openForm(id) {
+                var elements = document.getElementsByClassName("form-popup");
+                for(var i=0; i<elements.length; i=i+1){
+                    elements[i].style.display = "none";
+                }
                 document.getElementById(id).style.display = "flex";
             }
             
@@ -98,17 +114,23 @@
                 document.getElementById(id).style.display = "none";
             }
 
-            function updateScroll(){
-                for(var i=0, len=autoscroll_elements.length|0; i<len; i=i+1|0){
-                    var elements = document.getElementsByClassName(autoscroll_elements[i]);
-                    for(var j=0, leng=elements.length|0; i<leng; i=i+1|0){
-                        var item = elements[j];
-                        item.scrollTop = item.scrollHeight;
-                    }
-                }
-            setInterval(updateScroll,1000); 
-                
+            function scrollTapes(){
+                var elements = document.querySelectorAll(".timing_tape div");
+                for(var j=0; j<elements.length; j=j+1){
+                    var item = elements[j];
+                    item.scrollTop = item.scrollHeight;
+                }  
             }
+
+            function scrollConsole(){
+                element = document.getElementById("console")
+                element.scrollTop = element.scrollHeight;
+            }
+
+            setInterval(scrollTapes, 1000);
+            setInterval(scrollConsole, 1000) 
+                
+            
         </script>
     </body>
 </html>

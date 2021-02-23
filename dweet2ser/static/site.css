@@ -39,21 +39,29 @@ body {
 }
 
 .status {
+    display: flex;
+    align-items: center;
     background-color: black;
     color: white;
-    font-size: 15px;
+    font-size: 1em;
     line-height: .4;
     border-radius: 5px;
     margin: 0px;
-    padding: 12px;
+    padding: 20px;
     white-space: pre-wrap;
-    flex: 0 1 80px;
+    flex: 0 1 70px;
     overflow: auto;
 }
 
-.status h1 {
-    margin-top: 0px;
-    margin-bottom: 10px;
+.title {
+    flex: 0 1 auto;
+    margin-right: 2em;
+}
+
+.subtitle {
+    flex: 0 1 auto;
+    margin: 5px;
+    color: rgb(180, 180, 180);
 }
 
 .status h2 {
@@ -61,26 +69,32 @@ body {
 }
 
 .device {
+    display: flex;
     flex-grow: 0;
     flex-shrink: 1;
     margin: 5px;
     font-size: 13px;
-    max-width: 25%;
+    width: 18em;
     min-height: 0;
+    min-width: 0;
+    border-radius: 5px;
 }
 
 .device table {
+    flex: 0 1 auto;
     border-collapse: collapse;
-    width: 100%;
+    width: 18em;
     margin-bottom: 10px;
     overflow: scroll;
     overflow-x: scroll;
     min-height: 0;
+    min-width: 0;
+    border-radius: 5px;
   }
   
 .device td, .device th {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 2px;
   }
   
 .device tr:nth-child(even){background-color: #f2f2f2;}
@@ -135,7 +149,7 @@ body {
 }
 
 .form-container label{
-    display:block;
+    display:inline-block;
     justify-content: left;
 }
 
@@ -150,6 +164,7 @@ body {
 }
 
 .form-container input[type=checkbox], input[type=radio] {
+    display: inline-block;
     vertical-align: middle; 
     position: relative;
     bottom: .08em; /* this is a better value for different fonts! */
@@ -167,7 +182,7 @@ body {
 
 /* Set a style for the submit/login button */
 .form-container .btn {
-  background-color: cyan;
+  background-color: rgb(0, 201, 201);
   color: white;
   padding: 16px 20px;
   border: none;
@@ -179,7 +194,7 @@ body {
 
 /* Add a red background color to the cancel button */
 .form-container .cancel {
-  background-color: red;
+  background-color: rgb(199, 0, 0);
 }
 
 /* Add some hover effects to buttons */

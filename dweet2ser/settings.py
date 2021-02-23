@@ -1,4 +1,5 @@
 import datetime
+import time
 import os
 import socket
 from threading import Lock
@@ -8,7 +9,7 @@ from colorama import init as colorama_init
 
 colorama_init()
 
-WEB_CONSOLE_BUFFER = '\r'
+WEB_CONSOLE_BUFFER = []
 
 
 def _get_default_config_file():
@@ -66,9 +67,19 @@ def internet_connection(host="8.8.8.8", port=53, timeout=3):
 def print_to_web_console(message, endline = "\n"):
     """Thread safe print function"""
     global WEB_CONSOLE_BUFFER
-    WEB_CONSOLE_BUFFER += str(message) + str(endline)
+    WEB_CONSOLE_BUFFER.append(str(message))
 
 def get_console_buffer():
-    return WEB_CONSOLE_BUFFER
+    while True:
+        if len(WEB_CONSOLE_BUFFER) > 0:
+            yield WEB_CONSOLE_BUFFER.pop(0)
+        else:
+            time.sleep(.1)
 
-
+def get_available_com_ports():
+    names = []
+    import serial.tools.list_ports
+    ports = list(serial.tools.list_ports.comports())
+    for p in ports:
+        names.append(p[0])
+    return names
