@@ -5,15 +5,16 @@ from colorama import Fore, Style
 from colorama import init as colorama_init
 from termcolor import colored
 
-from dweet2ser.settings import internet_connection, s_print, timestamp
+from .settings import internet_connection, print_to_web_console, timestamp
 
 colorama_init()
 
 
 def _print_device_list(dev_list):
     """
-    Prints a list of devices in table form.
+    Returns a list of devices in table form.
     """
+    buf = ''
     cols = ["#".ljust(3),
             "Name".ljust(16),
             "Type".ljust(10),
@@ -25,31 +26,32 @@ def _print_device_list(dev_list):
     header = ''
     for col in cols:
         header = header + f"{col}  "
-    print(f"\t{Fore.LIGHTWHITE_EX}{header}{Style.RESET_ALL}")
+    buf += f"\t{header}\n"
 
     for i in range(0, len(dev_list)):
         num = str(i + 1)
         d = dev_list[i]
         if type(d).__name__ == "LocalDevice":
-            print(f"\t"
-                  f"{num.ljust(3)}  "
-                  f"{d.name.ljust(16)}  "
-                  f"{colored(d.type.ljust(10), d.type_color)}  "
-                  f"{d.port_name.ljust(15)}  "
-                  f"{''.ljust(20)}  "
-                  f"{''.ljust(10)}  "
-                  f"{str(d.mute).ljust(10)}  "
-                  )
+            buf += (f"\t"
+                    f"{num.ljust(3)}  "
+                    f"{d.name.ljust(16)}  "
+                    f"{d.type.ljust(10)}  "
+                    f"{d.port_name.ljust(15)}  "
+                    f"{''.ljust(20)}  "
+                    f"{''.ljust(10)}  "
+                    f"{str(d.mute).ljust(10)}  \n"
+                    )
         if type(d).__name__ == "RemoteDevice":
-            print(f"\t"
-                  f"{num.ljust(3)}  "
-                  f"{d.name.ljust(16)}  "
-                  f"{colored(d.type.ljust(10), d.type_color)}  "
-                  f"{''.ljust(15)}  "
-                  f"{d.thing_id.ljust(20)}  "
-                  f"{str(d.locked).ljust(10)}  "
-                  f"{str(d.mute).ljust(10)}  "
-                  )
+            buf += (f"\t"
+                    f"{num.ljust(3)}  "
+                    f"{d.name.ljust(16)}  "
+                    f"{d.type.ljust(10)}  "
+                    f"{''.ljust(15)}  "
+                    f"{d.thing_id.ljust(20)}  "
+                    f"{str(d.locked).ljust(10)}  "
+                    f"{str(d.mute).ljust(10)}  \n"
+                    )
+    return buf
 
 
 class DeviceBus(object):
@@ -90,26 +92,28 @@ class DeviceBus(object):
                 found = True
                 d.kill_listen_stream()
                 self.dce_devices.remove(d)
-                print(f"{timestamp()}Device '{d.name}' removed.")
+                print_to_web_console(f"{timestamp()}Device '{d.name}' removed.")
 
         for d in self.dte_devices:
             if d.name == device_name:
                 found = True
                 d.kill_listen_stream()
                 self.dte_devices.remove(d)
-                print(f"{timestamp()}Device '{d.name}' removed.")
+                print_to_web_console(f"{timestamp()}Device '{d.name}' removed.")
 
         if not found:
-            print("Device not found.")
+            print_to_web_console(f"{timestamp}Device {device_name} not found.")
 
     def print_status(self):
         """
-        Prints a list of all devices in the connection.
+        Returns a list of all devices in the connection.
         """
-        print("\nDCE Devices")
-        _print_device_list(self.dce_devices)
-        print("\nDTE Devices")
-        _print_device_list(self.dte_devices)
+        buf = ''
+        buf += "\nDCE Devices"
+        buf += _print_device_list(self.dce_devices)
+        buf += "\nDTE Devices"
+        buf += _print_device_list(self.dte_devices)
+        return buf
 
     def print_threads(self):
         print(self.listen_threads)
@@ -118,14 +122,14 @@ class DeviceBus(object):
         """
         Listens for messages from the given device, then writes to all appropriate devices on bus.
         """
-        s_print(f"{timestamp()}Listen stream started for {device.name}.")
+        print_to_web_console(f"{timestamp()}Listen stream started for {device.name}.")
 
         for message in device.listen():
             message = str(message)
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip().replace('\r', '')
 
-            s_print(f"\n{timestamp()}Received {colored(device.type, device.type_color)} message from {device.name}:"
-                    f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
+            print_to_web_console(f"\n{timestamp()}Received {device.type} message from {device.name}:"
+                    f" {message_decoded}")
 
             if device.mode == "DTE":
                 # Messages from DTE devices get sent to all DCE devices.
@@ -138,7 +142,7 @@ class DeviceBus(object):
                     d.write(message)
 
             else:
-                s_print("Mode not found")
+                print_to_web_console("Mode not found")
 
         return True
 
@@ -158,7 +162,7 @@ class DeviceBus(object):
             time.sleep(.01)
 
     def _restart_thread(self, device):
-        s_print(f"{timestamp()}Reconnecting to {device.name}.")
+        print_to_web_console(f"{timestamp()}Reconnecting to {device.name}.")
         device.kill_listen_stream()  # attempt to kill the listen thread if it is still responding
         device.exc = False  # reset the exception flag to false
         device.restart_session()  # start a new Session

@@ -1,19 +1,19 @@
 import argparse
 import sys
-import time
 
 from colorama import init as colorama_init
 from termcolor import colored
 
-from dweet2ser import device_bus, local_device, remote_device
-from dweet2ser.settings import s_input, s_print, sys_stamp
-from dweet2ser.setup_config import Dweet2serConfiguration
+from . import device_bus, local_device, remote_device, views, webapp
+from .settings import print_to_web_console, sys_stamp
+from .setup_config import Dweet2serConfiguration
 
 colorama_init()
 
 BUS = device_bus.DeviceBus()
 CFG = Dweet2serConfiguration(BUS)
 
+views.init(BUS, CFG)
 
 def add_device():
     name = s_input("\nDevice Name: ")
@@ -40,7 +40,7 @@ def add_device():
                 baudrate=baudrate
                 )
         except Exception as e:
-            s_print(e)
+            print_to_web_console(e)
 
     elif location == "2":
         thing_id = s_input("Thing ID: ")
@@ -50,9 +50,9 @@ def add_device():
         try:
             d = remote_device.RemoteDevice(thing_id, mode, key, name, mute)
         except Exception as e:
-            s_print(e)
+            print_to_web_console(e)
     else:
-        s_print("Invalid input")
+        print_to_web_console("Invalid input")
         return
     if d:
         BUS.add_device(d)
@@ -79,17 +79,12 @@ def process_input(cmd, ):
         return CFG.save_current_to_file()
     else:
         # print command help
-        s_print("\tType 'info' to display session info.\n"
+        print_to_web_console("\tType 'info' to display session info.\n"
                 "\tType 'add' to add a device.\n"
                 "\tType 'remove' to remove a device.\n"
                 "\tType 'save' to save the current configuration as default."
                 )
         return
-
-
-def idle():
-    while True:
-        time.sleep(1)
 
 
 def main():
@@ -104,12 +99,6 @@ def main():
                               "\ne.g. --override DCE /dev/ttyUSB0 dweet2ser_default.")
     args = arg_parser.parse_args()
 
-    s_print("\t\t*************************************************")
-    s_print("\t\t**               " + colored("Dweet", "cyan") + " to " +
-            colored("Serial", "red") + "               **")
-    s_print("\t\t**                by Zach Henry                **")
-    s_print("\t\t*************************************************")
-
     if args.override:
         if args.override[0].upper() == "DTE":
             other_mode = "DCE"
@@ -121,7 +110,7 @@ def main():
             BUS.add_device(local)
             BUS.add_device(remote)
         except Exception as e:
-            s_print(f"{sys_stamp}Override failed: {e}")
+            print_to_web_console(f"{sys_stamp}Override failed: {e}")
 
     elif args.file:
         CFG.add_devices_from_file(args.file)
@@ -129,16 +118,7 @@ def main():
     elif not args.empty:
         CFG.add_devices_from_file()
 
-    while True:
-        cmd = ''
-        try:
-            time.sleep(.0001)
-            cmd = s_input("\nType 'exit' to exit or ENTER for help.\n")
-        except EOFError:  # if ran as a daemon, make sure we don't reach EOF prematurely
-            idle()
-        if cmd == 'exit':
-            break
-        process_input(cmd)
+    webapp.run()
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ from colorama import init as colorama_init
 
 colorama_init()
 
-s_print_lock = Lock()
+WEB_CONSOLE_BUFFER = '\r'
 
 
 def _get_default_config_file():
@@ -41,11 +41,11 @@ CONFIG_DEFAULTS = {"type": "",
                    "baud": "9600"
                    }
 
-sys_stamp = "[ " + Fore.LIGHTBLACK_EX + "sys" + Style.RESET_ALL + " ] "
+sys_stamp = "[ sys ] "
 
 
 def timestamp():
-    return "[" + Fore.LIGHTBLACK_EX + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + Style.RESET_ALL + "] "
+    return "[" + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "] "
 
 
 def internet_connection(host="8.8.8.8", port=53, timeout=3):
@@ -63,14 +63,12 @@ def internet_connection(host="8.8.8.8", port=53, timeout=3):
         return False
 
 
-def s_print(*a, **b):
+def print_to_web_console(message, endline = "\n"):
     """Thread safe print function"""
-    with s_print_lock:
-        print(*a, **b)
+    global WEB_CONSOLE_BUFFER
+    WEB_CONSOLE_BUFFER += str(message) + str(endline)
+
+def get_console_buffer():
+    return WEB_CONSOLE_BUFFER
 
 
-def s_input(*a):
-    """Thread safe input function"""
-    with s_print_lock:
-        print(*a, end='')
-    return input('')

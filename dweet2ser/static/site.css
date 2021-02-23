@@ -1,0 +1,215 @@
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 100%;
+    font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,sans-serif;
+}
+
+* {box-sizing: border-box;}
+
+.menu_bar{
+    display: flex;
+    flex-direction: column-reverse;
+    flex: 0 1 20%;
+}
+
+.menu_bar button{
+    background-color: #555;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.8;
+    position: relative;
+    width: 100%;
+}
+
+.main_window{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+.status {
+    background-color: black;
+    color: white;
+    font-size: 15px;
+    line-height: .4;
+    border-radius: 5px;
+    margin: 0px;
+    padding: 12px;
+    white-space: pre-wrap;
+    flex: 0 1 80px;
+    overflow: auto;
+}
+
+.status h1 {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.status h2 {
+    margin: 0px;
+}
+
+.device {
+    flex-grow: 0;
+    flex-shrink: 1;
+    margin: 5px;
+    font-size: 13px;
+    max-width: 25%;
+    min-height: 0;
+}
+
+.device table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 10px;
+    overflow: scroll;
+    overflow-x: scroll;
+    min-height: 0;
+  }
+  
+.device td, .device th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+.device tr:nth-child(even){background-color: #f2f2f2;}
+  
+.device tr:nth-child(odd) {background-color: #ddd;}
+  
+.serial_device th {
+    background-color: rgb(170, 56, 56);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    color: white;
+}
+
+.dweet_device th {
+    background-color: cyan;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    color: white;
+}
+
+.timing_tape {
+    background-color: white;  
+}
+
+.timing_tape div {
+    white-space: pre;
+    overflow: scroll;
+    max-width: 18em;
+    min-width: 0;
+    max-height: 10em;
+    min-height: 0;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: relative;
+  top: 0;
+  right: 0;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+  justify-content: left;
+}
+
+/* Add styles to the form container */
+.form-container {
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+}
+
+.form-container label{
+    display:block;
+    justify-content: left;
+}
+
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 1px 0 1px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+.form-container input[type=checkbox], input[type=radio] {
+    vertical-align: middle; 
+    position: relative;
+    bottom: .08em; /* this is a better value for different fonts! */
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+.form-container select{
+    display: inline-flex;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: cyan;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin: 1px 0 1px 0;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+.device_window{
+    display: flex;
+    flex-direction: row;
+    flex: 0, 1, 100%;
+    height: 100%;
+    background-color: lightslategray;
+    border-radius: 5px;
+    align-items: flex-end;
+}
+
+.console {
+    font-size: 13px;
+    line-height: 1.30769231;
+    color: whitesmoke;
+    background-color: black;
+    border-radius: 5px;
+    margin: 0;
+    padding: 12px;
+    overflow: scroll;
+    overflow-x: scroll;
+    flex: 0 1 200px;
+    text-indent: 0px;
+    max-width: 100%;
+    min-width: 0;
+    justify-self: flex-end;
+}

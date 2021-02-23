@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>dweet2ser status</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
+    </head>
+    <body>
+        <div class="menu_bar">
+            <button onclick="openForm('addRemote')">Add Remote Device</button>
+            <div class="form-popup" id="addRemote">
+                <form action="/add_remote" class="form-container">
+                    <h1>Add Device</h1>
+    
+                    <input type="text" placeholder="Enter Name" name="name" required>
+    
+                    <input type="text" placeholder="Enter Dweet ID" name="thing_id" required>
+                    
+                    <label>
+                        <input type="checkbox" name="mute"/>Mute?
+                    </label>
+    
+                    <button type="submit" class="btn">Add</button>
+                    <button type="button" class="btn cancel" onclick="closeForm('addRemote')">Close</button>
+                </form>
+            </div>
+            <button onclick="openForm('addLocal')">Add Local Device</button>
+            <div class="form-popup" id="addLocal">
+                <form action="/add_local" class="form-container">
+                    <h1>Add Device</h1>
+    
+                    <input type="text" placeholder="Enter Name" name="name" required>
+    
+                    <input type="text" placeholder="Enter Port" name="port" required>
+                    
+                    <label for="baud">Baudrate:</label>
+                    <select id="baud" name="baud">
+                        <option value="9600">9600</option>
+                        <option value="1200">1200</option>
+                        <option value="2400">2400</option>
+                        <option value="4800">4800</option>
+                    </select>
+                    
+                    <label>
+                        Mute? <input type="checkbox" name="mute"/>
+                    </label>
+    
+                    <button type="submit" class="btn">Add</button>
+                    <button type="button" class="btn cancel" onclick="closeForm('addLocal')">Close</button>
+                </form>
+            </div>
+        </div>
+        <div class="main_window">
+            <div class="status">
+                <h1>dweet2ser</h1>
+                <p>From config file: {{ file }}</p>
+
+            </div>
+            <div class="device_window">
+                
+                {% for d in bus.dce_devices %}
+                <div class="device">
+                    {% if d.type == "serial" %}
+                        <table class="serial_device">
+                            <tr><td class="timing_tape" colspan="2"><div>{{ d.tape }}</div></td></tr>
+                            <tr><th colspan="2">{{ d.name }}</th></tr>
+                            <tr><th>Port:</th><td>{{ d.port_name }}</td></tr>
+                            <tr><th>Baud:</th><td>{{ d.baudrate }}</td></tr>
+                            <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
+                        </table>
+                    {% endif %}
+                    {% if d.type == "dweet" %}
+                        <table class="dweet_device">
+                            <tr><td class="timing_tape" colspan="2"><div>{{ d.tape }}</div></td></tr>
+                            <tr><th colspan="2">{{ d.name }}</th></tr>
+                            <tr><th>Dweet ID:</th><td>{{ d.thing_id }}</td></tr>
+                            <tr><th>Locked?</th><td>{{ d.locked }}</td></tr>
+                            <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
+                        </table>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <pre class="console">
+                {{ console }}
+            </pre>
+        </div>
+        
+        
+
+        <script>
+            var autoscroll_elements = ["timing_tape", "console"]
+            function openForm(id) {
+                document.getElementById(id).style.display = "flex";
+            }
+            
+            function closeForm(id) {
+                document.getElementById(id).style.display = "none";
+            }
+
+            function updateScroll(){
+                for(var i=0, len=autoscroll_elements.length|0; i<len; i=i+1|0){
+                    var elements = document.getElementsByClassName(autoscroll_elements[i]);
+                    for(var j=0, leng=elements.length|0; i<leng; i=i+1|0){
+                        var item = elements[j];
+                        item.scrollTop = item.scrollHeight;
+                    }
+                }
+            setInterval(updateScroll,1000); 
+                
+            }
+        </script>
+    </body>
+</html>
