@@ -25,14 +25,14 @@ def stream_template(template_name, **context):
 def home():
     
     console_buffer = settings.get_console_buffer()
-    return Response(stream_with_context(stream_template(
+    return render_template(
         "home.html",
         console=console_buffer,
         bus=bus,
         cfg=cfg,
         file=settings.DEFAULT_CONFIG_FILE,
         ports=settings.get_available_com_ports()
-    )))
+    )
 
 @webapp.route("/add_local", methods=["GET", "POST"])
 def add_local():
