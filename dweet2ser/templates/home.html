@@ -72,7 +72,7 @@
                 <div class="device">
                     {% if d.type == "serial" %}
                         <table class="serial_device">
-                            <tr><td class="timing_tape" colspan="2"><div>{{ d.tape }}</div></td></tr>
+                            <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
                             <tr><th colspan="2">{{ d.name }}</th></tr>
                             <tr><th>Port:</th><td>{{ d.port_name }}</td></tr>
                             <tr><th>Baud:</th><td>{{ d.baudrate }}</td></tr>
@@ -81,7 +81,7 @@
                     {% endif %}
                     {% if d.type == "dweet" %}
                         <table class="dweet_device">
-                            <tr><td class="timing_tape" colspan="2"><div>{{ d.tape }}</div></td></tr>
+                            <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
                             <tr><th colspan="2">{{ d.name }}</th></tr>
                             <tr><th>Dweet ID:</th><td>{{ d.thing_id }}</td></tr>
                             <tr><th>Locked?</th><td>{{ d.locked }}</td></tr>
@@ -91,14 +91,14 @@
                 </div>
                 {% endfor %}
             </div>
-            <pre class="console" id="console">
-                {{ console }}
-            </pre>
+            <pre class="console" id="console"></pre>
         </div>
         
-        
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js" 
+            integrity="sha512-oFOCo2/3DtjrJG4N27BjSLQWoiBv171sK6a+JiWjp/7agxC2nCUP358AqzxkBUb5jX8g6CYLPdSKQTbC0weCwA==" crossorigin="anonymous"></script>
         <script>
+            var socket = io.connect('http://' + document.domain + ':' + location.port);
             var autoscroll_elements = ["timing_tape div", "console"]
             function openForm(id) {
                 var elements = document.getElementsByClassName("form-popup");
@@ -120,13 +120,21 @@
                 }  
             }
 
-            function scrollConsole(){
-                element = document.getElementById("console")
-                element.scrollTop = element.scrollHeight;
-            }
+            socket.on("connect", function(){
 
-            setInterval(scrollTapes, 1000);
-            setInterval(scrollConsole, 1000) 
+            })
+
+            socket.on("console", function(buffer){
+                $("#console").text(buffer);
+                var element = document.getElementById("console");
+                element.scrollTop = element.scrollHeight;
+            })
+
+            socket.on("tape_feed", function(data){
+                var tape_cell = document.getElementById(data["target"]);
+                tape_cell.textContent = data["buffer"];
+                tape_cell.scrollTop = tape_cell.scrollHeight;
+            })
                 
             
         </script>

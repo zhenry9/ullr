@@ -23,11 +23,8 @@ def stream_template(template_name, **context):
 
 @webapp.route("/")
 def home():
-    
-    console_buffer = settings.get_console_buffer()
     return render_template(
         "home.html",
-        console=console_buffer,
         bus=bus,
         cfg=cfg,
         file=settings.DEFAULT_CONFIG_FILE,

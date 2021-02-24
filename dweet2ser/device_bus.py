@@ -5,7 +5,8 @@ from colorama import Fore, Style
 from colorama import init as colorama_init
 from termcolor import colored
 
-from .settings import internet_connection, print_to_web_console, timestamp
+from .settings import internet_connection, timestamp
+from .socketing import print_to_web_console, print_tape
 
 colorama_init()
 
@@ -128,6 +129,7 @@ class DeviceBus(object):
             message = str(message)
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip().replace('\r', '')
 
+            print_tape(device.sku, message_decoded)
             print_to_web_console(f"\n{timestamp()}Received {device.type} message from {device.name}:"
                     f" {message_decoded}")
 

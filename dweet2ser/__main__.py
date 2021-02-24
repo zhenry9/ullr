@@ -1,14 +1,11 @@
 import argparse
 import sys
 
-from colorama import init as colorama_init
-from termcolor import colored
-
-from . import device_bus, local_device, remote_device, views, webapp
-from .settings import print_to_web_console, sys_stamp
+from . import device_bus, local_device, remote_device, views, webapp, socketio
+from .settings import sys_stamp
+from .socketing import print_to_web_console
 from .setup_config import Dweet2serConfiguration
 
-colorama_init()
 
 BUS = device_bus.DeviceBus()
 CFG = Dweet2serConfiguration(BUS)
@@ -46,8 +43,7 @@ def main():
     elif not args.empty:
         CFG.add_devices_from_file()
 
-    webapp.run()
-
+    socketio.run(webapp)
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -1,14 +1,7 @@
 import datetime
 import os
 import socket
-from threading import Lock
 
-from colorama import Fore, Style
-from colorama import init as colorama_init
-
-colorama_init()
-
-WEB_CONSOLE_BUFFER = '\r'
 
 
 def _get_default_config_file():
@@ -61,15 +54,6 @@ def internet_connection(host="8.8.8.8", port=53, timeout=3):
     except socket.error as ex:
         #  print(ex)
         return False
-
-
-def print_to_web_console(message, endline = "\n"):
-    """Thread safe print function"""
-    global WEB_CONSOLE_BUFFER
-    WEB_CONSOLE_BUFFER += str(message) + str(endline)
-
-def get_console_buffer():
-    return WEB_CONSOLE_BUFFER
 
 def get_available_com_ports():
     names = []

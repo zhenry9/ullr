@@ -4,14 +4,15 @@ import time
 import serial
 from termcolor import colored
 
-from .settings import print_to_web_console, timestamp
-
+from .settings import timestamp
+from .socketing import print_to_web_console
 
 class LocalDevice(object):
     """
     A device connected to a serial port on the local machine.
     """
     def __init__(self, port, mode, name="Local Device", mute=False, baudrate=9600):
+        self.sku = id(self)
         self.name = name
         self.type = "serial"
         self.type_color = "red"
@@ -25,7 +26,6 @@ class LocalDevice(object):
         self.mute = mute
         self.exc = False
         self.listening = False
-        self.tape = ''
 
     def write(self, message: str):
         """

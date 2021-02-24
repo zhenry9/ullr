@@ -26,7 +26,8 @@
             "type": "python",
             "request": "launch",
             "module": "dweet2ser",
-            "sudo": true
+            "sudo": true,
+            /** "gevent": true **/
         },
         {
             "name": "sudo dweet2ser --empty",
