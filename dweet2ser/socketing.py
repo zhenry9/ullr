@@ -23,6 +23,12 @@ def print_tape(target, message):
     payload = {"target": target, "buffer": TAPES[target]}
     socketio.emit("tape_feed", payload)
 
+def load_tapes():
+    for tape in TAPES:
+        payload = {"target": tape, "buffer": TAPES[tape]}
+        socketio.emit("tape_feed", payload)
+
 @socketio.on("connect")
 def on_connect():
+    load_tapes()
     print_to_web_console(f"{timestamp()}Connected to web client.")
