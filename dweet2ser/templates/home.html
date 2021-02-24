@@ -99,7 +99,7 @@
             integrity="sha512-oFOCo2/3DtjrJG4N27BjSLQWoiBv171sK6a+JiWjp/7agxC2nCUP358AqzxkBUb5jX8g6CYLPdSKQTbC0weCwA==" crossorigin="anonymous"></script>
         <script>
             var socket = io.connect('http://' + document.domain + ':' + location.port);
-            var autoscroll_elements = ["timing_tape div", "console"]
+            
             function openForm(id) {
                 var elements = document.getElementsByClassName("form-popup");
                 for(var i=0; i<elements.length; i=i+1){
@@ -111,18 +111,6 @@
             function closeForm(id) {
                 document.getElementById(id).style.display = "none";
             }
-
-            function scrollTapes(){
-                var elements = document.querySelectorAll(".timing_tape div");
-                for(var j=0; j<elements.length; j=j+1){
-                    var item = elements[j];
-                    item.scrollTop = item.scrollHeight;
-                }  
-            }
-
-            socket.on("connect", function(){
-
-            })
 
             socket.on("console", function(buffer){
                 $("#console").text(buffer);
