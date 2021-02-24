@@ -6,7 +6,7 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
     </head>
     <body>
-        <div class="menu_bar">
+        <div class="menu_bar" id="config_menu">
             <button onclick="openForm('addRemote')">Add Remote Device</button>
             <div class="form-popup" id="addRemote">
                 <form action="/add_remote" method="POST" class="form-container">
@@ -59,11 +59,13 @@
                     <button type="button" class="btn cancel" onclick="closeForm('addLocal')">Close</button>
                 </form>
             </div>
+            <button onclick="closeMenuBar()" style="margin-bottom: auto;">Close Menu</button>
         </div>
         <div class="main_window">
             <div class="status">
-                <div class="title"><h1>dweet2ser</h1></div>
-                <div class="subtitle">From config file: {{ file }}</div>
+                <div class="title"><h1>dweet2ser</h1></div><h3>v{{ version }}</h3>
+                <div class="subtitle">Config file: {{ file }}</div>
+                <button onclick="openMenuBar()" id="config_button">Configure</button>
 
             </div>
             <div class="device_window">
@@ -91,7 +93,10 @@
                 </div>
                 {% endfor %}
             </div>
-            <pre class="console" id="console"></pre>
+            <div class="console">
+                <div class="tab" onclick="toggleConsole()">^^ Console ^^</div>
+                <pre id="console"></pre>
+            </div>
         </div>
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -100,6 +105,32 @@
         <script>
             var socket = io.connect('http://' + document.domain + ':' + location.port);
             
+            function openMenuBar() {
+                document.getElementById("config_button").style.display = "none";
+                document.getElementById("config_menu").style.display = "flex";
+            }
+
+            function closeMenuBar() {
+                document.getElementById("config_menu").style.display = "none";
+                document.getElementById("config_button").style.display = "flex";
+                document.getElementById("config_button").style.textAlign = "center";
+            }
+
+            $(".tab").click(function() {
+                var console = document.getElementById("console");
+                var current_style = window.getComputedStyle(console).display
+                if( current_style == "none"){
+                    console.style.display = "flex";
+                    console.scrollTop = console.scrollHeight;
+                    $("this").textContent = "Console";
+                }
+                if(current_style == "flex"){
+                    console.style.display = "none";
+                    $("this").textContent = "^^ Console ^^";
+                }
+                
+            });
+
             function openForm(id) {
                 var elements = document.getElementsByClassName("form-popup");
                 for(var i=0; i<elements.length; i=i+1){
