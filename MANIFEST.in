@@ -1,4 +1,4 @@
 
 include dweet2ser/*.ini
 include dweet2ser/webapp/static/*.*
-include dweet2ser/webapp/templates*.*
+include dweet2ser/webapp/templates/*.*
