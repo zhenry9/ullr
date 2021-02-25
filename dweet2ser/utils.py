@@ -47,4 +47,4 @@ def get_available_com_ports():
 
 def print_to_ui(message):
     # logging stuff here
-    if 
+    pass
