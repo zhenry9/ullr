@@ -1,2 +1,3 @@
 
 include dweet2ser/*.ini
+include dweet2ser/webapp/static/*.*
