@@ -47,7 +47,6 @@ class LocalDevice(object):
         while self.listening:
             if ser.in_waiting > 0:
                 ser_data = ser.read(100)
-                self.tape += ' '.join(ser_data.decode('latin-1').split()) + "\n"
                 self._last_message = ser_data.hex()
                 yield ser_data.hex()
             else:
