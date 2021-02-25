@@ -4,7 +4,7 @@ from configparser import ConfigParser
 from dweet2ser.local_device import LocalDevice
 from dweet2ser.remote_device import RemoteDevice
 from dweet2ser.settings import CONFIG_COMMENTS, CONFIG_DEFAULTS, DEFAULT_CONFIG_FILE, sys_stamp
-from .socketing import print_to_web_console
+from .webapp.socketing import print_to_web_console
 
 class Dweet2serConfiguration(object):
 

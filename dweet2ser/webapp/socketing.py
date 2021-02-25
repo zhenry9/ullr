@@ -1,7 +1,7 @@
 
 
 from . import socketio
-from .settings import timestamp
+from ..settings import timestamp
 
 WEB_CONSOLE_BUFFER = '\r'
 TAPES ={}

@@ -1,7 +1,7 @@
 
-from . import settings, __version__ as version
-from .local_device import LocalDevice
-from .remote_device import RemoteDevice
+from .. import settings, __version__ as version
+from ..local_device import LocalDevice
+from ..remote_device import RemoteDevice
 from flask import Flask, render_template, request, redirect, Response, stream_with_context
 
 from . import webapp

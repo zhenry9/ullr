@@ -1,14 +1,10 @@
 import threading
 import time
 
-from colorama import Fore, Style
-from colorama import init as colorama_init
-from termcolor import colored
-
 from .settings import internet_connection, timestamp
-from .socketing import print_to_web_console, print_tape
+from .webapp.socketing import print_to_web_console, print_tape
 
-colorama_init()
+
 
 
 def _print_device_list(dev_list):

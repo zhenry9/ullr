@@ -2,10 +2,9 @@
 import time
 
 import serial
-from termcolor import colored
 
 from .settings import timestamp
-from .socketing import print_to_web_console
+from .webapp.socketing import print_to_web_console
 
 class LocalDevice(object):
     """

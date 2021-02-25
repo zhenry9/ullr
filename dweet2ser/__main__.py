@@ -2,9 +2,10 @@
 import argparse
 import sys
 
-from . import device_bus, local_device, remote_device, views, webapp, socketio
+from . import device_bus, local_device, remote_device, webapp
+from .webapp import views, webapp, socketio
 from .settings import sys_stamp
-from .socketing import print_to_web_console
+from .webapp.socketing import print_to_web_console
 from .setup_config import Dweet2serConfiguration
 
 
@@ -44,7 +45,7 @@ def main():
     elif not args.empty:
         CFG.add_devices_from_file()
 
-    socketio.run(webapp)
+    socketio.run(webapp, host="0.0.0.0")
 
 if __name__ == "__main__":
     sys.exit(main())

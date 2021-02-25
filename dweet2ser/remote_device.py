@@ -7,7 +7,7 @@ from urllib3.exceptions import ProtocolError
 
 from . import dweepy
 from .settings import internet_connection, timestamp
-from .socketing import print_to_web_console
+from .webapp.socketing import print_to_web_console
 
 class DeadConnectionError(Exception):
     pass
