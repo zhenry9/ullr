@@ -3,7 +3,7 @@ import time
 
 import serial
 
-from .settings import timestamp
+from .utils import timestamp
 from .webapp.socketing import print_to_web_console
 
 class LocalDevice(object):

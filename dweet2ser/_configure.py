@@ -1,32 +1,36 @@
 import os
 from configparser import ConfigParser
 
-from dweet2ser.local_device import LocalDevice
-from dweet2ser.remote_device import RemoteDevice
-from dweet2ser.settings import CONFIG_COMMENTS, CONFIG_DEFAULTS, DEFAULT_CONFIG_FILE, sys_stamp
+from .local_device import LocalDevice
+from .remote_device import RemoteDevice
+from .settings import CONFIG_COMMENTS, CONFIG_DEFAULTS
+from . import utils
 from .webapp.socketing import print_to_web_console
 
 class Dweet2serConfiguration(object):
 
-    def __init__(self, bus):
+    def __init__(self):
         self.parser = ConfigParser()
-        self.bus = bus
+        self.bus = object()
+        self.config_file = utils.get_default_config_file()
 
-    def add_devices_from_file(self, file=DEFAULT_CONFIG_FILE):
+    def add_devices_from_file(self, file=None):
         """ Attempt to add devices from an arbitrary file. If no file is given the default file is used.
 
         """
+        if file == None:
+            file = self.config_file
         if self._load_config_file(file):
             try:
                 self._add_devices()
             except Exception as exc:
-                print_to_web_console(f"{sys_stamp}Invalid config file format: {exc}")
+                print_to_web_console(f"{utils.sys_stamp}Invalid config file format: {exc}")
 
     def _add_devices(self):
         devices = self.parser.sections()
         # make sure there is actually something in config
         if len(devices) > 0:
-            print_to_web_console(f"{sys_stamp}Loading devices from config.")
+            print_to_web_console(f"{utils.sys_stamp}Loading devices from config.")
             for d in devices:
                 name = d
                 location = self.parser[d]["location"]
@@ -41,9 +45,9 @@ class Dweet2serConfiguration(object):
                     try:
                         dev = LocalDevice(port, dev_type, name, mute, baudrate)
                         self.bus.add_device(dev)
-                        print_to_web_console(f"{sys_stamp}Added {location} {dev_type} device '{name}' from config.")
+                        print_to_web_console(f"{utils.sys_stamp}Added {location} {dev_type} device '{name}' from config.")
                     except Exception as e:
-                        print_to_web_console(f"{sys_stamp}Failed to add device '{name}' from default config: {e}")
+                        print_to_web_console(f"{utils.sys_stamp}Failed to add device '{name}' from default config: {e}")
                 elif location == "remote":
                     thing_name = self.parser[d]["thing_name"]
                     if self.parser[d]["key"] == "" or self.parser[d]["key"].lower().strip() == "none":
@@ -53,11 +57,11 @@ class Dweet2serConfiguration(object):
                     try:
                         dev = RemoteDevice(thing_name, dev_type, key, name, mute)
                         self.bus.add_device(dev)
-                        print_to_web_console(f"{sys_stamp}Added {location} {dev_type} device '{name}' from config.")
+                        print_to_web_console(f"{utils.sys_stamp}Added {location} {dev_type} device '{name}' from config.")
                     except Exception as e:
-                        print_to_web_console(f"{sys_stamp}Failed to add device '{name}' from default config: {e}")
+                        print_to_web_console(f"{utils.sys_stamp}Failed to add device '{name}' from default config: {e}")
                 else:
-                    print_to_web_console(f"{sys_stamp}Failed to add device '{name}' from default config: "
+                    print_to_web_console(f"{utils.sys_stamp}Failed to add device '{name}' from default config: "
                             f"invalid location '{location}'")
 
     def save_current_to_file(self):
@@ -95,34 +99,34 @@ class Dweet2serConfiguration(object):
                 self.parser[dev.name]["key"] = str(dev.thing_key)
             self.parser[dev.name]["mute"] = str(dev.mute)
 
-        os.makedirs(os.path.dirname(DEFAULT_CONFIG_FILE), exist_ok=True)
+        os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
 
-        with open(DEFAULT_CONFIG_FILE, 'w') as configfile:
+        with open(self.config_file, 'w') as configfile:
             configfile.write(CONFIG_COMMENTS)
-        with open(DEFAULT_CONFIG_FILE, 'a') as configfile:
+        with open(self.config_file, 'a') as configfile:
             self.parser.write(configfile)
 
-        print_to_web_console(f"{sys_stamp}Settings saved to config file: {DEFAULT_CONFIG_FILE}")
+        print_to_web_console(f"{utils.sys_stamp}Settings saved to config file: {self.config_file}")
 
     def _load_config_file(self, file):
         if not os.path.isabs(file):
             file = os.path.join(os.getcwd(), file)
         if os.path.exists(file):
-            print_to_web_console(f"{sys_stamp}Found config file at {file}.")
+            print_to_web_console(f"{utils.sys_stamp}Found config file at {file}.")
             try:
                 self.parser = ConfigParser()
                 self.parser.read(file)
                 self._add_defaults_to_parser()
                 return True
             except Exception as e:
-                print_to_web_console(f"{sys_stamp}Failed to read config file: {e}")
+                print_to_web_console(f"{utils.sys_stamp}Failed to read config file: {e}")
                 return False
 
         else:
             self._add_defaults_to_parser()
             print_to_web_console(f"Config file {file} not found.")
-            if file == DEFAULT_CONFIG_FILE:
-                print_to_web_console(f"{sys_stamp}Creating empty default file at: {file}")
+            if file == self.config_file:
+                print_to_web_console(f"{utils.sys_stamp}Creating empty default file at: {file}")
                 self.save_current_to_file()
             return False
 

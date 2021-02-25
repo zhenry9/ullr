@@ -64,13 +64,13 @@
         <div class="main_window">
             <div class="status">
                 <div class="title"><h1>dweet2ser</h1></div><h3>v{{ version }}</h3>
-                <div class="subtitle">Config file: {{ file }}</div>
+                <div class="subtitle">Config file: {{ session.config_file }}</div>
                 <button onclick="openMenuBar()" id="config_button">Configure</button>
 
             </div>
             <div class="device_window">
                 
-                {% for d in bus.dce_devices %}
+                {% for d in session.bus.dce_devices %}
                 <div class="device">
                     {% if d.type == "serial" %}
                         <table class="serial_device">

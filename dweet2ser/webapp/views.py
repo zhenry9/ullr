@@ -1,18 +1,17 @@
+from flask import (Flask, Response, redirect, render_template, request,
+                   stream_with_context)
 
-from .. import settings, __version__ as version
+from .. import __version__ as version
+from .. import utils
 from ..local_device import LocalDevice
 from ..remote_device import RemoteDevice
-from flask import Flask, render_template, request, redirect, Response, stream_with_context
+from . import socketing, webapp
 
-from . import webapp
+session = object()
 
-bus = object()
-cfg = object()
-
-def init(bus_from_main, cfg_from_main):
-    global bus
-    bus = bus_from_main
-    cfg = cfg_from_main
+def init(session_from_main):
+    global session
+    session = session_from_main
 
 def stream_template(template_name, **context):
     webapp.update_template_context(context)
@@ -26,10 +25,8 @@ def home():
     return render_template(
         "home.html",
         version=version,
-        bus=bus,
-        cfg=cfg,
-        file=settings.DEFAULT_CONFIG_FILE,
-        ports=settings.get_available_com_ports()
+        session=session,
+        ports=utils.get_available_com_ports()
     )
 
 @webapp.route("/add_local", methods=["GET", "POST"])
@@ -47,9 +44,9 @@ def add_local():
                 form["name"], 
                 mute=mute, 
                 baudrate=form["baud"])
-            bus.add_device(dev)
+            session.bus.add_device(dev)
         except Exception as e:
-            settings.print_to_web_console(f"{settings.timestamp()}Failed to add device: {e}")
+            socketing.print_to_web_console(f"{utils.timestamp()}Failed to add device: {e}")
     
     return redirect("/")
 
@@ -68,8 +65,8 @@ def add_remote():
                 name=form["name"], 
                 mute=mute, 
                 )
-            bus.add_device(dev)
+            session.bus.add_device(dev)
         except Exception as e:
-            settings.print_to_web_console(f"{settings.timestamp()}Failed to add device: {e}")
+            socketing.print_to_web_console(f"{utils.timestamp()}Failed to add device: {e}")
     
     return redirect("/")

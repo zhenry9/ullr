@@ -2,17 +2,11 @@
 import argparse
 import sys
 
-from . import device_bus, local_device, remote_device, webapp
-from .webapp import views, webapp, socketio
-from .settings import sys_stamp
+from . import local_device, remote_device, webapp, cli
+from .utils import sys_stamp
+from .webapp import views
 from .webapp.socketing import print_to_web_console
-from .setup_config import Dweet2serConfiguration
-
-
-BUS = device_bus.DeviceBus()
-CFG = Dweet2serConfiguration(BUS)
-
-views.init(BUS, CFG)
+from .session import DweetSession
 
 def main():
     arg_parser = argparse.ArgumentParser(description="An interface for networking R232 devices using dweet.io.")
@@ -24,7 +18,11 @@ def main():
     options.add_argument("--override", metavar=('MODE', 'PORT', 'THING_NAME'), action="store", type=str, nargs=3,
                          help="Setup a basic connection with command line arguments."
                               "\ne.g. --override DCE /dev/ttyUSB0 dweet2ser_default.")
+    arg_parser.add_argument("--nowebui", action="store_true", help="Use dweet2ser from the command line."
+                                                                   "Don't run GUI on webserver.")                          
     args = arg_parser.parse_args()
+
+    session = DweetSession()
 
     if args.override:
         if args.override[0].upper() == "DTE":
@@ -34,18 +32,24 @@ def main():
         try:
             local = local_device.LocalDevice(args.override[1], args.override[0])
             remote = remote_device.RemoteDevice(args.override[2], other_mode)
-            BUS.add_device(local)
-            BUS.add_device(remote)
+            session.bus.add_device(local)
+            session.bus.add_device(remote)
         except Exception as e:
             print_to_web_console(f"{sys_stamp}Override failed: {e}")
 
     elif args.file:
-        CFG.add_devices_from_file(args.file)
+        session.add_devices_from_file(args.file)
 
     elif not args.empty:
-        CFG.add_devices_from_file()
+        session.add_devices_from_file()
 
-    socketio.run(webapp, host="0.0.0.0")
+    if args.nowebui:
+        session.ui = "cli"
+        cli.run(session)
+    else:
+        views.init(session)
+        webapp.run()
+    
 
 if __name__ == "__main__":
     sys.exit(main())
