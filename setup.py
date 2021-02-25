@@ -28,13 +28,10 @@ setuptools.setup(
         'Natural Language :: English',
     ],
     install_requires=[
-        # 'dweepy',  packaging modified dweepy source with dweet2ser_conductor for now
-        'requests >= 2, < 3',
-        'pySerial',
-        'colorama',
-        'termcolor',
-        # my patched dweepy repo, no longer needed
-        # 'dweepy @ https://github.com/zhenry9/dweepy/archive/master.tar.gz',
+        "Flask>=1.1.2, <2",
+        "Flask-SocketIO>=5.0.1, <6",
+        "pyserial>=3.5, <4",
+        "requests>=2.25.1, <3"
     ],
     python_requires='>=3.6',
     entry_points={
