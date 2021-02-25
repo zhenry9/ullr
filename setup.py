@@ -1,6 +1,6 @@
 import setuptools
 
-from dweet2ser import __version__ as version
+# from dweet2ser import __version__ as version
 
 # except ImportError:
 #    from distutils.core import setup
@@ -10,7 +10,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setuptools.setup(
     name='dweet2ser',
-    version=version,
+    version="0.2.0",
     author='Zach Henry',
     author_email='zhenry9@gmail.com',
     description='A dweet.io <-> serial interface',
