@@ -28,10 +28,12 @@ setuptools.setup(
         'Natural Language :: English',
     ],
     install_requires=[
+        "colorama>=0.4.4, <1",
         "Flask>=1.1.2, <2",
         "Flask-SocketIO>=5.0.1, <6",
         "pyserial>=3.5, <4",
-        "requests>=2.25.1, <3"
+        "requests>=2.25.1, <3",
+        "termcolor>=1.1.0, <2"
     ],
     python_requires='>=3.6',
     entry_points={
