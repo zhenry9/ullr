@@ -124,7 +124,7 @@
                 </div>
             </div>
             <div class="console">
-                <span class="tab">^^ Console ^^</span>
+                <span id="console_tab">^^ Console ^^</span>
                 <pre id="console"></pre>
             </div>
         </div>
@@ -160,17 +160,17 @@
                 evt.currentTarget.className += " active";
             }
 
-            $(".tab").click(function() {
+            $("#console_tab").click(function() {
                 var console = document.getElementById("console");
                 var current_style = window.getComputedStyle(console).display
                 if( current_style == "none"){
                     console.style.display = "flex";
                     console.scrollTop = console.scrollHeight;
-                    $("tab").textContent = "Console";
+                    $("#console_tab").textContent = "Console";
                 }
                 if(current_style == "flex"){
                     console.style.display = "none";
-                    $("tab").textContent = "^^ Console ^^";
+                    $("#console_tab").textContent = "^^ Console ^^";
                 }
                 
             });
