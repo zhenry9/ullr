@@ -9,22 +9,16 @@ from colorama import Fore, Style
 from colorama import init as colorama_init
 
 from .settings import USER_SPECIFIED_DEFAULT_CONFIG_FILE
-from . import webapp
+from . import webapp, cli
 from .webapp import socketing
+from .cli import interface
 
 colorama_init()
-
-
-s_print_lock = Lock()
 ui = "webapp"
 
-def start_ui(user_int):
+def set_ui(user_int):
     global ui
     ui = user_int
-    if ui == "webapp":
-        webapp.run()
-    elif ui == "cli":
-        cli.run()
 
 def get_default_config_file():
     if USER_SPECIFIED_DEFAULT_CONFIG_FILE is None:
@@ -79,16 +73,5 @@ def print_to_ui(message, endline="\n", sys=False):
         no_colors = ansi_escape.sub('', message)
         socketing.print_to_web_console(no_colors, endline=endline)
     elif ui == "cli":
-        s_print(message, endline=endline)
+        interface.s_print(message, end=endline)
 
-def s_print(*a, **b):
-    """Thread safe print function"""
-    with s_print_lock:
-        print(*a, **b)
-
-
-def s_input(*a):
-    """Thread safe input function"""
-    with s_print_lock:
-        print(*a, end='')
-    return input('')

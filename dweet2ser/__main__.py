@@ -2,8 +2,14 @@
 import argparse
 import sys
 
-from . import utils, local_device, remote_device, current_session
+from flask.globals import session
+
+from . import utils, local_device, remote_device, webapp
 from .webapp import views
+from .cli import cli
+from .session import DweetSession
+
+current_session = DweetSession()
 
 def main():
     arg_parser = argparse.ArgumentParser(description="An interface for networking R232 devices using dweet.io.")
@@ -39,10 +45,14 @@ def main():
         current_session.add_devices_from_file()
 
     if args.nowebui:
-        utils.start_ui("cli")
+        cli.init(current_session)
+        utils.set_ui("cli")
+        cli.menu()
     
     else:
-        utils.start_ui("webapp")
+        views.init(current_session)
+        utils.set_ui("webapp")
+        webapp.run()
     
 
 if __name__ == "__main__":

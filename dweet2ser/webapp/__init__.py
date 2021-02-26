@@ -1,4 +1,5 @@
 import flask
+from flask.globals import session
 import flask_socketio
 
 webapp = flask.Flask(__name__)

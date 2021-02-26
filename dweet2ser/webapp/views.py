@@ -2,11 +2,16 @@ from flask import (Flask, Response, redirect, render_template, request,
                    stream_with_context)
 
 from .. import __version__ as version
-from .. import utils, current_session
+from .. import utils
 from ..local_device import LocalDevice
 from ..remote_device import RemoteDevice
 from . import socketing, webapp
 
+current_session = object()
+
+def init(session):
+    global current_session
+    current_session = session
 
 def stream_template(template_name, **context):
     webapp.update_template_context(context)

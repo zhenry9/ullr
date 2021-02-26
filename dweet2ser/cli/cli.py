@@ -2,7 +2,7 @@ import time
 
 from ..local_device import LocalDevice
 from ..remote_device import RemoteDevice
-from ..utils import s_input, print_to_ui
+from .interface import s_input, s_print
 
 current_session = object()
 
@@ -35,7 +35,7 @@ def add_device():
                 baudrate=baudrate
                 )
         except Exception as e:
-            print_to_ui(e)
+            s_print(e)
 
     elif location == "2":
         thing_id = s_input("Thing ID: ")
@@ -45,9 +45,9 @@ def add_device():
         try:
             d = RemoteDevice(thing_id, mode, key, name, mute)
         except Exception as e:
-            print_to_ui(e)
+            s_print(e)
     else:
-        print_to_ui("Invalid input")
+        s_print("Invalid input")
         return
     if d:
         current_session.bus.add_device(d)
@@ -63,7 +63,7 @@ def remove_device():
 
 def process_input(cmd, ):
     if cmd == "info":
-        return current_session.bus.print_status()
+        return s_print(current_session.bus.print_status())
     if cmd == "threads":
         return current_session.bus.print_threads()
     if cmd == "add":
@@ -74,7 +74,7 @@ def process_input(cmd, ):
         return current_session.save_current_to_file()
     else:
         # print command help
-        print_to_ui("\tType 'info' to display session info.\n"
+        s_print("\tType 'info' to display session info.\n"
                 "\tType 'add' to add a device.\n"
                 "\tType 'remove' to remove a device.\n"
                 "\tType 'save' to save the current configuration as default."
@@ -85,3 +85,15 @@ def process_input(cmd, ):
 def idle():
     while True:
         time.sleep(1)
+
+def menu():
+    while True:
+        cmd = ''
+        try:
+            time.sleep(.0001)
+            cmd = s_input("\nType 'exit' to exit or ENTER for help.\n")
+        except EOFError:  # if ran as a daemon, make sure we don't reach EOF prematurely
+            idle()
+        if cmd == 'exit':
+            break
+        process_input(cmd)
