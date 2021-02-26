@@ -2,16 +2,11 @@ from flask import (Flask, Response, redirect, render_template, request,
                    stream_with_context)
 
 from .. import __version__ as version
-from .. import utils
+from .. import utils, current_session
 from ..local_device import LocalDevice
 from ..remote_device import RemoteDevice
 from . import socketing, webapp
 
-session = object()
-
-def init(session_from_main):
-    global session
-    session = session_from_main
 
 def stream_template(template_name, **context):
     webapp.update_template_context(context)
@@ -25,7 +20,7 @@ def home():
     return render_template(
         "home.html",
         version=version,
-        session=session,
+        session=current_session,
         ports=utils.get_available_com_ports()
     )
 
@@ -44,7 +39,7 @@ def add_local():
                 form["name"], 
                 mute=mute, 
                 baudrate=form["baud"])
-            session.bus.add_device(dev)
+            current_session.bus.add_device(dev)
         except Exception as e:
             socketing.print_to_web_console(f"{utils.timestamp()}Failed to add device: {e}")
     
@@ -65,7 +60,7 @@ def add_remote():
                 name=form["name"], 
                 mute=mute, 
                 )
-            session.bus.add_device(dev)
+            current_session.bus.add_device(dev)
         except Exception as e:
             socketing.print_to_web_console(f"{utils.timestamp()}Failed to add device: {e}")
     

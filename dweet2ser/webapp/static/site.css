@@ -10,6 +10,7 @@ body {
     display: flex;
     flex-direction: row-reverse;
     height: 100%;
+    padding: 0
 }
 
 * {box-sizing: border-box;}
@@ -17,6 +18,7 @@ body {
 .menu_bar{
     display: flex;
     flex-direction: column-reverse;
+    background-color: #ddd;
     flex: 0 1 20%;
 }
 
@@ -93,25 +95,56 @@ body {
     justify-content: center;
 }
 
+.tabs {
+    overflow: hidden;
+    border: none;
+    background-color: rgb(160, 160, 160);
+}
+
+.tabs button {
+    background-color: #ccc;
+    float: left;
+    border: none;
+    border-radius: 5px 5px 0 0;
+    outline: none;
+    cursor: pointer;
+    margin: .1em .1em 0 .1em;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+
+.tabs button:hover {
+    background-color: #ddd;
+}
+  
+.tabs button.active {
+    background-color: lightslategray;
+}
+
 .device {
     display: flex;
+    flex-direction: row;
     flex-grow: 0;
     flex-shrink: 1;
-    margin: 5px;
+    margin: auto 5px 5px 5px;
     font-size: 13px;
-    width: 18em;
     min-height: 0;
     min-width: 0;
     border-radius: 5px;
+    align-items: flex-end;
+    -webkit-animation: fadeEffect .5s;
+    animation: fadeEffect .5s;
 }
 
 .device table {
     flex: 0 1 auto;
     border-collapse: collapse;
     width: 18em;
-    margin-bottom: 10px;
+    margin: 5px;
     overflow: scroll;
     overflow-x: scroll;
+    width: 18em;
     min-height: 0;
     min-width: 0;
     border-radius: 5px;
@@ -130,15 +163,15 @@ body {
     background-color: rgb(170, 56, 56);
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
+    text-align: center;
     color: white;
 }
 
 .dweet_device th {
-    background-color: cyan;
+    background-color: rgb(0, 201, 201);
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
+    text-align: center;
     color: white;
 }
 
@@ -229,14 +262,13 @@ body {
 
 .device_window{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex: 0 1 100%;
     height: 100%;
     min-width: 0;
     overflow: scroll;
     background-color: lightslategray;
     border-radius: 5px;
-    align-items: flex-end;
 }
 
 .console {
@@ -282,3 +314,13 @@ body {
     overflow-x: scroll;
     margin: .1em;
 }
+
+@-webkit-keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+  
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }

@@ -1,3 +1,0 @@
-
-def run(session):
-    pass

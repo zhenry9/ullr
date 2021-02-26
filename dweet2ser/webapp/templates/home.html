@@ -69,32 +69,62 @@
 
             </div>
             <div class="device_window">
-                
-                {% for d in session.bus.dce_devices %}
-                <div class="device">
-                    {% if d.type == "serial" %}
-                        <table class="serial_device">
-                            <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
-                            <tr><th colspan="2">{{ d.name }}</th></tr>
-                            <tr><th>Port:</th><td>{{ d.port_name }}</td></tr>
-                            <tr><th>Baud:</th><td>{{ d.baudrate }}</td></tr>
-                            <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
-                        </table>
-                    {% endif %}
-                    {% if d.type == "dweet" %}
-                        <table class="dweet_device">
-                            <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
-                            <tr><th colspan="2">{{ d.name }}</th></tr>
-                            <tr><th>Dweet ID:</th><td>{{ d.thing_id }}</td></tr>
-                            <tr><th>Locked?</th><td>{{ d.locked }}</td></tr>
-                            <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
-                        </table>
-                    {% endif %}
+                <div class="tabs">
+                    <button class="tablinks active" onclick="openTab(event, 'dce')">Devices</button>
+                    <button class="tablinks" onclick="openTab(event, 'dte')">Computers</button>
                 </div>
-                {% endfor %}
+                
+                <div class="device" id="dce">
+                    {% for d in session.bus.dce_devices %}
+                    
+                        {% if d.type == "serial" %}
+                            <table class="serial_device">
+                                <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="2">{{ d.name }}</th></tr>
+                                <tr><th>Port:</th><td>{{ d.port_name }}</td></tr>
+                                <tr><th>Baud:</th><td>{{ d.baudrate }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
+                            </table>
+                        {% endif %}
+                        {% if d.type == "dweet" %}
+                            <table class="dweet_device">
+                                <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="2">{{ d.name }}</th></tr>
+                                <tr><th>Dweet ID:</th><td>{{ d.thing_id }}</td></tr>
+                                <tr><th>Locked?</th><td>{{ d.locked }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
+                            </table>
+                        {% endif %}
+                    
+                    {% endfor %}
+                </div>
+                <div class="device" id="dte" style="display: none;">
+                    {% for d in session.bus.dte_devices %}
+                    
+                        {% if d.type == "serial" %}
+                            <table class="serial_device">
+                                <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="2">{{ d.name }}</th></tr>
+                                <tr><th>Port:</th><td>{{ d.port_name }}</td></tr>
+                                <tr><th>Baud:</th><td>{{ d.baudrate }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
+                            </table>
+                        {% endif %}
+                        {% if d.type == "dweet" %}
+                            <table class="dweet_device">
+                                <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="2">{{ d.name }}</th></tr>
+                                <tr><th>Dweet ID:</th><td>{{ d.thing_id }}</td></tr>
+                                <tr><th>Locked?</th><td>{{ d.locked }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
+                            </table>
+                        {% endif %}
+                    
+                    {% endfor %}
+                </div>
             </div>
             <div class="console">
-                <div class="tab" onclick="toggleConsole()">^^ Console ^^</div>
+                <span class="tab">^^ Console ^^</span>
                 <pre id="console"></pre>
             </div>
         </div>
@@ -116,17 +146,31 @@
                 document.getElementById("config_button").style.textAlign = "center";
             }
 
+            function openTab(evt, tabName) {
+                var i, devicetab, tablinks;
+                devicetab = document.getElementsByClassName("device");
+                for (i = 0; i < devicetab.length; i++) {
+                    devicetab[i].style.display = "none";
+                }
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+                document.getElementById(tabName).style.display = "flex";
+                evt.currentTarget.className += " active";
+            }
+
             $(".tab").click(function() {
                 var console = document.getElementById("console");
                 var current_style = window.getComputedStyle(console).display
                 if( current_style == "none"){
                     console.style.display = "flex";
                     console.scrollTop = console.scrollHeight;
-                    $("this").textContent = "Console";
+                    $("tab").textContent = "Console";
                 }
                 if(current_style == "flex"){
                     console.style.display = "none";
-                    $("this").textContent = "^^ Console ^^";
+                    $("tab").textContent = "^^ Console ^^";
                 }
                 
             });

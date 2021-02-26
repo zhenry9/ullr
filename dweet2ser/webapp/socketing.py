@@ -1,13 +1,14 @@
-
+import datetime
 
 from . import socketio
-from ..utils import timestamp
 
 WEB_CONSOLE_BUFFER = '\r'
 TAPES ={}
 
+def timestamp():
+    return "[" + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "] "
+
 def print_to_web_console(message, endline = "\n"):
-    """Thread safe print function"""
     global WEB_CONSOLE_BUFFER
     WEB_CONSOLE_BUFFER += str(message) + str(endline)
     socketio.emit("console", WEB_CONSOLE_BUFFER)

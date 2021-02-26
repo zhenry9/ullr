@@ -1,10 +1,14 @@
 import threading
 import time
 
-from .utils import internet_connection, timestamp
-from .webapp.socketing import print_to_web_console, print_tape
+from colorama import Fore, Style
+from colorama import init as colorama_init
+from termcolor import colored
 
+from .utils import internet_connection, print_to_ui
+from .webapp.socketing import print_tape
 
+colorama_init()
 
 
 def _print_device_list(dev_list):
@@ -89,17 +93,17 @@ class DeviceBus(object):
                 found = True
                 d.kill_listen_stream()
                 self.dce_devices.remove(d)
-                print_to_web_console(f"{timestamp()}Device '{d.name}' removed.")
+                print_to_ui(f"Device '{d.name}' removed.")
 
         for d in self.dte_devices:
             if d.name == device_name:
                 found = True
                 d.kill_listen_stream()
                 self.dte_devices.remove(d)
-                print_to_web_console(f"{timestamp()}Device '{d.name}' removed.")
+                print_to_ui(f"Device '{d.name}' removed.")
 
         if not found:
-            print_to_web_console(f"{timestamp}Device {device_name} not found.")
+            print_to_ui(f"Device {device_name} not found.")
 
     def print_status(self):
         """
@@ -119,15 +123,16 @@ class DeviceBus(object):
         """
         Listens for messages from the given device, then writes to all appropriate devices on bus.
         """
-        print_to_web_console(f"{timestamp()}Listen stream started for {device.name}.")
+        print_to_ui(f"Listen stream started for {device.name}.")
 
         for message in device.listen():
             message = str(message)
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip().replace('\r', '')
 
             print_tape(device.sku, message_decoded)
-            print_to_web_console(f"\n{timestamp()}Received {device.type} message from {device.name}:"
-                    f" {message_decoded}")
+            print_to_ui(f"\nReceived {colored(device.type, device.type_color)} message from {device.name}:"
+                                 f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}:"
+                                 f" {message_decoded}")
 
             if device.mode == "DTE":
                 # Messages from DTE devices get sent to all DCE devices.
@@ -140,7 +145,7 @@ class DeviceBus(object):
                     d.write(message)
 
             else:
-                print_to_web_console("Mode not found")
+                print_to_ui("Mode not found")
 
         return True
 
@@ -160,7 +165,7 @@ class DeviceBus(object):
             time.sleep(.01)
 
     def _restart_thread(self, device):
-        print_to_web_console(f"{timestamp()}Reconnecting to {device.name}.")
+        print_to_ui(f"Reconnecting to {device.name}.")
         device.kill_listen_stream()  # attempt to kill the listen thread if it is still responding
         device.exc = False  # reset the exception flag to false
         device.restart_session()  # start a new Session

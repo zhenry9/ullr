@@ -1,8 +1,30 @@
-from .settings import USER_SPECIFIED_DEFAULT_CONFIG_FILE
-import os
 import datetime
-import socket
 import logging
+import os
+import socket
+import re
+from threading import Lock
+
+from colorama import Fore, Style
+from colorama import init as colorama_init
+
+from .settings import USER_SPECIFIED_DEFAULT_CONFIG_FILE
+from . import webapp
+from .webapp import socketing
+
+colorama_init()
+
+
+s_print_lock = Lock()
+ui = "webapp"
+
+def start_ui(user_int):
+    global ui
+    ui = user_int
+    if ui == "webapp":
+        webapp.run()
+    elif ui == "cli":
+        cli.run()
 
 def get_default_config_file():
     if USER_SPECIFIED_DEFAULT_CONFIG_FILE is None:
@@ -17,10 +39,11 @@ def get_default_config_file():
     else:
         return USER_SPECIFIED_DEFAULT_CONFIG_FILE
 
-sys_stamp = "[ sys ] "
+sys_stamp = "[ " + Fore.LIGHTBLACK_EX + "sys" + Style.RESET_ALL + " ] "
+
 
 def timestamp():
-    return "[" + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "] "
+    return "[" + Fore.LIGHTBLACK_EX + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + Style.RESET_ALL + "] "
 
 
 def internet_connection(host="8.8.8.8", port=53, timeout=3):
@@ -45,6 +68,27 @@ def get_available_com_ports():
         names.append(p[0])
     return names
 
-def print_to_ui(message):
+def print_to_ui(message, endline="\n", sys=False):
     # logging stuff here
-    pass
+    if sys:
+        message = sys_stamp + message
+    else:
+        message = timestamp() + message
+    if ui == "webapp":
+        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+        no_colors = ansi_escape.sub('', message)
+        socketing.print_to_web_console(no_colors, endline=endline)
+    elif ui == "cli":
+        s_print(message, endline=endline)
+
+def s_print(*a, **b):
+    """Thread safe print function"""
+    with s_print_lock:
+        print(*a, **b)
+
+
+def s_input(*a):
+    """Thread safe input function"""
+    with s_print_lock:
+        print(*a, end='')
+    return input('')
