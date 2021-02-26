@@ -1,5 +1,6 @@
 html {
     height: 100%;
+    padding-top: 0;
 }
 
 body, input, textarea, button {
@@ -10,7 +11,9 @@ body {
     display: flex;
     flex-direction: row-reverse;
     height: 100%;
-    padding: 0
+    padding: 1px 1px 0 1px;
+    margin: 0;
+    background-color: #aaa;
 }
 
 * {box-sizing: border-box;}
@@ -26,7 +29,7 @@ body {
     display: none;
 }
 
-.menu_bar button{
+.menu_bar button, .status button{
     background-color: #555;
     color: white;
     padding: 16px 20px;
@@ -37,6 +40,10 @@ body {
     position: relative;
     width: 100%;
 }
+
+.menu_bar button:hover, .status button:hover {
+    opacity: 1;
+  }
 
 .main_window{
     display: flex;
@@ -61,7 +68,7 @@ body {
     padding: 20px 10px 20px 20px;
     white-space: pre-wrap;
     flex: 0 1 70px;
-    overflow: auto;
+    overflow: hidden;
 }
 
 .title {
@@ -105,11 +112,11 @@ body {
     background-color: #ccc;
     float: left;
     border: none;
-    border-radius: 5px 5px 0 0;
+    border-radius: 8px 8px 0 0;
     outline: none;
     cursor: pointer;
     margin: .1em .1em 0 .1em;
-    padding: 14px 16px;
+    padding: 5px 16px;
     transition: 0.3s;
     font-size: 17px;
   }
