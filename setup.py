@@ -28,7 +28,7 @@ setuptools.setup(
         'Natural Language :: English',
     ],
     install_requires=[
-        "colorama>=0.4.4, <1",
+        "colorama",
         "Flask>=1.1.2, <2",
         "Flask-SocketIO>=5.0.1, <6",
         "pyserial>=3.5, <4",
