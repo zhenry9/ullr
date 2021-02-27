@@ -10,51 +10,6 @@ from .webapp.socketing import print_tape
 
 colorama_init()
 
-
-def _print_device_list(dev_list):
-    """
-    Returns a list of devices in table form.
-    """
-    buf = ''
-    cols = ["#".ljust(3),
-            "Name".ljust(16),
-            "Type".ljust(10),
-            "Port".ljust(15),
-            "ThingName".ljust(20),
-            "Locked".ljust(10),
-            "Muted".ljust(10)
-            ]
-    header = ''
-    for col in cols:
-        header = header + f"{col}  "
-    buf += f"\t{header}\n"
-
-    for i in range(0, len(dev_list)):
-        num = str(i + 1)
-        d = dev_list[i]
-        if type(d).__name__ == "LocalDevice":
-            buf += (f"\t"
-                    f"{num.ljust(3)}  "
-                    f"{d.name.ljust(16)}  "
-                    f"{d.type.ljust(10)}  "
-                    f"{d.port_name.ljust(15)}  "
-                    f"{''.ljust(20)}  "
-                    f"{''.ljust(10)}  "
-                    f"{str(d.mute).ljust(10)}  \n"
-                    )
-        if type(d).__name__ == "RemoteDevice":
-            buf += (f"\t"
-                    f"{num.ljust(3)}  "
-                    f"{d.name.ljust(16)}  "
-                    f"{d.type.ljust(10)}  "
-                    f"{''.ljust(15)}  "
-                    f"{d.thing_id.ljust(20)}  "
-                    f"{str(d.locked).ljust(10)}  "
-                    f"{str(d.mute).ljust(10)}  \n"
-                    )
-    return buf
-
-
 class DeviceBus(object):
     """
     Holds all the devices in a connection and facilitates communication between them. All DCE devices
@@ -105,19 +60,8 @@ class DeviceBus(object):
         if not found:
             print_to_ui(f"Device {device_name} not found.")
 
-    def print_status(self):
-        """
-        Returns a list of all devices in the connection.
-        """
-        buf = ''
-        buf += "\nDCE Devices"
-        buf += _print_device_list(self.dce_devices)
-        buf += "\nDTE Devices"
-        buf += _print_device_list(self.dte_devices)
-        return buf
-
     def print_threads(self):
-        print(self.listen_threads)
+        print_to_ui(self.listen_threads)
 
     def _listen_stream(self, device):
         """

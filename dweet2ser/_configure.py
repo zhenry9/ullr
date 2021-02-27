@@ -29,7 +29,7 @@ class Dweet2serConfiguration(object):
         devices = self.parser.sections()
         # make sure there is actually something in config
         if len(devices) > 0:
-            utils.print_to_ui(f"Loading devices from config.", sys=True)
+            utils.print_to_ui(f"Loading devices from config...", sys=True)
             for d in devices:
                 name = d
                 location = self.parser[d]["location"]

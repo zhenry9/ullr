@@ -105,8 +105,8 @@ def menu():
 
 def run():
     interface.s_print("\t\t*************************************************\n"
-                      "\t\t**               " + colored("Dweet", "cyan") + " to " +
-                      colored("Serial", "red") + "               **\n"
+                      "\t\t**                   " + colored("dweet", "cyan") + "2" +
+                      colored("ser", "red") + "                 **\n"
                      f"\t\t**                    v{version}                   **\n"
                       "\t\t*************************************************\n")
     menu()

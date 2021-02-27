@@ -60,10 +60,11 @@ def get_devices_table(session):
                     f"{str(d.locked).ljust(10)}  "
                     f"{str(d.mute).ljust(10)}  "
                     )
+        buf += "\n"
         return buf
     buffer = ''
-    buffer += "\nDCE Devices"
+    buffer += "\nDCE Devices\n"
     buffer += get_table(session.bus.dce_devices)
-    buffer += "\nDTE Devices"
+    buffer += "\nDTE Devices\n"
     buffer += get_table(session.bus.dte_devices)
     return buffer
