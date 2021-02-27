@@ -47,7 +47,7 @@ def main():
     if args.nowebui:
         cli.init(current_session)
         utils.set_ui("cli")
-        cli.menu()
+        cli.run()
     
     else:
         views.init(current_session)
