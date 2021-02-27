@@ -1,5 +1,6 @@
-from flask import (Flask, Response, redirect, render_template, request,
-                   stream_with_context)
+import socket
+
+from flask import (Flask, Response, redirect, render_template, request)
 
 from .. import __version__ as version
 from .. import utils
@@ -26,7 +27,9 @@ def home():
         "home.html",
         version=version,
         session=current_session,
-        ports=utils.get_available_com_ports()
+        ports=utils.get_available_com_ports(),
+        hostname=socket.gethostname(),
+        host_ip=utils.get_ip()
     )
 
 @webapp.route("/add_local", methods=["GET", "POST"])

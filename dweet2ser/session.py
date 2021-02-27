@@ -1,4 +1,4 @@
-from . import device_bus, _configure, webapp
+from . import device_bus, _configure
 
 class DweetSession(_configure.Dweet2serConfiguration):
     

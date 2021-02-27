@@ -3,13 +3,11 @@ import logging
 import os
 import socket
 import re
-from threading import Lock
 
 from colorama import Fore, Style
 from colorama import init as colorama_init
 
 from .settings import USER_SPECIFIED_DEFAULT_CONFIG_FILE
-from . import webapp, cli
 from .webapp import socketing
 from .cli import interface
 
@@ -53,6 +51,18 @@ def internet_connection(host="8.8.8.8", port=53, timeout=3):
     except socket.error as ex:
         #  print(ex)
         return False
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('8.8.8.8', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
 
 def get_available_com_ports():
     names = []

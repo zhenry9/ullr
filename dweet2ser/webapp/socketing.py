@@ -1,5 +1,7 @@
 import datetime
 
+from flask import request
+
 from . import socketio
 
 WEB_CONSOLE_BUFFER = '\r'
@@ -31,5 +33,6 @@ def load_tapes():
 
 @socketio.on("connect")
 def on_connect():
+    client_name = request.remote_addr
     load_tapes()
-    print_to_web_console(f"{timestamp()}Connected to web client.")
+    print_to_web_console(f"{timestamp()}Connected to web client: {client_name}.")

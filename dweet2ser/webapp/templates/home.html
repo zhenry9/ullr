@@ -64,7 +64,7 @@
         <div class="main_window">
             <div class="status">
                 <div class="title"><h1>dweet2ser</h1></div><h3>v{{ version }}</h3>
-                <div class="subtitle">Config file: {{ session.config_file }}</div>
+                <div class="subtitle">Running on: {{ hostname }}({{ host_ip }})</div>
                 <button onclick="openMenuBar()" id="config_button">Configure</button>
 
             </div>
@@ -124,7 +124,7 @@
                 </div>
             </div>
             <div class="console">
-                <span id="console_tab">^^ Console ^^</span>
+                <span id="console_tab">^ Console ^</span>
                 <pre id="console"></pre>
             </div>
         </div>
