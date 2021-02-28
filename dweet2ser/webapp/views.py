@@ -1,12 +1,12 @@
 import socket
 
-from flask import (Flask, Response, redirect, render_template, request)
+from flask import (redirect, render_template, request)
 
 from .. import __version__ as version
 from .. import utils
 from ..local_device import LocalDevice
 from ..remote_device import RemoteDevice
-from . import socketing, webapp
+from . import socketing, webapp, socketio
 
 current_session = object()
 
@@ -73,3 +73,7 @@ def add_remote():
             socketing.print_to_web_console(f"{utils.timestamp()}Failed to add device: {e}")
     
     return redirect("/")
+
+@socketio.on("save_config")
+def save_config():
+    current_session.save_current_to_file()

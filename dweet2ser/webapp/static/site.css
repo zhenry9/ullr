@@ -41,6 +41,10 @@ body {
     width: 100%;
 }
 
+.menu_bar button {
+    margin: 1px;
+}
+
 .menu_bar button:hover, .status button:hover {
     opacity: 1;
   }

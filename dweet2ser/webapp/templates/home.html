@@ -59,7 +59,8 @@
                     <button type="button" class="btn cancel" onclick="closeForm('addLocal')">Close</button>
                 </form>
             </div>
-            <button onclick="closeMenuBar()" style="margin-bottom: auto;">Close Menu</button>
+            <button onclick="saveConfig()" style="margin-bottom: auto;">Save Configuration</button>
+            <button onclick="closeMenuBar()">Close Menu</button>
         </div>
         <div class="main_window">
             <div class="status">
@@ -175,12 +176,20 @@
                 
             });
 
+            function saveConfig(){
+                socket.emit('save_config')
+            }
+
             function openForm(id) {
                 var elements = document.getElementsByClassName("form-popup");
+                var caller = document.getElementById(id)
+                var current_style = window.getComputedStyle(caller).display
                 for(var i=0; i<elements.length; i=i+1){
                     elements[i].style.display = "none";
                 }
-                document.getElementById(id).style.display = "flex";
+                if(current_style == "none"){
+                    caller.style.display = "flex";
+                }
             }
             
             function closeForm(id) {
