@@ -80,20 +80,22 @@
                     
                         {% if d.type == "serial" %}
                             <table class="serial_device">
-                                <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
-                                <tr><th colspan="2">{{ d.name }}</th></tr>
-                                <tr><th>Port:</th><td>{{ d.port_name }}</td></tr>
-                                <tr><th>Baud:</th><td>{{ d.baudrate }}</td></tr>
-                                <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
+                                <tr><td class="timing_tape" colspan="3"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="3">{{ d.name }}</th></tr>
+                                <tr><th>Port:</th><td colspan="2">{{ d.port_name }}</td></tr>
+                                <tr><th>Baud:</th><td colspan="2">{{ d.baudrate }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
+                                    <td><form action="/remove/{{ d.name }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
                             </table>
                         {% endif %}
                         {% if d.type == "dweet" %}
                             <table class="dweet_device">
-                                <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
-                                <tr><th colspan="2">{{ d.name }}</th></tr>
-                                <tr><th>Dweet ID:</th><td>{{ d.thing_id }}</td></tr>
-                                <tr><th>Locked?</th><td>{{ d.locked }}</td></tr>
-                                <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
+                                <tr><td class="timing_tape" colspan="3"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="3">{{ d.name }}</th></tr>
+                                <tr><th>Dweet ID:</th><td colspan="2">{{ d.thing_id }}</td></tr>
+                                <tr><th>Locked?</th><td colspan="2">{{ d.locked }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
+                                    <td><form action="/remove/{{ d.name }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
                             </table>
                         {% endif %}
                     
@@ -104,20 +106,22 @@
                     
                         {% if d.type == "serial" %}
                             <table class="serial_device">
-                                <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
-                                <tr><th colspan="2">{{ d.name }}</th></tr>
-                                <tr><th>Port:</th><td>{{ d.port_name }}</td></tr>
-                                <tr><th>Baud:</th><td>{{ d.baudrate }}</td></tr>
-                                <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
+                                <tr><td class="timing_tape" colspan="3"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="3">{{ d.name }}</th></tr>
+                                <tr><th>Port:</th><td colspan="2">{{ d.port_name }}</td></tr>
+                                <tr><th>Baud:</th><td colspan="2">{{ d.baudrate }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
+                                    <td><form action="/remove/{{ d.name }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
                             </table>
                         {% endif %}
                         {% if d.type == "dweet" %}
                             <table class="dweet_device">
-                                <tr><td class="timing_tape" colspan="2"><div  id= {{ d.sku }}></div></td></tr>
-                                <tr><th colspan="2">{{ d.name }}</th></tr>
-                                <tr><th>Dweet ID:</th><td>{{ d.thing_id }}</td></tr>
-                                <tr><th>Locked?</th><td>{{ d.locked }}</td></tr>
-                                <tr><th>Muted?</th><td>{{ d.mute }}</td></tr>
+                                <tr><td class="timing_tape" colspan="3"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="3">{{ d.name }}</th></tr>
+                                <tr><th>Dweet ID:</th><td colspan="2">{{ d.thing_id }}</td></tr>
+                                <tr><th>Locked?</th><td colspan="2">{{ d.locked }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
+                                    <td><form action="/remove/{{ d.name }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
                             </table>
                         {% endif %}
                     
@@ -178,6 +182,7 @@
 
             function saveConfig(){
                 socket.emit('save_config')
+                alert("Configuration saved to {{ config_file }}")
             }
 
             function openForm(id) {

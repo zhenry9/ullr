@@ -148,6 +148,11 @@ body {
     animation: fadeEffect .5s;
 }
 
+.icon {
+    font-size: 1em;
+}
+
+
 .device table {
     flex: 0 1 auto;
     border-collapse: collapse;

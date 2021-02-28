@@ -29,7 +29,8 @@ def home():
         session=current_session,
         ports=utils.get_available_com_ports(),
         hostname=socket.gethostname(),
-        host_ip=utils.get_ip()
+        host_ip=utils.get_ip(),
+        config_file=current_session.config_file
     )
 
 @webapp.route("/add_local", methods=["GET", "POST"])
@@ -72,6 +73,11 @@ def add_remote():
         except Exception as e:
             socketing.print_to_web_console(f"{utils.timestamp()}Failed to add device: {e}")
     
+    return redirect("/")
+
+@webapp.route("/remove/<device>", methods=["GET", "POST"])
+def remove_device(device):
+    current_session.bus.remove_device(device)
     return redirect("/")
 
 @socketio.on("save_config")
