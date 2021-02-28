@@ -3,6 +3,8 @@
 # which is ~/.config/dweet2ser/config.ini or /etc/dweet2ser/config.ini if superuser
 USER_SPECIFIED_DEFAULT_CONFIG_FILE = None
 
+USER_SPECIFIED_LOG_FILE = None
+
 CONFIG_COMMENTS = str("\n; The settings in the [DEFAULT] section reference the values set in 'settings.py' " +
                       "in the package directory." +
                       "\n; They should be here for config file stability." +

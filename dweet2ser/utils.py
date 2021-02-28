@@ -1,13 +1,14 @@
 import datetime
-import logging
 import os
 import socket
 import re
+import logging
+import logging.handlers
 
 from colorama import Fore, Style
 from colorama import init as colorama_init
 
-from .settings import USER_SPECIFIED_DEFAULT_CONFIG_FILE
+from .settings import USER_SPECIFIED_DEFAULT_CONFIG_FILE, USER_SPECIFIED_LOG_FILE
 from .webapp import socketing
 from .cli import interface
 
@@ -30,6 +31,34 @@ def get_default_config_file():
         return os.path.join(home_path, 'dweet2ser', file_name)
     else:
         return USER_SPECIFIED_DEFAULT_CONFIG_FILE
+
+def get_log_file():
+    if USER_SPECIFIED_LOG_FILE is None:
+        home_path = os.path.expanduser('~')
+        # check if we're on linux running as superuser, then choose more appropriate directory
+        if home_path == "/root":
+            home_path = "/var/log"
+        else:
+            home_path = os.path.join(home_path, '.log')
+        file_name = "dweet2ser.log"
+        path = os.path.join(home_path, 'dweet2ser', file_name)
+    else:
+        path = USER_SPECIFIED_DEFAULT_CONFIG_FILE
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    return path
+
+def setup_logger():
+    logger = logging.getLogger("")
+    logger.setLevel(logging.DEBUG)
+    handler = logging.handlers.RotatingFileHandler(
+        get_log_file(), maxBytes=(1024 * 100), backupCount=5
+    )
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return logger
+
+logger = setup_logger()
 
 sys_stamp = "[ " + Fore.LIGHTBLACK_EX + "sys" + Style.RESET_ALL + " ] "
 
@@ -73,7 +102,7 @@ def get_available_com_ports():
     return names
 
 def print_to_ui(message, endline="\n", sys=False):
-    # logging stuff here
+    logger.info(message)
     if sys:
         message = sys_stamp + message
     else:
