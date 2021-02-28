@@ -1,4 +1,5 @@
 import socket
+from datetime import date, datetime
 
 from flask import (redirect, render_template, request, Response)
 
@@ -85,10 +86,11 @@ def get_log():
     with open(utils.get_log_file(), "r") as file:
         log = file.read()
     utils.print_to_ui("Served logfile.")
+    now = datetime.now().strftime("%Y%m%d_%H%M%S")
     return Response(
         log,
         mimetype="text/plain",
-        headers={"Content-disposition": "attachment; filename=dweet2ser.log"}
+        headers={"Content-disposition": f"attachment; filename=dweet2ser-{now}.log"}
     )
 @socketio.on("save_config")
 def save_config():

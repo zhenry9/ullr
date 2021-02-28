@@ -2,10 +2,11 @@
 import argparse
 import sys
 
-from . import utils, local_device, remote_device, webapp
-from .webapp import views
+from . import __version__ as version
+from . import local_device, remote_device, utils, webapp
 from .cli import cli
 from .session import DweetSession
+from .webapp import views
 
 current_session = DweetSession()
 
@@ -22,6 +23,8 @@ def main():
     arg_parser.add_argument("--nowebui", action="store_true", help="Use dweet2ser from the command line."
                                                                    "Don't run GUI on webserver.")                          
     args = arg_parser.parse_args()
+
+    utils.print_to_ui(f"Starting dweet2ser v{version}...", sys=True)
 
     if args.override:
         if args.override[0].upper() == "DTE":
