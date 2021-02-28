@@ -215,9 +215,10 @@ body {
 
 /* Add styles to the form container */
 .form-container {
-  width: 100%;
-  padding: 10px;
-  background-color: white;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+    background-color: white;
 }
 
 .form-container label{
