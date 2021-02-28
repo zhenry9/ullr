@@ -2,8 +2,6 @@
 import argparse
 import sys
 
-from flask.globals import session
-
 from . import utils, local_device, remote_device, webapp
 from .webapp import views
 from .cli import cli

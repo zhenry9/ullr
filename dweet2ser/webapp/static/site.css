@@ -148,11 +148,6 @@ body {
     animation: fadeEffect .5s;
 }
 
-.icon {
-    font-size: 1em;
-}
-
-
 .device table {
     flex: 0 1 auto;
     border-collapse: collapse;
@@ -165,8 +160,9 @@ body {
     border-radius: 5px;
   }
 
-.device table:hover {
-    overflow: auto;
+.device table form{
+    text-align: right;
+    margin-right: .5em;
 }
   
 .device td, .device th {
