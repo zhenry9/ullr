@@ -90,7 +90,7 @@ def get_log():
     return Response(
         log,
         mimetype="text/plain",
-        headers={"Content-disposition": f"attachment; filename=dweet2ser-{now}.log"}
+        headers={"Content-disposition": f"attachment; filename={now}-dweet2ser-{socket.gethostname()}.log"}
     )
 @socketio.on("save_config")
 def save_config():
