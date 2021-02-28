@@ -1,6 +1,6 @@
 import socket
 
-from flask import (redirect, render_template, request)
+from flask import (redirect, render_template, request, Response)
 
 from .. import __version__ as version
 from .. import utils
@@ -80,6 +80,16 @@ def remove_device(device):
     current_session.bus.remove_device(device)
     return redirect("/")
 
+@webapp.route("/get_log", methods=["GET", "POST"])
+def get_log():
+    with open(utils.get_log_file(), "r") as file:
+        log = file.read()
+    utils.print_to_ui("Served logfile.")
+    return Response(
+        log,
+        mimetype="text/plain",
+        headers={"Content-disposition": "attachment; filename=dweet2ser.log"}
+    )
 @socketio.on("save_config")
 def save_config():
     current_session.save_current_to_file()
