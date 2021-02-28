@@ -74,7 +74,7 @@ class DeviceBus(object):
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip().replace('\r', '')
 
             print_tape(device.sku, message_decoded)
-            print_to_ui(f"\nReceived {colored(device.type, device.type_color)} message from {device.name}:"
+            print_to_ui(f"Received {colored(device.type, device.type_color)} message from {device.name}:"
                                  f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}:"
                                  f" {message_decoded}")
 
