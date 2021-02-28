@@ -3,11 +3,11 @@
 block_cipher = None
 
 
-a = Analysis(['dweet2ser/__main__.py'],
-             pathex=['C:\\Users\\Z\\PycharmProjects\\dweet2ser'],
+a = Analysis(['shim_for_pyinstaller.py'],
+             pathex=['/home/zhenry9/VSCodeProjects/dweet2ser'],
              binaries=[],
              datas=[],
-             hiddenimports=["colorama", "termcolor"],
+             hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
@@ -23,7 +23,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='__main__',
+          name='shim_for_pyinstaller',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,

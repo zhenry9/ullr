@@ -1,55 +1,14 @@
 import threading
 import time
 
+from colorama import Fore, Style
+from colorama import init as colorama_init
 from termcolor import colored
-from colorama import init as colorama_init, Fore, Style
 
-from dweet2ser.settings import timestamp, internet_connection, s_print
+from .utils import internet_connection, print_to_ui
+from .webapp.socketing import print_tape
 
 colorama_init()
-
-
-def _print_device_list(dev_list):
-    """
-    Prints a list of devices in table form.
-    """
-    cols = ["#".ljust(3),
-            "Name".ljust(16),
-            "Type".ljust(10),
-            "Port".ljust(15),
-            "ThingName".ljust(20),
-            "Locked".ljust(10),
-            "Muted".ljust(10)
-            ]
-    header = ''
-    for col in cols:
-        header = header + f"{col}  "
-    print(f"\t{Fore.LIGHTWHITE_EX}{header}{Style.RESET_ALL}")
-
-    for i in range(0, len(dev_list)):
-        num = str(i + 1)
-        d = dev_list[i]
-        if type(d).__name__ == "LocalDevice":
-            print(f"\t"
-                  f"{num.ljust(3)}  "
-                  f"{d.name.ljust(16)}  "
-                  f"{colored(d.type.ljust(10), d.type_color)}  "
-                  f"{d.port_name.ljust(15)}  "
-                  f"{''.ljust(20)}  "
-                  f"{''.ljust(10)}  "
-                  f"{str(d.mute).ljust(10)}  "
-                  )
-        if type(d).__name__ == "RemoteDevice":
-            print(f"\t"
-                  f"{num.ljust(3)}  "
-                  f"{d.name.ljust(16)}  "
-                  f"{colored(d.type.ljust(10), d.type_color)}  "
-                  f"{''.ljust(15)}  "
-                  f"{d.thing_id.ljust(20)}  "
-                  f"{str(d.locked).ljust(10)}  "
-                  f"{str(d.mute).ljust(10)}  "
-                  )
-
 
 class DeviceBus(object):
     """
@@ -89,42 +48,35 @@ class DeviceBus(object):
                 found = True
                 d.kill_listen_stream()
                 self.dce_devices.remove(d)
-                print(f"{timestamp()}Device '{d.name}' removed.")
+                print_to_ui(f"Device '{d.name}' removed.")
 
         for d in self.dte_devices:
             if d.name == device_name:
                 found = True
                 d.kill_listen_stream()
                 self.dte_devices.remove(d)
-                print(f"{timestamp()}Device '{d.name}' removed.")
+                print_to_ui(f"Device '{d.name}' removed.")
 
         if not found:
-            print("Device not found.")
-
-    def print_status(self):
-        """
-        Prints a list of all devices in the connection.
-        """
-        print("\nDCE Devices")
-        _print_device_list(self.dce_devices)
-        print("\nDTE Devices")
-        _print_device_list(self.dte_devices)
+            print_to_ui(f"Device {device_name} not found.")
 
     def print_threads(self):
-        print(self.listen_threads)
+        print_to_ui(self.listen_threads)
 
     def _listen_stream(self, device):
         """
         Listens for messages from the given device, then writes to all appropriate devices on bus.
         """
-        s_print(f"{timestamp()}Listen stream started for {device.name}.")
+        print_to_ui(f"Listen stream started for {device.name}.")
 
         for message in device.listen():
             message = str(message)
             message_decoded = bytes.fromhex(message).decode('latin-1').rstrip().replace('\r', '')
 
-            s_print(f"\n{timestamp()}Received {colored(device.type, device.type_color)} message from {device.name}:"
-                    f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
+            print_tape(device.sku, message_decoded)
+            print_to_ui(f"Received {colored(device.type, device.type_color)} message from {device.name}:"
+                                 f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}:"
+                                 f" {message_decoded}")
 
             if device.mode == "DTE":
                 # Messages from DTE devices get sent to all DCE devices.
@@ -137,7 +89,7 @@ class DeviceBus(object):
                     d.write(message)
 
             else:
-                s_print("Mode not found")
+                print_to_ui("Mode not found")
 
         return True
 
@@ -157,7 +109,7 @@ class DeviceBus(object):
             time.sleep(.01)
 
     def _restart_thread(self, device):
-        s_print(f"{timestamp()}Reconnecting to {device.name}.")
+        print_to_ui(f"Reconnecting to {device.name}.")
         device.kill_listen_stream()  # attempt to kill the listen thread if it is still responding
         device.exc = False  # reset the exception flag to false
         device.restart_session()  # start a new Session

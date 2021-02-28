@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>dweet2ser status</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
+    </head>
+    <body>
+        <div class="menu_bar" id="config_menu">
+            <button onclick="openForm('addRemote')">Add Remote Device</button>
+            <div class="form-popup" id="addRemote">
+                <form action="/add_remote" method="POST" class="form-container">
+                    <h1>Add Remote</h1>
+    
+                    <input type="text" placeholder="Enter Name" name="name" required>
+    
+                    <input type="text" placeholder="Enter Dweet ID" name="thing_id" required>
+                    
+                    <input type="radio" id="DCE" name="mode" value="DCE" checked>
+                    <label for="DCE">DCE</label>
+                    <input type="radio" id="DTE" name="mode" value="DTE">
+                    <label for="DTE">DTE</label>
+
+                    <label>
+                        <input type="checkbox" name="mute"/>Mute?
+                    </label>
+    
+                    <button type="submit" class="btn">Add</button>
+                    <button type="button" class="btn cancel" onclick="closeForm('addRemote')">Close</button>
+                </form>
+            </div>
+            <button onclick="openForm('addLocal')">Add Local Device</button>
+            <div class="form-popup" id="addLocal">
+                <form action="/add_local" method="POST" class="form-container">
+                    <h1>Add Local</h1>
+    
+                    <input type="text" placeholder="Enter Name" name="name" required>
+    
+                    <input type="text" placeholder="Enter Port" name="port" required>
+
+                    <input type="radio" id="DCE" name="mode" value="DCE" checked>
+                    <label for="DCE">DCE</label>
+                    <input type="radio" id="DTE" name="mode" value="DTE">
+                    <label for="DTE">DTE</label>
+                    
+                    <label for="baud">Baudrate:</label>
+                    <select id="baud" name="baud">
+                        <option value="9600">9600</option>
+                        <option value="1200">1200</option>
+                        <option value="2400">2400</option>
+                        <option value="4800">4800</option>
+                    </select>
+                    
+                    <label>
+                        Mute? <input type="checkbox" name="mute"/>
+                    </label>
+    
+                    <button type="submit" class="btn">Add</button>
+                    <button type="button" class="btn cancel" onclick="closeForm('addLocal')">Close</button>
+                </form>
+            </div>
+            <form action="/get_log" metod="POST" style="margin-bottom: auto;"><button>Get Log File</button></form>
+            <button onclick="saveConfig()">Save Configuration</button>
+            <button onclick="closeMenuBar()">Close Menu</button>
+        </div>
+        <div class="main_window">
+            <div class="status">
+                <div class="title"><h1>dweet2ser</h1></div><h3>v{{ version }}</h3>
+                <div class="subtitle">Running on: {{ hostname }}({{ host_ip }})</div>
+                <button onclick="openMenuBar()" id="config_button">Configure</button>
+
+            </div>
+            <div class="device_window">
+                <div class="tabs">
+                    <button class="tablinks active" onclick="openTab(event, 'dce')">Devices</button>
+                    <button class="tablinks" onclick="openTab(event, 'dte')">Computers</button>
+                </div>
+                
+                <div class="device" id="dce">
+                    {% for d in session.bus.dce_devices %}
+                    
+                        {% if d.type == "serial" %}
+                            <table class="serial_device">
+                                <tr><td class="timing_tape" colspan="3"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="3">{{ d.name }}</th></tr>
+                                <tr><th>Port:</th><td colspan="2">{{ d.port_name }}</td></tr>
+                                <tr><th>Baud:</th><td colspan="2">{{ d.baudrate }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
+                                    <td><form action="/remove/{{ d.name }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
+                            </table>
+                        {% endif %}
+                        {% if d.type == "dweet" %}
+                            <table class="dweet_device">
+                                <tr><td class="timing_tape" colspan="3"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="3">{{ d.name }}</th></tr>
+                                <tr><th>Dweet ID:</th><td colspan="2">{{ d.thing_id }}</td></tr>
+                                <tr><th>Locked?</th><td colspan="2">{{ d.locked }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
+                                    <td><form action="/remove/{{ d.name }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
+                            </table>
+                        {% endif %}
+                    
+                    {% endfor %}
+                </div>
+                <div class="device" id="dte" style="display: none;">
+                    {% for d in session.bus.dte_devices %}
+                    
+                        {% if d.type == "serial" %}
+                            <table class="serial_device">
+                                <tr><td class="timing_tape" colspan="3"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="3">{{ d.name }}</th></tr>
+                                <tr><th>Port:</th><td colspan="2">{{ d.port_name }}</td></tr>
+                                <tr><th>Baud:</th><td colspan="2">{{ d.baudrate }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
+                                    <td><form action="/remove/{{ d.name }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
+                            </table>
+                        {% endif %}
+                        {% if d.type == "dweet" %}
+                            <table class="dweet_device">
+                                <tr><td class="timing_tape" colspan="3"><div  id= {{ d.sku }}></div></td></tr>
+                                <tr><th colspan="3">{{ d.name }}</th></tr>
+                                <tr><th>Dweet ID:</th><td colspan="2">{{ d.thing_id }}</td></tr>
+                                <tr><th>Locked?</th><td colspan="2">{{ d.locked }}</td></tr>
+                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
+                                    <td><form action="/remove/{{ d.name }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
+                            </table>
+                        {% endif %}
+                    
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="console">
+                <span id="console_tab">^ Console ^</span>
+                <pre id="console"></pre>
+            </div>
+        </div>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js" 
+            integrity="sha512-oFOCo2/3DtjrJG4N27BjSLQWoiBv171sK6a+JiWjp/7agxC2nCUP358AqzxkBUb5jX8g6CYLPdSKQTbC0weCwA==" crossorigin="anonymous"></script>
+        <script>
+            var socket = io.connect('http://' + document.domain + ':' + location.port);
+            
+            function openMenuBar() {
+                document.getElementById("config_button").style.display = "none";
+                document.getElementById("config_menu").style.display = "flex";
+            }
+
+            function closeMenuBar() {
+                document.getElementById("config_menu").style.display = "none";
+                document.getElementById("config_button").style.display = "flex";
+                document.getElementById("config_button").style.textAlign = "center";
+            }
+
+            function openTab(evt, tabName) {
+                var i, devicetab, tablinks;
+                devicetab = document.getElementsByClassName("device");
+                for (i = 0; i < devicetab.length; i++) {
+                    devicetab[i].style.display = "none";
+                }
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+                document.getElementById(tabName).style.display = "flex";
+                evt.currentTarget.className += " active";
+            }
+
+            $("#console_tab").click(function() {
+                var console = document.getElementById("console");
+                var current_style = window.getComputedStyle(console).display
+                if( current_style == "none"){
+                    console.style.display = "flex";
+                    console.scrollTop = console.scrollHeight;
+                    $("#console_tab").textContent = "Console";
+                }
+                if(current_style == "flex"){
+                    console.style.display = "none";
+                    $("#console_tab").textContent = "^^ Console ^^";
+                }
+                
+            });
+
+            function saveConfig(){
+                socket.emit('save_config')
+                alert("Configuration saved to {{ config_file }}")
+            }
+
+            function openForm(id) {
+                var elements = document.getElementsByClassName("form-popup");
+                var caller = document.getElementById(id)
+                var current_style = window.getComputedStyle(caller).display
+                for(var i=0; i<elements.length; i=i+1){
+                    elements[i].style.display = "none";
+                }
+                if(current_style == "none"){
+                    caller.style.display = "flex";
+                }
+            }
+            
+            function closeForm(id) {
+                document.getElementById(id).style.display = "none";
+            }
+
+            socket.on("console", function(buffer){
+                $("#console").text(buffer);
+                var element = document.getElementById("console");
+                element.scrollTop = element.scrollHeight;
+            })
+
+            socket.on("tape_feed", function(data){
+                var tape_cell = document.getElementById(data["target"]);
+                tape_cell.textContent = data["buffer"];
+                tape_cell.scrollTop = tape_cell.scrollHeight;
+            })
+                
+            
+        </script>
+    </body>
+</html>

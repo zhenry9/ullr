@@ -54,4 +54,7 @@ docs/_build/
 .idea/
 
 # virtual environments
-/venv/
+venv/
+.venv/
+
+.vscode

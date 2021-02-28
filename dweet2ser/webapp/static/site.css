@@ -1,0 +1,353 @@
+html {
+    height: 100%;
+    padding-top: 0;
+}
+
+body, input, textarea, button {
+    font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 100%;
+    padding: 1px 1px 0 1px;
+    margin: 0;
+    background-color: #aaa;
+}
+
+* {box-sizing: border-box;}
+
+.menu_bar{
+    display: flex;
+    flex-direction: column-reverse;
+    background-color: #ddd;
+    flex: 0 1 20%;
+}
+
+#config_menu {
+    display: none;
+}
+
+.menu_bar button, .status button{
+    background-color: #555;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.8;
+    position: relative;
+    width: 100%;
+}
+
+.menu_bar button {
+    margin: 1px;
+}
+
+.menu_bar button:hover, .status button:hover {
+    opacity: 1;
+  }
+
+.main_window{
+    display: flex;
+    justify-self: left;
+    flex-direction: column;
+    flex: 1 4 auto;
+    height: 100%;
+    /** max-width: 80%; **/
+    min-width: 0;
+    min-height: 0;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    background-color: black;
+    color: white;
+    font-size: 1em;
+    line-height: .4;
+    border-radius: 5px;
+    margin: 0px;
+    padding: 20px 10px 20px 20px;
+    white-space: pre-wrap;
+    flex: 0 1 70px;
+    overflow: hidden;
+}
+
+.title {
+    flex: 0 1 auto;
+    margin-right: 0
+}
+
+.subtitle {
+    flex: 0 1 auto;
+    margin: 5px;
+    color: rgb(180, 180, 180);
+}
+
+.status h3 {
+    flex: 0 1 auto;
+    margin: 5px;
+    color: rgb(180, 180, 180);
+    margin-right: 2em;
+}
+
+#config_button {
+    background-color: #555;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 15%;
+    margin-left: auto;
+    text-align: center;
+    justify-content: center;
+}
+
+.tabs {
+    overflow: hidden;
+    border: none;
+    background-color: rgb(160, 160, 160);
+}
+
+.tabs button {
+    background-color: #ccc;
+    float: left;
+    border: none;
+    border-radius: 8px 8px 0 0;
+    outline: none;
+    cursor: pointer;
+    margin: .1em .1em 0 .1em;
+    padding: 5px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+  }
+
+.tabs button:hover {
+    background-color: #ddd;
+}
+  
+.tabs button.active {
+    background-color: lightslategray;
+}
+
+.device {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+    flex-shrink: 1;
+    margin: auto 5px 5px 5px;
+    font-size: 13px;
+    min-height: 0;
+    min-width: 0;
+    border-radius: 5px;
+    align-items: flex-end;
+    -webkit-animation: fadeEffect .5s;
+    animation: fadeEffect .5s;
+}
+
+.device table {
+    flex: 0 1 auto;
+    border-collapse: collapse;
+    width: 18em;
+    margin: 5px;
+    overflow: hidden;
+    width: 18em;
+    min-height: 0;
+    min-width: 0;
+    border-radius: 5px;
+  }
+
+.device table form{
+    text-align: right;
+    margin-right: .5em;
+}
+  
+.device td, .device th {
+    border: 1px solid #ddd;
+    padding: 2px;
+  }
+  
+.device tr:nth-child(even){background-color: #f2f2f2;}
+  
+.device tr:nth-child(odd) {background-color: #ddd;}
+  
+.serial_device th {
+    background-color: rgb(170, 56, 56);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    color: white;
+}
+
+.dweet_device th {
+    background-color: rgb(0, 201, 201);
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    color: white;
+}
+
+.timing_tape {
+    background-color: white;  
+}
+
+.timing_tape div {
+    white-space: pre;
+    overflow: hidden;
+    max-width: 18em;
+    min-width: 0;
+    max-height: 20em;
+    min-height: 0;
+}
+
+.timing_tape div:hover {
+    overflow: auto;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: relative;
+  top: 0;
+  right: 0;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+  justify-content: left;
+}
+
+/* Add styles to the form container */
+.form-container {
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+    background-color: white;
+}
+
+.form-container label{
+    display:inline-block;
+    justify-content: left;
+}
+
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 1px 0 1px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+.form-container input[type=checkbox], input[type=radio] {
+    display: inline-block;
+    vertical-align: middle; 
+    position: relative;
+    bottom: .08em; /* this is a better value for different fonts! */
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+.form-container select{
+    display: inline-flex;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: rgb(0, 201, 201);
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin: 1px 0 1px 0;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: rgb(199, 0, 0);
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+.device_window{
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 100%;
+    height: 100%;
+    min-width: 0;
+    overflow: hidden;
+    background-color: lightslategray;
+    border-radius: 5px;
+}
+
+.device_window:hover{
+    overflow: auto;
+}
+
+.console {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    line-height: 1.30769231;
+    color: whitesmoke;
+    background-color: black;
+    border-radius: 5px 5px 0 0;
+    margin: 0;
+    padding: 12px;
+    flex: 0 1 auto;
+    overflow: hidden;
+    max-height: 20%;
+    text-indent: 0px;
+    max-width: 100%;
+    min-width: 0;
+    justify-self: flex-end;
+    padding: .2em .5em;
+}
+
+#console_tab {
+    color: white;
+    width: 100%;
+    display: flex;
+    padding: 0;
+    margin: 0;
+    align-self: center;
+    position: relative;
+    opacity: 0.5;
+    justify-content: center;
+}
+
+#console_tab:hover{
+    opacity: 1;
+}
+
+#console {
+    display: none;
+    position: relative;
+    overflow: hidden;
+    margin: .1em;
+}
+
+#console:hover {
+    overflow: auto;
+}
+
+@-webkit-keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+  
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }

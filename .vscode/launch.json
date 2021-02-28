@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         
+        
         {
             "name": "Python: Flask",
             "type": "python",
@@ -26,7 +27,8 @@
             "type": "python",
             "request": "launch",
             "module": "dweet2ser",
-            "sudo": true
+            "sudo": true,
+            "gevent": true
         },
         {
             "name": "sudo dweet2ser --empty",
@@ -36,6 +38,16 @@
             "sudo": true,
             "args": [
                 "--empty"
+            ]
+        },
+        {
+            "name": "sudo dweet2ser --nowebui",
+            "type": "python",
+            "request": "launch",
+            "module": "dweet2ser",
+            "sudo": true,
+            "args": [
+                "--nowebui"
             ]
         }
     ]

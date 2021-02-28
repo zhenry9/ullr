@@ -2,16 +2,15 @@
 import time
 
 import serial
-from termcolor import colored
 
-from dweet2ser.settings import timestamp, s_print
-
+from .utils import print_to_ui
 
 class LocalDevice(object):
     """
     A device connected to a serial port on the local machine.
     """
     def __init__(self, port, mode, name="Local Device", mute=False, baudrate=9600):
+        self.sku = id(self)
         self.name = name
         self.type = "serial"
         self.type_color = "red"
@@ -34,7 +33,7 @@ class LocalDevice(object):
             message = str(message)
         message_bytes = bytes.fromhex(message)  # convert dweet string into bytes for RS232.
         message_decoded = message_bytes.decode('latin-1').rstrip()
-        s_print(f"{timestamp()}{colored(self.type.capitalize(), self.type_color)} message sent to {self.name}: {message_decoded}")
+        print_to_ui(f"{self.type.capitalize()} message sent to {self.name}: {message_decoded}")
         return self.serial_port.write(message_bytes)
 
     def listen(self):
