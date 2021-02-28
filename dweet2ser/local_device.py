@@ -3,7 +3,7 @@ import time
 
 import serial
 
-from .webapp.socketing import print_to_web_console
+from .utils import print_to_ui
 
 class LocalDevice(object):
     """
@@ -33,7 +33,7 @@ class LocalDevice(object):
             message = str(message)
         message_bytes = bytes.fromhex(message)  # convert dweet string into bytes for RS232.
         message_decoded = message_bytes.decode('latin-1').rstrip()
-        print_to_web_console(f"{self.type.capitalize()} message sent to {self.name}: {message_decoded}")
+        print_to_ui(f"{self.type.capitalize()} message sent to {self.name}: {message_decoded}")
         return self.serial_port.write(message_bytes)
 
     def listen(self):
