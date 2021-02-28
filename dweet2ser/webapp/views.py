@@ -31,7 +31,7 @@ def home():
         ports=utils.get_available_com_ports(),
         hostname=socket.gethostname(),
         host_ip=utils.get_ip(),
-        config_file=current_session.config_file
+        config_file=current_session.config_file.replace("\\", "\\\\")
     )
 
 @webapp.route("/add_local", methods=["GET", "POST"])
