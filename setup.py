@@ -1,6 +1,6 @@
 import setuptools
 
-# from dweet2ser import __version__ as version
+from dweet2ser import __version__ as version
 
 # except ImportError:
 #    from distutils.core import setup
@@ -10,14 +10,14 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setuptools.setup(
     name='dweet2ser',
-    version="0.2.0a",
+    version=version,
     author='Zach Henry',
     author_email='zhenry9@gmail.com',
     description='A dweet.io <-> serial interface',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/zhenry9/dweet2ser',
-    download_url=f'https://github.com/zhenry9/dweet2ser/archive/0.2.0a.tar.gz',
+    download_url=f'https://github.com/zhenry9/dweet2ser/archive/{version}.tar.gz',
     packages=setuptools.find_packages(exclude=('tests',)),
     include_package_data=True,
     classifiers=[
