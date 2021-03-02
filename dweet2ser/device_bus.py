@@ -7,6 +7,7 @@ from termcolor import colored
 
 from .utils import internet_connection, print_to_ui
 from .webapp.socketing import print_tape
+from . import skiracetiming
 
 colorama_init()
 
@@ -77,6 +78,10 @@ class DeviceBus(object):
             print_to_ui(f"Received {colored(device.type, device.type_color)} message from {device.name}:"
                                  f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}:"
                                  f" {message_decoded}")
+            if device.translation[0]:
+                message_decoded = skiracetiming.translate(message_decoded, device.translation[1], device.translation[2])
+                print_to_ui(f"Translated from {device.translation[1]} to {device.translation[2]}: {message_decoded}")
+                message = message_decoded.encode().hex()
 
             if device.mode == "DTE":
                 # Messages from DTE devices get sent to all DCE devices.
@@ -99,10 +104,14 @@ class DeviceBus(object):
         """
         while True:
             for d in self.dce_devices:
+                if d.remove_me:
+                    self.remove_device(d.name)
                 if d.exc and internet_connection():
                     # if the thread had an exception, start a new one
                     self._restart_thread(d)
             for d in self.dte_devices:
+                if d.remove_me:
+                    self.remove_device(d.name)
                 if d.exc and internet_connection():
                     # if the thread had an exception, start a new one
                     self._restart_thread(d)
@@ -110,6 +119,9 @@ class DeviceBus(object):
 
     def _restart_thread(self, device):
         print_to_ui(f"Reconnecting to {device.name}.")
+        while not internet_connection(): # wait for a connection
+            pass
+        time.sleep(1)
         device.kill_listen_stream()  # attempt to kill the listen thread if it is still responding
         device.exc = False  # reset the exception flag to false
         device.restart_session()  # start a new Session

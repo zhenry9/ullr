@@ -32,17 +32,28 @@ class Dweet2serConfiguration(object):
             utils.print_to_ui(f"Loading devices from config...", sys=True)
             for d in devices:
                 name = d
+                translation = [False, None, None]
                 location = self.parser[d]["location"]
                 dev_type = self.parser[d]["type"]
                 if self.parser[d]["mute"].upper().strip() == "TRUE":
                     mute = True
                 else:
                     mute = False
+                if self.parser[d]["translated"].upper().strip() == "TRUE":
+                    translation[0] = True
+                    translation[1] = self.parser[d]["translated_from"]
+                    translation[2] = self.parser[d]["translated_to"]
                 if location == "local":
                     port = self.parser[d]["port"]
                     baudrate = int(self.parser[d]["baud"])
                     try:
-                        dev = LocalDevice(port, dev_type, name, mute, baudrate)
+                        dev = LocalDevice(
+                            port=port, 
+                            mode=dev_type, 
+                            name=name, 
+                            mute=mute, 
+                            baudrate=baudrate, 
+                            translation=translation)
                         self.bus.add_device(dev)
                         utils.print_to_ui(f"Added {location} {dev_type} device '{name}' from config.", sys=True)
                     except Exception as e:
@@ -54,7 +65,13 @@ class Dweet2serConfiguration(object):
                     else:
                         key = self.parser[d]["key"]
                     try:
-                        dev = RemoteDevice(thing_name, dev_type, key, name, mute)
+                        dev = RemoteDevice(
+                            thing_id=thing_name, 
+                            mode=dev_type, 
+                            thing_key=key, 
+                            name=name, 
+                            mute=mute,
+                            translation=translation)
                         self.bus.add_device(dev)
                         utils.print_to_ui(f"Added {location} {dev_type} device '{name}' from config.", sys=True)
                     except Exception as e:
@@ -70,24 +87,7 @@ class Dweet2serConfiguration(object):
         self.parser = ConfigParser()  # clear any settings in the parser
         self._add_defaults_to_parser()
 
-        # add DCE settings to parser
-        for dev in self.bus.dce_devices:
-            self.parser.add_section(dev.name)
-            self.parser[dev.name]["type"] = "DCE"
-            if type(dev).__name__ == "LocalDevice":
-                self.parser[dev.name]["location"] = "local"
-                self.parser[dev.name]["port"] = dev.port_name
-                self.parser[dev.name]["baud"] = dev.baudrate
-            if type(dev).__name__ == "RemoteDevice":
-                self.parser[dev.name]["location"] = "remote"
-                self.parser[dev.name]["thing_name"] = dev.thing_id
-                self.parser[dev.name]["key"] = str(dev.thing_key)
-            self.parser[dev.name]["mute"] = str(dev.mute)
-
-        # add DTE settings to parser
-        for dev in self.bus.dte_devices:
-            self.parser.add_section(dev.name)
-            self.parser[dev.name]["type"] = "DTE"
+        def add_device_to_config(dev):
             if type(dev).__name__ == "LocalDevice":
                 self.parser[dev.name]["location"] = "local"
                 self.parser[dev.name]["port"] = dev.port_name
@@ -97,6 +97,21 @@ class Dweet2serConfiguration(object):
                 self.parser[dev.name]["thing_name"] = dev.thing_id
                 self.parser[dev.name]["key"] = str(dev.thing_key)
             self.parser[dev.name]["mute"] = str(dev.mute)
+            self.parser[dev.name]["translated"] = str(dev.translation[0])
+            self.parser[dev.name]["translated_from"] = str(dev.translation[1])
+            self.parser[dev.name]["translated_to"] = str(dev.translation[2])
+
+        # add DCE settings to parser
+        for dev in self.bus.dce_devices:
+            self.parser.add_section(dev.name)
+            self.parser[dev.name]["type"] = "DCE"
+            add_device_to_config(dev)
+
+        # add DTE settings to parser
+        for dev in self.bus.dte_devices:
+            self.parser.add_section(dev.name)
+            self.parser[dev.name]["type"] = "DTE"
+            add_device_to_config(dev)
 
         os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
 
