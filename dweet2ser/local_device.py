@@ -10,7 +10,7 @@ class LocalDevice(object):
     """
     A device connected to a serial port on the local machine.
     """
-    def __init__(self, port, mode, name="Local Device", mute=False, baudrate=9600, translation = [False, None, None]):
+    def __init__(self, port, mode, name="Local Device", mute=False, baudrate=9600, translation = [False, None, None, 0]):
         self.sku = id(self)
         self.name = name
         self.type = "serial"
@@ -36,13 +36,11 @@ class LocalDevice(object):
         if type(message) is not str:  # make sure the message is a string
             message = str(message)
         message_bytes = bytes.fromhex(message)  # convert dweet string into bytes for RS232.
-        message_decoded = message_bytes.decode('latin-1').rstrip()
         try:
             self.serial_port.write(message_bytes)
-            print_to_ui(f"{self.type.capitalize()} message sent to {self.name}: {message_decoded}")
+            
             return True
         except SerialTimeoutException:
-            print_to_ui(f"Writing to {self.name} timed out.")
             return False
 
     def listen(self):

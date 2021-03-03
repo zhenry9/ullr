@@ -16,7 +16,7 @@ class RemoteDevice(object):
     """
     Implementation of a serial device remotely connected with dweet.io
     """
-    def __init__(self, thing_id, mode, thing_key=None, name="Remote Device", mute=False, translation = [False, None, None]):
+    def __init__(self, thing_id, mode, thing_key=None, name="Remote Device", mute=False, translation = [False, None, None, 0]):
         self.sku = id(self)
         self.name = name
         self.type = "dweet"
@@ -53,9 +53,6 @@ class RemoteDevice(object):
         """
         if internet_connection() and self._send_dweet({self.write_kw: message}):
             # check for a connection before trying to send to dweet
-            message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
-            print_to_ui(f"{self.type.capitalize()} sent to {self.name}: "
-                    f"{message_decoded}")
             return True
         else:
             # if there's no connection save the message to resend on reconnect

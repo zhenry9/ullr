@@ -76,22 +76,30 @@ class DeviceBus(object):
 
             print_tape(device.sku, message_decoded)
             print_to_ui(f"Received {colored(device.type, device.type_color)} message from {device.name}:"
-                                 f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}:"
-                                 f" {message_decoded}")
+                        f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
+            
             if device.translation[0]:
-                message_decoded = skiracetiming.translate(message_decoded, device.translation[1], device.translation[2])
-                print_to_ui(f"Translated from {device.translation[1]} to {device.translation[2]}: {message_decoded}")
+                message_decoded = skiracetiming.translate(message_decoded, device.translation[1], 
+                                                          device.translation[2], device.translation[3])
+                print_to_ui(f"Translated from {device.translation[1]} to {device.translation[2]} "
+                            f"with channel shift {device.translation[3]}.")
                 message = message_decoded.encode().hex()
 
             if device.mode == "DTE":
                 # Messages from DTE devices get sent to all DCE devices.
                 for d in self.dce_devices:
-                    d.write(message)
+                    if d.write(message):
+                        print_to_ui(f"{colored(d.type.capitalize(), d.type_color)} message sent to {d.name}: {message_decoded}")
+                    else:
+                        print_to_ui(f"Writing to {d.name} failed.")
 
             elif device.mode == "DCE":
                 # Messages from DCE devices get sent to all DTE devices.
                 for d in self.dte_devices:
-                    d.write(message)
+                    if d.write(message):
+                        print_to_ui(f"{colored(d.type.capitalize(), d.type_color)} message sent to {d.name}: {message_decoded}")
+                    else:
+                        print_to_ui(f"Writing to {d.name} failed.")
 
             else:
                 print_to_ui("Mode not found")
@@ -118,7 +126,7 @@ class DeviceBus(object):
             time.sleep(.01)
 
     def _restart_thread(self, device):
-        print_to_ui(f"Reconnecting to {device.name}.")
+        print_to_ui(f"Reconnecting to {device.name}...")
         while not internet_connection(): # wait for a connection
             pass
         time.sleep(1)

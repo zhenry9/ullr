@@ -32,7 +32,7 @@ class Dweet2serConfiguration(object):
             utils.print_to_ui(f"Loading devices from config...", sys=True)
             for d in devices:
                 name = d
-                translation = [False, None, None]
+                translation = [False, None, None, 0]
                 location = self.parser[d]["location"]
                 dev_type = self.parser[d]["type"]
                 if self.parser[d]["mute"].upper().strip() == "TRUE":
@@ -43,6 +43,7 @@ class Dweet2serConfiguration(object):
                     translation[0] = True
                     translation[1] = self.parser[d]["translated_from"]
                     translation[2] = self.parser[d]["translated_to"]
+                    translation[3] = int(self.parser[d]["channel_shift"])
                 if location == "local":
                     port = self.parser[d]["port"]
                     baudrate = int(self.parser[d]["baud"])
@@ -100,6 +101,7 @@ class Dweet2serConfiguration(object):
             self.parser[dev.name]["translated"] = str(dev.translation[0])
             self.parser[dev.name]["translated_from"] = str(dev.translation[1])
             self.parser[dev.name]["translated_to"] = str(dev.translation[2])
+            self.parser[dev.name]["channel_shift"] = str(dev.translation[3])
 
         # add DCE settings to parser
         for dev in self.bus.dce_devices:

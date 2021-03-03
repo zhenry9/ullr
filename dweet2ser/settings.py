@@ -22,7 +22,8 @@ CONFIG_DEFAULTS = {"type": "",
                    "baud": "9600",
                    "translated": "False",
                    "translated_from": "None",
-                   "translated_to": "None"
+                   "translated_to": "None",
+                   "channel_shift": "0"
                    }
 
 

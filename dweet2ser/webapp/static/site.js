@@ -42,7 +42,7 @@ $("#console_tab").click(function() {
 
 function saveConfig(){
     socket.emit('save_config')
-    alert("Configuration saved to {{ config_file }}")
+    alert("Configuration saved to " + config_file)
 }
 
 function openForm(id) {

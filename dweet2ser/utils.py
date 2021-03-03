@@ -109,12 +109,11 @@ def print_to_ui(message, endline="\n", sys=False):
     logger.info(no_colors)
     if sys:
         message = sys_stamp + message
-        no_colors = sys_stamp + message
     else:
         message = timestamp() + message
-        no_colors = timestamp() + no_colors
     if ui == "webapp":
-        socketing.print_to_web_console(no_colors, endline=endline)
+        message = ansi_escape.sub('', message)
+        socketing.print_to_web_console(message, endline=endline)
     elif ui == "cli":
         interface.s_print(message, end=endline)
 
