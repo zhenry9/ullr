@@ -50,6 +50,8 @@ def get_log_file():
 def setup_logger():
     logger = logging.getLogger("")
     logger.setLevel(logging.DEBUG)
+    logging.getLogger("requests").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
     handler = logging.handlers.RotatingFileHandler(
         get_log_file(), maxBytes=(1024 * 100), backupCount=5
     )
@@ -102,14 +104,16 @@ def get_available_com_ports():
     return names
 
 def print_to_ui(message, endline="\n", sys=False):
-    logger.info(message)
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    no_colors = ansi_escape.sub('', message)
+    logger.info(no_colors)
     if sys:
         message = sys_stamp + message
+        no_colors = sys_stamp + message
     else:
         message = timestamp() + message
+        no_colors = timestamp() + no_colors
     if ui == "webapp":
-        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-        no_colors = ansi_escape.sub('', message)
         socketing.print_to_web_console(no_colors, endline=endline)
     elif ui == "cli":
         interface.s_print(message, end=endline)
