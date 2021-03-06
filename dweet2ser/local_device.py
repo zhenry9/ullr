@@ -27,7 +27,6 @@ class LocalDevice(object):
         self.translation = translation
         self.exc = False
         self.listening = False
-        self.remove_me = False
 
     def write(self, message: str):
         """
@@ -49,18 +48,15 @@ class LocalDevice(object):
         ser = self.serial_port
         self.listening = True
 
-        try:
-            while self.listening:
-                if ser.in_waiting > 0:
-                    ser_data = ser.read(100)
-                    self._last_message = ser_data.hex()
-                    yield ser_data.hex()
-                else:
-                    time.sleep(0.0001)
-            self.serial_port.close()
-        except:
-            print_to_ui(f"{self.name} unplugged.")
-            self.remove_me = True
+
+        while self.listening:
+            if ser.in_waiting > 0:
+                ser_data = ser.read(100)
+                self._last_message = ser_data.hex()
+                yield ser_data.hex()
+            else:
+                time.sleep(0.0001)
+        self.serial_port.close()
 
         return 
 

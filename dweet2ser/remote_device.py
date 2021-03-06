@@ -65,7 +65,7 @@ class RemoteDevice(object):
         """
         Attempt to send queued messages.
         """
-        while len(self._message_queue) > 0 and internet_connection():
+        while len(self._message_queue) > 0:
             print_to_ui(f"Sending queued messages.")
             self.write(self._message_queue.pop(0))
             time.sleep(1.2)  # avoid exceeding dweet.io's 1s rate limit
