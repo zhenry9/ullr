@@ -43,15 +43,22 @@ dweet2ser needs to be running and individually configured on all DTE and DCE dev
 ### Default
 `dweet2ser`
 
+This starts dweet2ser with a web interface on `localhost:5000`.
 If dweet2ser is run without command line options, it will attempt to load devices from the default config file. This
 will be '~/.config/dweet2ser/config.ini', or '/etc/dweet2ser/config.ini' if run as superuser. 
 If you are running dweet2ser for the first time or with an empty config file, no devices will be loaded. You can add
-devices interactively using the 'add' command.
+devices interactively using the web interface.
+
+### CLI
+`dweet2ser --nowebui`
+
+This will load dweet2ser with a command line interface only, whithout the web interface. 
+Configuration can be done interactively from the command line.
 
 ### Empty
 `dweet2ser --empty`
 
-This will ignore the default config file and start dweet2ser without any device loaded. This is useful for fixing bad
+This will ignore the default config file and start dweet2ser without any devices loaded. This is useful for fixing bad
 config files, or creating new ones from scratch.
 
 ### From file
@@ -97,5 +104,5 @@ In the above example, we could use com0com to create a virtual null modem with p
 dweet2ser would connect to COM20, and the PC software to COM21.
 
 ## Licensing and Copyright
-MIT License
+GNU GPL v3 License
 Copyright (c) Zach Henry.

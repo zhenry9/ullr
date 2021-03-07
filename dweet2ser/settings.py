@@ -20,7 +20,10 @@ CONFIG_DEFAULTS = {"type": "",
                    "key": "None",
                    "mute": "False",
                    "baud": "9600",
-                   "ui": "webapp"
+                   "translated": "False",
+                   "translated_from": "None",
+                   "translated_to": "None",
+                   "channel_shift": "0"
                    }
 
 

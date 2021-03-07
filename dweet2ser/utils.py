@@ -2,6 +2,9 @@ import datetime
 import os
 import socket
 import re
+import sys
+import glob
+import serial
 import logging
 import logging.handlers
 
@@ -50,6 +53,8 @@ def get_log_file():
 def setup_logger():
     logger = logging.getLogger("")
     logger.setLevel(logging.DEBUG)
+    logging.getLogger("requests").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
     handler = logging.handlers.RotatingFileHandler(
         get_log_file(), maxBytes=(1024 * 100), backupCount=5
     )
@@ -94,23 +99,44 @@ def get_ip():
     return IP
 
 def get_available_com_ports():
-    names = []
-    import serial.tools.list_ports
-    ports = list(serial.tools.list_ports.comports())
-    for p in ports:
-        names.append(p[0])
-    return names
+    """ Lists serial port names
+
+        :raises EnvironmentError:
+            On unsupported or unknown platforms
+        :returns:
+            A list of the serial ports available on the system
+    """
+    if sys.platform.startswith('win'):
+        ports = ['COM%s' % (i + 1) for i in range(100)]
+    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+        # this excludes your current terminal "/dev/tty"
+        ports = glob.glob('/dev/tty[A-Za-z]*')
+    elif sys.platform.startswith('darwin'):
+        ports = glob.glob('/dev/tty.*')
+    else:
+        raise EnvironmentError('Unsupported platform')
+
+    result = []
+    for port in ports:
+        try:
+            s = serial.Serial(port)
+            s.close()
+            result.append(port)
+        except (OSError, serial.SerialException):
+            pass
+    return result
 
 def print_to_ui(message, endline="\n", sys=False):
-    logger.info(message)
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    no_colors = ansi_escape.sub('', message)
+    logger.info(no_colors)
     if sys:
         message = sys_stamp + message
     else:
         message = timestamp() + message
     if ui == "webapp":
-        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-        no_colors = ansi_escape.sub('', message)
-        socketing.print_to_web_console(no_colors, endline=endline)
+        message = ansi_escape.sub('', message)
+        socketing.print_to_web_console(message, endline=endline)
     elif ui == "cli":
         interface.s_print(message, end=endline)
 

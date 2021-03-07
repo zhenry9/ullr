@@ -16,7 +16,7 @@ class RemoteDevice(object):
     """
     Implementation of a serial device remotely connected with dweet.io
     """
-    def __init__(self, thing_id, mode, thing_key=None, name="Remote Device", mute=False):
+    def __init__(self, thing_id, mode, thing_key=None, name="Remote Device", mute=False, translation = [False, None, None, 0]):
         self.sku = id(self)
         self.name = name
         self.type = "dweet"
@@ -43,6 +43,8 @@ class RemoteDevice(object):
         self._started_on_day = datetime.datetime.utcnow().strftime("%Y-%m-%d")
         self.exc = False
         self.listening = False
+        self.remove_me = False
+        self.translation = translation
 
     def write(self, message):
         """
@@ -51,9 +53,6 @@ class RemoteDevice(object):
         """
         if internet_connection() and self._send_dweet({self.write_kw: message}):
             # check for a connection before trying to send to dweet
-            message_decoded = bytes.fromhex(message).decode('latin-1').rstrip()
-            print_to_ui(f"{self.type.capitalize()} sent to {self.name}: "
-                    f"{message_decoded}")
             return True
         else:
             # if there's no connection save the message to resend on reconnect
@@ -66,7 +65,7 @@ class RemoteDevice(object):
         """
         Attempt to send queued messages.
         """
-        while len(self._message_queue) > 0 and internet_connection():
+        while len(self._message_queue) > 0:
             print_to_ui(f"Sending queued messages.")
             self.write(self._message_queue.pop(0))
             time.sleep(1.2)  # avoid exceeding dweet.io's 1s rate limit
@@ -118,6 +117,8 @@ class RemoteDevice(object):
         for message in self._listen_for_dweets():
             yield message
 
+        self.listening = False
+
     def _listen_for_dweets(self):
         """ makes a call to dweepy to start a listening stream. error handling needs work
         """
@@ -156,7 +157,15 @@ class RemoteDevice(object):
             This sends a dummy payload every 45s to avoid that.
         """
         while self.listening and not self.exc:
-            time.sleep(45)
+            no_internet_counter = 0
+            for i in range(0, 44):
+                if not self.listening or self.exc:
+                    break
+                time.sleep(1)
+                if not internet_connection():
+                    no_internet_counter += 1
+                if no_internet_counter >= 3:
+                    self.exc = True
             self._send_dweet({"keepalive": 1})
 
     def get_last_message(self):
