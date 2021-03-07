@@ -220,6 +220,7 @@ body {
 
 /* Add styles to the form container */
 .form-container {
+    display: flex;
     flex-direction: column;
     width: 100%;
     padding: 10px;
@@ -271,13 +272,17 @@ body {
 }
 
 /* Add a red background color to the cancel button */
-.form-container .cancel {
+.form-container .local {
   background-color: rgb(199, 0, 0);
 }
 
 /* Add some hover effects to buttons */
 .form-container .btn:hover, .open-button:hover {
   opacity: 1;
+}
+
+#mode {
+    margin-top: 5px;
 }
 
 .device_window{

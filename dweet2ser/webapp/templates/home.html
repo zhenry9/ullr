@@ -16,17 +16,19 @@
     
                     <input type="text" placeholder="Enter Dweet ID" name="thing_id" required>
                     
-                    <input type="radio" id="DCE" name="mode" value="DCE" checked>
-                    <label for="DCE">DCE</label>
-                    <input type="radio" id="DTE" name="mode" value="DTE">
-                    <label for="DTE">DTE</label>
+                    <label for="type">Type: 
+                    <select id="mode" name="mode">
+                        <option value="DCE">DCE</option>
+                        <option value="DTE">DTE</option>
+                    </select>
+                    </label>
 
                     <label>
-                        <input type="checkbox" name="mute"/>Mute?
+                        Mute? <input type="checkbox" name="mute"/>
                     </label>
     
                     <button type="submit" class="btn">Add</button>
-                    <button type="button" class="btn cancel" onclick="closeForm('addRemote')">Close</button>
+                    
                 </form>
             </div>
             <button onclick="openForm('addLocal')">Add Local Device</button>
@@ -35,28 +37,37 @@
                     <h1>Add Local</h1>
     
                     <input type="text" placeholder="Enter Name" name="name" required>
-    
-                    <input type="text" placeholder="Enter Port" name="port" required>
 
-                    <input type="radio" id="DCE" name="mode" value="DCE" checked>
-                    <label for="DCE">DCE</label>
-                    <input type="radio" id="DTE" name="mode" value="DTE">
-                    <label for="DTE">DTE</label>
-                    
-                    <label for="baud">Baudrate:</label>
+                    <label for="type">Type: 
+                    <select id="mode" name="mode">
+                        <option value="DCE">DCE</option>
+                        <option value="DTE">DTE</option>
+                    </select>
+                    </label>
+
+                    <label for="port">Port: 
+                    <select id="port" name="port">
+                    {% for port in ports %}
+                        <option value="{{ port }}">{{ port }}</option>
+                    {% endfor %}
+                    </select>
+                    </label>
+                                        
+                    <label for="baud">Baud:
                     <select id="baud" name="baud">
                         <option value="9600">9600</option>
                         <option value="1200">1200</option>
                         <option value="2400">2400</option>
                         <option value="4800">4800</option>
                     </select>
-                    
+                    </label>
+
                     <label>
                         Mute? <input type="checkbox" name="mute"/>
                     </label>
     
-                    <button type="submit" class="btn">Add</button>
-                    <button type="button" class="btn cancel" onclick="closeForm('addLocal')">Close</button>
+                    <button type="submit" class="btn local">Add</button>
+                    
                 </form>
             </div>
             <form action="/get_log" metod="POST" style="margin-bottom: auto;"><button>Get Log File</button></form>
