@@ -24,7 +24,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3',
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: GNU General Public License (GPL)',
         'Natural Language :: English',
     ],
     install_requires=[
