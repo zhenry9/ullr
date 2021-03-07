@@ -51,7 +51,7 @@ def add_local():
                 baudrate=form["baud"])
             current_session.bus.add_device(dev)
         except Exception as e:
-            socketing.print_to_web_console(f"{utils.timestamp()}Failed to add device: {e}")
+            utils.print_to_ui(f"Failed to add device: {e}")
     
     return redirect("/")
 
