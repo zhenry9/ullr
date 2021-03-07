@@ -41,6 +41,7 @@ class DeviceBus(object):
             self.listen_threads[device.name] = threading.Thread(target=self._listen_stream, args=[device])
             self.listen_threads[device.name].daemon = True
             self.listen_threads[device.name].start()
+        print_to_ui(f"Added device {device.name}.")
         return True
 
     def remove_device(self, device_name):
