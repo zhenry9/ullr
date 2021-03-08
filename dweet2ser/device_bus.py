@@ -87,11 +87,14 @@ class DeviceBus(object):
                             f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
                 
                 if device.translation[0]:
-                    message_decoded = skiracetiming.translate(message_decoded, device.translation[1], 
-                                                            device.translation[2], device.translation[3])
-                    print_to_ui(f"Translated from {device.translation[1]} to {device.translation[2]} "
-                                f"with channel shift {device.translation[3]}.")
-                    message = message_decoded.encode().hex()
+                    try:
+                        message_decoded = skiracetiming.translate(message_decoded, device.translation[1], 
+                                                                device.translation[2], device.translation[3])
+                        print_to_ui(f"Translated from {device.translation[1]} to {device.translation[2]} "
+                                    f"with channel shift {device.translation[3]}.")
+                        message = message_decoded.encode().hex()
+                    except Exception as e:
+                        print_to_ui(f"Translation failed: {e}")
                     
                 def write_to_device_list(list):
                     for d in list:
