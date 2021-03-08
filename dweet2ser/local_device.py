@@ -20,7 +20,7 @@ class LocalDevice(object):
         self.baudrate = baudrate
         self.serial_port = serial.Serial(port=port,
                                          baudrate=baudrate,
-                                         timeout=0.1,
+                                         timeout=round(1/(baudrate/500), 1),
                                          write_timeout=3)
         self._last_message = ''
         self.mute = mute
