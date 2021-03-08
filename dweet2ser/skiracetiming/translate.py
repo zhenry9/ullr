@@ -84,7 +84,7 @@ def _encode_s4(channel, tod):
 #       T = Time with no ":", HHMMSSttt
 # Example: "000100010012552550M 123456789\r" Finish at 12:34:56.789, either manually or from cable 
 def _decode_racetime2(message):
-    chan = message[14:17]
+    chan = int(message[14:17])
     channel = ["", False]
     # try to normalize channel numbers so they can be usable by other formats.
     # finish goes from 255>1, aux from 254>2, radio channels start at 3 instead of 1.
