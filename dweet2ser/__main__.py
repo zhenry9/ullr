@@ -10,10 +10,13 @@ from .webapp import views
 
 current_session = DweetSession()
 
+
 def main():
-    arg_parser = argparse.ArgumentParser(description="An interface for networking R232 devices using dweet.io.")
+    arg_parser = argparse.ArgumentParser(
+        description="An interface for networking R232 devices using dweet.io.")
     options = arg_parser.add_mutually_exclusive_group()
-    options.add_argument("--file", type=str, help="Specify config file to use, overriding defaults.")
+    options.add_argument(
+        "--file", type=str, help="Specify config file to use, overriding defaults.")
     options.add_argument("--empty", action='store_true', help="Start dweet2ser with no devices. "
                                                               "Useful for fixing broken config files "
                                                               "or creating new ones.")
@@ -21,7 +24,7 @@ def main():
                          help="Setup a basic connection with command line arguments."
                               "\ne.g. --override DCE /dev/ttyUSB0 dweet2ser_default.")
     arg_parser.add_argument("--nowebui", action="store_true", help="Use dweet2ser from the command line."
-                                                                   "Don't run GUI on webserver.")                          
+                                                                   "Don't run GUI on webserver.")
     args = arg_parser.parse_args()
 
     utils.print_to_ui(f"Starting dweet2ser v{version}...", sys=True)
@@ -32,7 +35,8 @@ def main():
         else:
             other_mode = "DTE"
         try:
-            local = local_device.LocalDevice(args.override[1], args.override[0])
+            local = local_device.LocalDevice(
+                args.override[1], args.override[0])
             remote = remote_device.RemoteDevice(args.override[2], other_mode)
             current_session.bus.add_device(local)
             current_session.bus.add_device(remote)
@@ -49,12 +53,12 @@ def main():
         cli.init(current_session)
         utils.set_ui("cli")
         cli.run()
-    
+
     else:
         views.init(current_session)
         utils.set_ui("webapp")
         webapp.run()
-    
+
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

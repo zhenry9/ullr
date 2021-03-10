@@ -25,6 +25,3 @@ CONFIG_DEFAULTS = {"type": "",
                    "translated_to": "None",
                    "channel_shift": "0"
                    }
-
-
-

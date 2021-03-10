@@ -15,17 +15,20 @@ from . import skiracetiming
 
 colorama_init()
 
+
 class DeviceBus(object):
     """
     Holds all the devices in a connection and facilitates communication between them. All DCE devices
     write to all DTE devices and vice versa.
     """
+
     def __init__(self):
         self.dce_devices = []
         self.dte_devices = []
         self.listen_threads = {}
 
-        self.stream_restarter = threading.Thread(target=self._check_for_crashed_threads)
+        self.stream_restarter = threading.Thread(
+            target=self._check_for_crashed_threads)
         self.stream_restarter.daemon = True
         self.stream_restarter.start()
 
@@ -38,7 +41,8 @@ class DeviceBus(object):
         if device.mode == "DCE":
             self.dce_devices.append(device)
         if not device.mute:
-            self.listen_threads[device.name] = threading.Thread(target=self._listen_stream, args=[device])
+            self.listen_threads[device.name] = threading.Thread(
+                target=self._listen_stream, args=[device])
             self.listen_threads[device.name].daemon = True
             self.listen_threads[device.name].start()
         print_to_ui(f"Added device {device.name}.")
@@ -85,24 +89,26 @@ class DeviceBus(object):
                 print_tape(device.sku, message_decoded)
                 print_to_ui(f"Received {colored(device.type, device.type_color)} message from {device.name}:"
                             f" {Fore.LIGHTWHITE_EX}{message_decoded}{Style.RESET_ALL}")
-                
+
                 if device.translation[0]:
                     try:
-                        message_decoded = skiracetiming.translate(message_decoded, device.translation[1], 
-                                                                device.translation[2], device.translation[3])
+                        message_decoded = skiracetiming.translate(message_decoded, device.translation[1],
+                                                                  device.translation[2], device.translation[3])
                         message = message_decoded.encode().hex()
                         message_decoded = message_decoded.rstrip().replace('\r', '')
                         print_to_ui(f"Translated from {device.translation[1]} to {device.translation[2]} "
                                     f"with channel shift {device.translation[3]}.")
-                        
+
                     except Exception as e:
                         print_to_ui(f"Translation failed: {e}")
-                    
+
                 def write_to_device_list(list):
                     for d in list:
                         try:
                             if d.write(message):
-                                print_to_ui(f"{colored(d.type.capitalize(), d.type_color)} message sent to {d.name}: {message_decoded}")
+                                print_to_ui(
+                                    f"{colored(d.type.capitalize(), d.type_color)} message sent to {d.name}: "
+                                    "{message_decoded}")
                             else:
                                 print_to_ui(f"Writing to {d.name} failed.")
                         except (OSError, ProtocolError, ConnectionError, DweepyError, DeadConnectionError) as e:
@@ -149,15 +155,17 @@ class DeviceBus(object):
 
     def _restart_thread(self, device):
         print_to_ui(f"Reconnecting to {device.name}...")
-        while not internet_connection(): # wait for a connection
+        while not internet_connection():  # wait for a connection
             pass
         time.sleep(1)
-        device.kill_listen_stream()  # attempt to kill the listen thread if it is still responding
+        # attempt to kill the listen thread if it is still responding
+        device.kill_listen_stream()
         device.exc = False  # reset the exception flag to false
         device.restart_session()  # start a new Session
         device.send_message_queue()  # send any messages saved in the queue
         if not device.mute:  # restart the listen thread if needed
-            self.listen_threads[device.name] = threading.Thread(target=self._listen_stream, args=[device])
+            self.listen_threads[device.name] = threading.Thread(
+                target=self._listen_stream, args=[device])
             self.listen_threads[device.name].daemon = True
             self.listen_threads[device.name].start()
         return

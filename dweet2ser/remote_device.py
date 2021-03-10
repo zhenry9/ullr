@@ -8,6 +8,7 @@ from urllib3.exceptions import ProtocolError
 from . import dweepy
 from .utils import internet_connection, print_to_ui
 
+
 class DeadConnectionError(Exception):
     pass
 
@@ -16,7 +17,8 @@ class RemoteDevice(object):
     """
     Implementation of a serial device remotely connected with dweet.io
     """
-    def __init__(self, thing_id, mode, thing_key=None, name="Remote Device", mute=False, translation = [False, None, None, 0]):
+    def __init__(self, thing_id, mode, thing_key=None, name="Remote Device",
+                 mute=False, translation=[False, None, None, 0]):
         self.sku = id(self)
         self.name = name
         self.type = "dweet"

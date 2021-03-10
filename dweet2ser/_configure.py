@@ -3,27 +3,31 @@ from configparser import ConfigParser
 
 from .local_device import LocalDevice
 from .remote_device import RemoteDevice
+from .device_bus import DeviceBus
 from .settings import CONFIG_COMMENTS, CONFIG_DEFAULTS
 from . import utils
+
 
 class Dweet2serConfiguration(object):
 
     def __init__(self):
         self.parser = ConfigParser()
-        self.bus = object()
+        self.bus = DeviceBus()
         self.config_file = utils.get_default_config_file()
 
     def add_devices_from_file(self, file=None):
-        """ Attempt to add devices from an arbitrary file. If no file is given the default file is used.
+        """ Attempt to add devices from an arbitrary file. If no file is given
+            the default file is used.
 
         """
-        if file == None:
+        if file is None:
             file = self.config_file
         if self._load_config_file(file):
             try:
                 self._add_devices()
             except Exception as exc:
-                utils.print_to_ui(f"Invalid config file format: {exc}", sys=True)
+                utils.print_to_ui(
+                    f"Invalid config file format: {exc}", sys=True)
 
     def _add_devices(self):
         devices = self.parser.sections()
@@ -49,16 +53,18 @@ class Dweet2serConfiguration(object):
                     baudrate = int(self.parser[d]["baud"])
                     try:
                         dev = LocalDevice(
-                            port=port, 
-                            mode=dev_type, 
-                            name=name, 
-                            mute=mute, 
-                            baudrate=baudrate, 
+                            port=port,
+                            mode=dev_type,
+                            name=name,
+                            mute=mute,
+                            baudrate=baudrate,
                             translation=translation)
                         self.bus.add_device(dev)
-                        utils.print_to_ui(f"Added {location} {dev_type} device '{name}' from config.", sys=True)
+                        utils.print_to_ui(
+                            f"Added {location} {dev_type} device '{name}' from config.", sys=True)
                     except Exception as e:
-                        utils.print_to_ui(f"Failed to add device '{name}' from default config: {e}", sys=True)
+                        utils.print_to_ui(
+                            f"Failed to add device '{name}' from default config: {e}", sys=True)
                 elif location == "remote":
                     thing_name = self.parser[d]["thing_name"]
                     if self.parser[d]["key"] == "" or self.parser[d]["key"].lower().strip() == "none":
@@ -67,19 +73,21 @@ class Dweet2serConfiguration(object):
                         key = self.parser[d]["key"]
                     try:
                         dev = RemoteDevice(
-                            thing_id=thing_name, 
-                            mode=dev_type, 
-                            thing_key=key, 
-                            name=name, 
+                            thing_id=thing_name,
+                            mode=dev_type,
+                            thing_key=key,
+                            name=name,
                             mute=mute,
                             translation=translation)
                         self.bus.add_device(dev)
-                        utils.print_to_ui(f"Added {location} {dev_type} device '{name}' from config.", sys=True)
+                        utils.print_to_ui(
+                            f"Added {location} {dev_type} device '{name}' from config.", sys=True)
                     except Exception as e:
-                        utils.print_to_ui(f"Failed to add device '{name}' from default config: {e}", sys=True)
+                        utils.print_to_ui(
+                            f"Failed to add device '{name}' from default config: {e}", sys=True)
                 else:
                     utils.print_to_ui(f"Failed to add device '{name}' from default config: "
-                            f"invalid location '{location}'", sys=True)
+                                      f"invalid location '{location}'", sys=True)
 
     def save_current_to_file(self):
         """ Save the current device bus to default config file
@@ -122,7 +130,8 @@ class Dweet2serConfiguration(object):
         with open(self.config_file, 'a') as configfile:
             self.parser.write(configfile)
 
-        utils.print_to_ui(f"Settings saved to config file: {self.config_file}", sys=True)
+        utils.print_to_ui(
+            f"Settings saved to config file: {self.config_file}", sys=True)
 
     def _load_config_file(self, file):
         if not os.path.isabs(file):
@@ -142,7 +151,8 @@ class Dweet2serConfiguration(object):
             self._add_defaults_to_parser()
             utils.print_to_ui(f"Config file {file} not found.", sys=True)
             if file == self.config_file:
-                utils.print_to_ui(f"Creating empty default file at: {file}", sys=True)
+                utils.print_to_ui(
+                    f"Creating empty default file at: {file}", sys=True)
                 self.save_current_to_file()
             return False
 

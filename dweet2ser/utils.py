@@ -18,9 +18,11 @@ from .cli import interface
 colorama_init()
 ui = "webapp"
 
+
 def set_ui(user_int):
     global ui
     ui = user_int
+
 
 def get_default_config_file():
     if USER_SPECIFIED_DEFAULT_CONFIG_FILE is None:
@@ -34,6 +36,7 @@ def get_default_config_file():
         return os.path.join(home_path, 'dweet2ser', file_name)
     else:
         return USER_SPECIFIED_DEFAULT_CONFIG_FILE
+
 
 def get_log_file():
     if USER_SPECIFIED_LOG_FILE is None:
@@ -50,6 +53,7 @@ def get_log_file():
     os.makedirs(os.path.dirname(path), exist_ok=True)
     return path
 
+
 def setup_logger():
     logger = logging.getLogger("")
     logger.setLevel(logging.DEBUG)
@@ -58,10 +62,12 @@ def setup_logger():
     handler = logging.handlers.RotatingFileHandler(
         get_log_file(), maxBytes=(1024 * 100), backupCount=5
     )
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     return logger
+
 
 logger = setup_logger()
 
@@ -86,6 +92,7 @@ def internet_connection(host="8.8.8.8", port=53, timeout=3):
         #  print(ex)
         return False
 
+
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
@@ -97,6 +104,7 @@ def get_ip():
     finally:
         s.close()
     return IP
+
 
 def get_available_com_ports():
     """ Lists serial port names
@@ -126,6 +134,7 @@ def get_available_com_ports():
             pass
     return result
 
+
 def print_to_ui(message, endline="\n", sys=False):
     ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
     no_colors = ansi_escape.sub('', message)
@@ -139,4 +148,3 @@ def print_to_ui(message, endline="\n", sys=False):
         socketing.print_to_web_console(message, endline=endline)
     elif ui == "cli":
         interface.s_print(message, end=endline)
-
