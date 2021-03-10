@@ -11,16 +11,11 @@ from . import socketing, webapp, socketio
 
 current_session = object()
 
+
 def init(session):
     global current_session
     current_session = session
 
-def stream_template(template_name, **context):
-    webapp.update_template_context(context)
-    t = webapp.jinja_env.get_template(template_name)
-    rv = t.stream(context)
-    rv.enable_buffering(5)
-    return rv
 
 @webapp.route("/")
 def home():
@@ -34,6 +29,7 @@ def home():
         config_file=current_session.config_file.replace("\\", "\\\\")
     )
 
+
 @webapp.route("/add_local", methods=["GET", "POST"])
 def add_local():
     if request.method == "POST":
@@ -44,16 +40,17 @@ def add_local():
 
         try:
             dev = LocalDevice(
-                form["port"], 
-                form["mode"], 
-                form["name"], 
-                mute=mute, 
+                form["port"],
+                form["mode"],
+                form["name"],
+                mute=mute,
                 baudrate=form["baud"])
             current_session.bus.add_device(dev)
         except Exception as e:
             utils.print_to_ui(f"Failed to add device: {e}")
-    
+
     return redirect("/")
+
 
 @webapp.route("/add_remote", methods=["GET", "POST"])
 def add_remote():
@@ -65,21 +62,24 @@ def add_remote():
 
         try:
             dev = RemoteDevice(
-                form["thing_id"], 
-                form["mode"], 
-                name=form["name"], 
-                mute=mute, 
-                )
+                form["thing_id"],
+                form["mode"],
+                name=form["name"],
+                mute=mute,
+            )
             current_session.bus.add_device(dev)
         except Exception as e:
-            socketing.print_to_web_console(f"{utils.timestamp()}Failed to add device: {e}")
-    
+            socketing.print_to_web_console(
+                f"{utils.timestamp()}Failed to add device: {e}")
+
     return redirect("/")
+
 
 @webapp.route("/remove/<device>", methods=["GET", "POST"])
 def remove_device(device):
     current_session.bus.remove_device(device)
     return redirect("/")
+
 
 @webapp.route("/get_log", methods=["GET", "POST"])
 def get_log():
@@ -90,8 +90,11 @@ def get_log():
     return Response(
         log,
         mimetype="text/plain",
-        headers={"Content-disposition": f"attachment; filename={now}-dweet2ser-{socket.gethostname()}.log"}
+        headers={
+            "Content-disposition": f"attachment; filename={now}-dweet2ser-{socket.gethostname()}.log"}
     )
+
+
 @socketio.on("save_config")
 def save_config():
     current_session.save_current_to_file()

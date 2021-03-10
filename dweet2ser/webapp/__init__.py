@@ -8,5 +8,6 @@ socketio = flask_socketio.SocketIO(webapp)
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
+
 def run():
     socketio.run(webapp, host="0.0.0.0")
