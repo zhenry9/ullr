@@ -108,7 +108,7 @@ class DeviceBus(object):
                             if d.write(message):
                                 print_to_ui(
                                     f"{colored(d.type.capitalize(), d.type_color)} message sent to {d.name}: "
-                                    "{message_decoded}")
+                                    f"{message_decoded}")
                             else:
                                 print_to_ui(f"Writing to {d.name} failed.")
                         except (OSError, ProtocolError, ConnectionError, DweepyError, DeadConnectionError) as e:
