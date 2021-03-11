@@ -53,9 +53,9 @@ class RemoteDevice(object):
         Tries to send a dweet message to the remote device. If there's no internet connection it saves
         the message to a queue.
         """
-        if internet_connection():
+        if internet_connection() and self._send_dweet({self.write_kw: message}):
             # check for a connection before trying to send to dweet
-            return self._send_dweet({self.write_kw: message})
+            return True
         else:
             # if there's no connection save the message to resend on reconnect
             print_to_ui(f"No connection to {self.name}. Saving message to queue.")
