@@ -20,7 +20,7 @@ def _decode_cp540(message):
 
 def _encode_cp540(channel, tod):
     channel[0] += 1  # First channel of CP540 is 1, not 0.
-    if channel[0] > 16:
+    if channel[0] > 16 or channel[0] < 1:
         raise TranslationError(f"Channel {channel[0]} out of range for CP540.")
     if channel[0] > 9:
         chan = f"{channel[0]}"
@@ -43,7 +43,7 @@ def _decode_timy(message):
     return channel, tod
 
 def _encode_timy(channel, tod):
-    if channel[0] > 7:
+    if channel[0] > 7 or channel[0] < 0:
         raise TranslationError(f"Channel {channel[0]} out of range for Timy.")
     if channel[1]:
         chan = f"c{channel[0]}M"
@@ -63,7 +63,7 @@ def _decode_s4(message):
     return channel, tod
 
 def _encode_s4(channel, tod):
-    if channel[0] > 17:
+    if channel[0] > 17 or channel[0] < 0:
         raise TranslationError(f"Channel {channel[0]} out of range for S4.")
     if channel[0] == 0:
         chan = "SZ "
@@ -103,6 +103,8 @@ def _decode_racetime2(message):
 
 def _encode_racetime2(channel, tod):
     # try to map normalized channel numbers to the physical channels of racetime2
+    if channel [0] > 255 or channel[0] < 0:
+        raise TranslationError(f"Channel {channel[0]} out of range for RaceTime2.")
     if channel[0] == 0:
         chan = "000"
     elif channel[0] == 1:
