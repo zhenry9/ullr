@@ -20,7 +20,7 @@ def _decode_cp540(message):
 
 def _encode_cp540(channel, tod):
     channel[0] += 1  # First channel of CP540 is 1, not 0.
-    if channel[0] > 8:
+    if channel[0] > 16:
         raise TranslationError(f"Channel {channel[0]} out of range for CP540.")
     if channel[1]:
         chan = f"M{channel[0]}"
