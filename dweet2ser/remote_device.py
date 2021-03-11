@@ -6,7 +6,7 @@ import requests
 from urllib3.exceptions import ProtocolError
 
 from . import dweepy
-from .utils import internet_connection, print_to_ui
+from .utils import internet_connection, print_to_ui, logger
 
 
 class DeadConnectionError(Exception):
@@ -53,9 +53,9 @@ class RemoteDevice(object):
         Tries to send a dweet message to the remote device. If there's no internet connection it saves
         the message to a queue.
         """
-        if internet_connection() and self._send_dweet({self.write_kw: message}):
+        if internet_connection():
             # check for a connection before trying to send to dweet
-            return True
+            return self._send_dweet({self.write_kw: message})
         else:
             # if there's no connection save the message to resend on reconnect
             print_to_ui(f"No connection to {self.name}. Saving message to queue.")
@@ -78,12 +78,13 @@ class RemoteDevice(object):
             return True
 
         except dweepy.DweepyError as e:
-            print_to_ui(str(e))
             if str(e) == "Rate limit exceeded, try again in 1 second(s).":
-                print_to_ui(f"Trying again...")
+                logger.warn(e)
+                logger.info("Trying again...")
                 time.sleep(1.5)
                 return self._send_dweet(content)
             else:
+                print_to_ui(e)
                 return False
 
         except (ConnectionError, ProtocolError, OSError) as e:
@@ -161,13 +162,14 @@ class RemoteDevice(object):
         while self.listening and not self.exc:
             no_internet_counter = 0
             for i in range(0, 44):
-                if not self.listening or self.exc:
+                if self.exc or not self.listening:
                     break
                 time.sleep(1)
                 if not internet_connection():
                     no_internet_counter += 1
                 if no_internet_counter >= 3:
                     self.exc = True
+                    print_to_ui("Internet connection lost.")
             self._send_dweet({"keepalive": 1})
 
     def get_last_message(self):
