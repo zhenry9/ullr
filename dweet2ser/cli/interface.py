@@ -6,6 +6,7 @@ from colorama import init as colorama_init, Fore, Style
 colorama_init()
 s_print_lock = Lock()
 
+
 def s_print(*a, **b):
     """Thread safe print function"""
     with s_print_lock:
@@ -17,6 +18,7 @@ def s_input(*a):
     with s_print_lock:
         print(*a, end='')
     return input('')
+
 
 def get_devices_table(session):
     """
@@ -41,25 +43,25 @@ def get_devices_table(session):
             num = str(i + 1)
             d = dev_list[i]
             if type(d).__name__ == "LocalDevice":
-                buf+=(f"\t"
-                    f"{num.ljust(3)}  "
-                    f"{d.name.ljust(16)}  "
-                    f"{colored(d.type.ljust(10), d.type_color)}  "
-                    f"{d.port_name.ljust(15)}  "
-                    f"{''.ljust(20)}  "
-                    f"{''.ljust(10)}  "
-                    f"{str(d.mute).ljust(10)}  "
-                    )
+                buf += (f"\t"
+                        f"{num.ljust(3)}  "
+                        f"{d.name.ljust(16)}  "
+                        f"{colored(d.type.ljust(10), d.type_color)}  "
+                        f"{d.port_name.ljust(15)}  "
+                        f"{''.ljust(20)}  "
+                        f"{''.ljust(10)}  "
+                        f"{str(d.mute).ljust(10)}  "
+                        )
             if type(d).__name__ == "RemoteDevice":
-                buf+=(f"\t"
-                    f"{num.ljust(3)}  "
-                    f"{d.name.ljust(16)}  "
-                    f"{colored(d.type.ljust(10), d.type_color)}  "
-                    f"{''.ljust(15)}  "
-                    f"{d.thing_id.ljust(20)}  "
-                    f"{str(d.locked).ljust(10)}  "
-                    f"{str(d.mute).ljust(10)}  "
-                    )
+                buf += (f"\t"
+                        f"{num.ljust(3)}  "
+                        f"{d.name.ljust(16)}  "
+                        f"{colored(d.type.ljust(10), d.type_color)}  "
+                        f"{''.ljust(15)}  "
+                        f"{d.thing_id.ljust(20)}  "
+                        f"{str(d.locked).ljust(10)}  "
+                        f"{str(d.mute).ljust(10)}  "
+                        )
         buf += "\n"
         return buf
     buffer = ''
