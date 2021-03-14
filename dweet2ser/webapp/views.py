@@ -44,7 +44,7 @@ def add_local():
                 form["mode"],
                 form["name"],
                 mute=mute,
-                baudrate=form["baud"])
+                baudrate=int(form["baud"]))
             current_session.bus.add_device(dev)
         except Exception as e:
             utils.print_to_ui(f"Failed to add device: {e}")
