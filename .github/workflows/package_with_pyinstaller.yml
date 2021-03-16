@@ -22,4 +22,4 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: dweet2ser
-        path: dist/windows/dweet2ser.exe
+        path: dist/windows/shim_for_pyinstaller.exe
