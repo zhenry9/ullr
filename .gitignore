@@ -18,8 +18,11 @@ parts/
 sdist/
 var/
 *.egg-info/
+*.dist-info/
 .installed.cfg
 *.egg
+windows/msi
+*.wixpdb
 
 # Installer logs
 pip-log.txt
