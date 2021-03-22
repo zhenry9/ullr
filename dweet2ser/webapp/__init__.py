@@ -10,12 +10,24 @@ socketio = flask_socketio.SocketIO(webapp)
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
+
 def port_in_use(port):
     import socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('localhost', port)) == 0
 
-def run():
-    webbrowser.open(f"http://localhost:{PORT}", new=1)
-    if not port_in_use(PORT):
-        socketio.run(webapp, host="0.0.0.0")
+
+def enough_memory():
+    import psutil
+    memory = round(psutil.virtual_memory().total / (1024.0 ** 3))
+    return memory > 1
+
+
+def run(port=PORT, popup=False):
+    if popup and enough_memory():
+        webbrowser.open(f"http://localhost:{port}", new=1)
+    if not port_in_use(port):
+        print(f"dweet2ser started on localhost:{port}")
+        socketio.run(webapp, host="0.0.0.0", port=port)
+    else:
+        print(f"dweet2ser already running on localhost:{port}")

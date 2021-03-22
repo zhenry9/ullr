@@ -33,7 +33,8 @@ setuptools.setup(
         "Flask-SocketIO>=5.0.1, <6",
         "pyserial>=3.5, <4",
         "requests>=2.25.1, <3",
-        "termcolor>=1.1.0, <2"
+        "termcolor>=1.1.0, <2",
+        "psutil>=5.8.0, <6"
     ],
     python_requires='>=3.6',
     entry_points={

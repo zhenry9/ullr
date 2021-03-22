@@ -25,6 +25,8 @@ def main():
                               "\ne.g. --override DCE /dev/ttyUSB0 dweet2ser_default.")
     arg_parser.add_argument("--nowebui", action="store_true", help="Use dweet2ser from the command line."
                                                                    "Don't run GUI on webserver.")
+    arg_parser.add_argument("--uiport", type=int, default=5000, help="Port for web interface.")
+    arg_parser.add_argument("--popup", action="store_true", help="Open a browser window to the web interface on run.")
     args = arg_parser.parse_args()
 
     utils.print_to_ui(f"Starting dweet2ser v{version}...", sys=True)
@@ -57,7 +59,7 @@ def main():
     else:
         views.init(current_session)
         utils.set_ui("webapp")
-        webapp.run()
+        webapp.run(port=args.uiport, popup=args.popup)
 
 
 if __name__ == "__main__":
