@@ -13,7 +13,7 @@ function closeMenuBar() {
 
 function openTab(evt, tabName) {
     var i, devicetab, tablinks;
-    devicetab = document.getElementsByClassName("device");
+    devicetab = document.getElementsByClassName("devices");
     for (i = 0; i < devicetab.length; i++) {
         devicetab[i].style.display = "none";
     }
@@ -61,6 +61,27 @@ function closeForm(id) {
     document.getElementById(id).style.display = "none";
 }
 
+window.onclick = function(event) {
+    if (event.target.className == "modal") {
+      event.target.style.display = "none";
+    }
+}
+
+function openAdvancedMenu(id){
+    document.getElementById(id).getElementsByClassName("modal")[0].style.display = "flex";
+}
+
+function closeAdvancedMenu(id){
+    document.getElementById(id).getElementsByClassName("modal")[0].style.display = "none";
+}
+
+function submitAdvancedMenu(id){
+    var formdata = $("#" + id + " form:eq(0)").serializeArray();
+    formdata = JSON.stringify(formdata)
+    socket.emit('update_translation', id, formdata);
+    closeAdvancedMenu(id);
+}
+
 socket.on("console", function(buffer){
     $("#console").text(buffer);
     var element = document.getElementById("console");
@@ -68,7 +89,7 @@ socket.on("console", function(buffer){
 })
 
 socket.on("tape_feed", function(data){
-    var tape_cell = document.getElementById(data["target"]);
+    var tape_cell = document.getElementById(data["target"]).getElementsByClassName("timing_tape")[0];
     tape_cell.textContent = data["buffer"];
     tape_cell.scrollTop = tape_cell.scrollHeight;
 })

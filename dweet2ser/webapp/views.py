@@ -1,4 +1,5 @@
 import socket
+import json
 from datetime import date, datetime
 
 from flask import (redirect, render_template, request, Response)
@@ -8,6 +9,7 @@ from .. import utils
 from ..local_device import LocalDevice
 from ..remote_device import RemoteDevice
 from . import socketing, webapp, socketio
+from ..skiracetiming.translate import DECODE, ENCODE
 
 current_session = object()
 
@@ -26,7 +28,9 @@ def home():
         ports=utils.get_available_com_ports(),
         hostname=socket.gethostname(),
         host_ip=utils.get_ip(),
-        config_file=current_session.config_file.replace("\\", "\\\\")
+        config_file=current_session.config_file.replace("\\", "\\\\"),
+        translation_sources=DECODE.keys(),
+        translation_destinations=ENCODE.keys()
     )
 
 
@@ -98,3 +102,23 @@ def get_log():
 @socketio.on("save_config")
 def save_config():
     current_session.save_current_to_file()
+
+
+@socketio.on("update_translation")
+def update_translation(id, data):
+    data = json.loads(data)
+    if data[0]["value"].upper() == "TRUE":
+        translation = [
+            True,
+            data[1]["value"],
+            data[2]["value"],
+            int(data[3]["value"])
+        ]
+    else:
+        translation = [
+            False,
+            None,
+            None,
+            0
+        ]
+    current_session.bus.update_translation(id, translation)

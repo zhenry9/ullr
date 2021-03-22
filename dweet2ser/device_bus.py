@@ -48,29 +48,44 @@ class DeviceBus(object):
         print_to_ui(f"Added device {device.name}.")
         return True
 
-    def remove_device(self, device_name):
+    def find_device(self, key):
+        for d in self.dce_devices:
+            if d.name == key:
+                return d
+            elif str(d.sku) == key:
+                return d
+        for d in self.dte_devices:
+            if d.name == key:
+                return d
+            elif str(d.sku) == key:
+                return d
+        return None
+
+    def remove_device(self, name_or_sku):
         """
         Takes a device name, and removes that device if the name is found
         """
-        found = False
-        for d in self.dce_devices:
-            if d.name == device_name:
-                found = True
-                d.kill_listen_stream()
-                self.dce_devices.remove(d)
-                TAPES.pop(d.sku, "")
-                print_to_ui(f"Device '{d.name}' removed.")
+        device = self.find_device(name_or_sku)
 
-        for d in self.dte_devices:
-            if d.name == device_name:
-                found = True
-                d.kill_listen_stream()
-                self.dte_devices.remove(d)
-                TAPES.pop(d.sku, "")
-                print_to_ui(f"Device '{d.name}' removed.")
+        if device:
+            device.kill_listen_stream()
+            self.dce_devices.remove(device)
+            TAPES.pop(device.sku, "")
+            print_to_ui(f"Device '{device.name}' removed.")
 
-        if not found:
-            print_to_ui(f"Device {device_name} not found.")
+        else:
+            print_to_ui(f"Device {name_or_sku} not found.")
+
+    def update_translation(self, name_or_sku, translation_list):
+        device = self.find_device(name_or_sku)
+        if device:
+            try:
+                device.translation = translation_list
+                print_to_ui(f"Updated translation for {device.name}: {translation_list}")
+            except Exception as e:
+                print_to_ui(f"Could not update translation for {device.name}: {e}")
+        else:
+            print_to_ui(f"Device {name_or_sku} not found.")
 
     def print_threads(self):
         print_to_ui(self.listen_threads)
@@ -84,7 +99,8 @@ class DeviceBus(object):
         try:
             for message in device.listen():
                 message = str(message)
-                message_decoded = bytes.fromhex(message).decode('latin-1').rstrip().replace('\r', '')
+                message_decoded = bytes.fromhex(message).decode(
+                    'latin-1').rstrip().replace('\r', '')
 
                 print_tape(device.sku, message_decoded)
                 print_to_ui(f"Received {colored(device.type, device.type_color)} message from {device.name}:"
