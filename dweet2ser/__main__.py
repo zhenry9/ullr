@@ -1,6 +1,7 @@
 # import gevent.monkey; gevent.monkey.patch_all()
 import argparse
 import sys
+import os
 
 from . import __version__ as version
 from . import local_device, remote_device, utils, webapp
@@ -9,6 +10,11 @@ from .session import DweetSession
 from .webapp import views
 
 current_session = DweetSession()
+
+# turn off console output if run as windows GUI
+if sys.executable.endswith("pythonw.exe"):
+    sys.stdout = open(os.devnull, "w")
+    sys.stderr = open(os.path.join(os.getenv("TEMP"), "stderr-"+os.path.basename(sys.argv[0])), "w")
 
 
 def main():
@@ -25,8 +31,10 @@ def main():
                               "\ne.g. --override DCE /dev/ttyUSB0 dweet2ser_default.")
     arg_parser.add_argument("--nowebui", action="store_true", help="Use dweet2ser from the command line."
                                                                    "Don't run GUI on webserver.")
-    arg_parser.add_argument("--uiport", type=int, default=5000, help="Port for web interface.")
-    arg_parser.add_argument("--popup", action="store_true", help="Open a browser window to the web interface on run.")
+    arg_parser.add_argument("--uiport", type=int,
+                            default=5000, help="Port for web interface.")
+    arg_parser.add_argument("--popup", action="store_true",
+                            help="Open a browser window to the web interface on run.")
     args = arg_parser.parse_args()
 
     utils.print_to_ui(f"Starting dweet2ser v{version}...", sys=True)
