@@ -134,7 +134,7 @@ class RemoteDevice(object):
                     if self.read_kw in content:
                         message = content[self.read_kw]
                         if message == self._kill_signal:
-                            print_to_ui(f"Listen stream for {self.name} closed.")
+                            print_to_ui(f"Listen stream for {self.name} killed.")
                             return
                         yield message
 
