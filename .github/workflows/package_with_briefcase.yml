@@ -1,0 +1,26 @@
+name: Package Application with Pyinstaller
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Package Application
+      uses: zhenry9/package-with-briefcase-action@main
+      with:
+        path: .
+        platform: windows
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: dweet2ser
+        path: windows/
