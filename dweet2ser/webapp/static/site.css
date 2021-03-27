@@ -200,7 +200,7 @@ body {
 
 .timing_tape {
     white-space: pre;
-    overflow: hidden;
+    overflow: auto;
     max-width: 18em;
     min-width: 0;
     max-height: 20em;

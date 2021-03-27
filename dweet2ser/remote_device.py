@@ -1,6 +1,8 @@
 import datetime
 import threading
 import time
+import uuid
+import os
 
 import requests
 from urllib3.exceptions import ProtocolError
@@ -40,7 +42,7 @@ class RemoteDevice(object):
 
         self._session = requests.Session()
         self._last_message = ''
-        self._kill_signal = "kill"
+        self._kill_signal = f"kill {hex(uuid.getnode())}-{os.getpid()}"
         self._message_queue = []
         self._started_on_day = datetime.datetime.utcnow().strftime("%Y-%m-%d")
         self.exc = False
