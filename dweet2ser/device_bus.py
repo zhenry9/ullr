@@ -81,9 +81,11 @@ class DeviceBus(object):
         if device:
             try:
                 device.translation = translation_list
-                print_to_ui(f"Updated translation for {device.name}: {translation_list}")
+                print_to_ui(
+                    f"Updated translation for {device.name}: {translation_list}")
             except Exception as e:
-                print_to_ui(f"Could not update translation for {device.name}: {e}")
+                print_to_ui(
+                    f"Could not update translation for {device.name}: {e}")
         else:
             print_to_ui(f"Device {name_or_sku} not found.")
 
@@ -99,8 +101,12 @@ class DeviceBus(object):
         try:
             for message in device.listen():
                 message = str(message)
-                message_decoded = bytes.fromhex(message).decode(
-                    'latin-1').rstrip().replace('\r', '')
+                try:
+                    message_decoded = bytes.fromhex(message).decode(
+                        'latin-1').rstrip().replace('\r', '')
+                except ValueError as e:
+                    print(e)
+                    message_decoded = "<undecipherable>"
 
                 print_tape(device.sku, message_decoded)
                 print_to_ui(f"Received {colored(device.type, device.type_color)} message from {device.name}:"
