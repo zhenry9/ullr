@@ -9,7 +9,7 @@ from urllib3.exceptions import ProtocolError
 
 from .dweepy import DweepyError
 from .remote_device import DeadConnectionError
-from .utils import internet_connection, print_to_ui
+from .utils import internet_connection, print_to_ui, logger
 from .webapp.socketing import print_tape, TAPES
 from . import skiracetiming
 
@@ -105,8 +105,9 @@ class DeviceBus(object):
                     message_decoded = bytes.fromhex(message).decode(
                         'latin-1').rstrip().replace('\r', '')
                 except ValueError as e:
-                    print(e)
-                    message_decoded = "<undecipherable>"
+                    logger.warn(f"Received invalid hex message: {message}")
+                    print_to_ui(f"{message}: {e}")
+                    message_decoded = "<indecipherable>"
 
                 print_tape(device.sku, message_decoded)
                 print_to_ui(f"Received {colored(device.type, device.type_color)} message from {device.name}:"
