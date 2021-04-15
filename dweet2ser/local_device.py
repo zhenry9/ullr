@@ -51,6 +51,8 @@ class LocalDevice(object):
         self.listening = True
         i = self.buffer.find(b"\r")
         if i >= 0:
+            if self.buffer[i+1] == b"\n":
+                i += 1
             r = self.buffer[:i+1]
             self.buffer = self.buffer[i+1:]
             yield r.hex()
@@ -60,6 +62,8 @@ class LocalDevice(object):
             data = ser.read(i)
             i = data.find(b"\r")
             if i >= 0:
+                if self.buffer[i+1] == b"\n":
+                    i += 1
                 r = self.buffer + data[:i+1]
                 self.buffer[0:] = data[i+1:]
                 hex_message = r.hex()
