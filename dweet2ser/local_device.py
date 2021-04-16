@@ -62,7 +62,7 @@ class LocalDevice(object):
             data = ser.read(i)
             i = data.find(b"\r")
             if i >= 0:
-                if self.buffer[i+1] == b"\n":
+                if len(self.buffer) > (i+1) and self.buffer[i+1] == b"\n":
                     i += 1
                 r = self.buffer + data[:i+1]
                 self.buffer[0:] = data[i+1:]
