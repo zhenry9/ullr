@@ -49,28 +49,21 @@ class LocalDevice(object):
         """
         ser = self.serial_port
         self.listening = True
-        i = self.buffer.find(b"\r")
-        if i >= 0:
-            if len(self.buffer) > (i+1) and self.buffer[i+1] == b"\n":
-                i += 1
-            r = self.buffer[:i+1]
-            self.buffer = self.buffer[i+1:]
-            yield r.hex()
 
         while self.listening:
-            i = max(1, min(2048, ser.in_waiting))
-            data = ser.read(i)
-            i = data.find(b"\r")
-            if i >= 0:
+            i = self.buffer.find(b"\r")
+            while i >= 0:
                 if len(self.buffer) > (i+1) and self.buffer[i+1] == b"\n":
                     i += 1
-                r = self.buffer + data[:i+1]
-                self.buffer[0:] = data[i+1:]
+                r = self.buffer[:i+1]
+                self.buffer = self.buffer[i+1:]
                 hex_message = r.hex()
                 self._last_message = hex_message
                 yield hex_message
-            else:
-                self.buffer.extend(data)
+                i = self.buffer.find(b"\r")
+            i = max(1, min(2048, ser.in_waiting))
+            data = ser.read(i)
+            self.buffer.extend(data)
 
         self.serial_port.close()
 
