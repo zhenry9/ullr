@@ -22,8 +22,8 @@ class LocalDevice(object):
         self.baudrate = baudrate
         self.serial_port = serial.Serial(port=port,
                                          baudrate=baudrate,
-                                         timeout=round(1/(baudrate/500), 1),
                                          write_timeout=3)
+        self.buffer = bytearray()
         self._last_message = ''
         self.mute = mute
         self.translation = translation
@@ -51,12 +51,21 @@ class LocalDevice(object):
         self.listening = True
 
         while self.listening:
-            if ser.in_waiting > 0:
-                ser_data = ser.read(100)
-                self._last_message = ser_data.hex()
-                yield ser_data.hex()
-            else:
-                time.sleep(0.0001)
+            i = self.buffer.find(b"\r")
+            while i >= 0:
+                if len(self.buffer) > (i+1) and self.buffer[i+1:i+2] == b"\n":
+                    i += 1
+                r = self.buffer[:i+1]
+                self.buffer = self.buffer[i+1:]
+                hex_message = r.hex()
+                self._last_message = hex_message
+                yield hex_message
+                i = self.buffer.find(b"\r")
+            time.sleep(.1)
+            i = max(1, min(2048, ser.in_waiting))
+            data = ser.read(i)
+            self.buffer.extend(data)
+
         self.serial_port.close()
 
         return
