@@ -61,6 +61,7 @@ class LocalDevice(object):
                 self._last_message = hex_message
                 yield hex_message
                 i = self.buffer.find(b"\r")
+            time.sleep(.1)
             i = max(1, min(2048, ser.in_waiting))
             data = ser.read(i)
             self.buffer.extend(data)
