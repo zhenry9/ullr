@@ -53,7 +53,7 @@ class LocalDevice(object):
         while self.listening:
             i = self.buffer.find(b"\r")
             while i >= 0:
-                if len(self.buffer) > (i+1) and self.buffer[i+1] == b"\n":
+                if len(self.buffer) > (i+1) and self.buffer[i+1:i+2] == b"\n":
                     i += 1
                 r = self.buffer[:i+1]
                 self.buffer = self.buffer[i+1:]
