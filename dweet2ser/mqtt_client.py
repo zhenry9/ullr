@@ -15,7 +15,7 @@ def on_connect(client, userdata, flags, rc):
     CLIENT.publish(CLIENT_ID+"/status", "online", qos=1, retain=True)
     print_to_ui("MQTT client connected")
 
-def on_disconnect(client, userdata, flags, rc):
+def on_disconnect(client, userdata, rc):
     global CONNECTED
     CONNECTED = False
 

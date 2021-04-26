@@ -52,6 +52,10 @@ class Dweet2serConfiguration(object):
                     mute = True
                 else:
                     mute = False
+                if self.parser[d]["published"].upper().strip() == "TRUE":
+                    published = True
+                else:
+                    published = False
                 if self.parser[d]["accepts_incoming"].upper().strip() == "FALSE":
                     accepts_incoming = False
                 else:
@@ -72,6 +76,7 @@ class Dweet2serConfiguration(object):
                             mute=mute,
                             accepts_incoming=accepts_incoming,
                             baudrate=baudrate,
+                            published=published,
                             translation=translation)
                         self.bus.add_device(dev)
                         utils.print_to_ui(
