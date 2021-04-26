@@ -10,6 +10,7 @@ idna>=2.10, <3
 itsdangerous>=1.1.0, <2
 Jinja2>=2.11.3, <3
 MarkupSafe>=1.1.1, <2
+paho-mqtt
 psutil>=5.8.0, <6
 pyserial>=3.5, <4
 python-engineio>=4.0.0, <5
