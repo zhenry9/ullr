@@ -1,5 +1,6 @@
 import datetime
 import os
+import uuid
 import socket
 import re
 import sys
@@ -17,7 +18,6 @@ from .cli import interface
 
 colorama_init()
 ui = "webapp"
-
 
 def set_ui(user_int):
     global ui

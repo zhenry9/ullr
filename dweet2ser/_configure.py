@@ -5,7 +5,7 @@ from .local_device import LocalDevice
 from .remote_device import RemoteDevice
 from .device_bus import DeviceBus
 from .settings import CONFIG_COMMENTS, CONFIG_DEFAULTS
-from . import utils
+from . import utils, mqtt_client
 
 
 class Dweet2serConfiguration(object):
@@ -24,10 +24,19 @@ class Dweet2serConfiguration(object):
             file = self.config_file
         if self._load_config_file(file):
             try:
+                self._connect_to_mqtt_broker()
                 self._add_devices()
             except Exception as exc:
                 utils.print_to_ui(
                     f"Invalid config file format: {exc}", sys=True)
+
+    def _connect_to_mqtt_broker(self):
+        defaults = self.parser.defaults()
+        broker_url = defaults["mqtt_broker_url"]
+        broker_port = int(defaults["mqtt_broker_port"])
+        broker_user = defaults["mqtt_broker_user"]
+        broker_pw = defaults["mqtt_broker_pw"]
+        mqtt_client.start_client(broker_url, broker_port, broker_user, broker_pw)
 
     def _add_devices(self):
         devices = self.parser.sections()
@@ -43,6 +52,10 @@ class Dweet2serConfiguration(object):
                     mute = True
                 else:
                     mute = False
+                if self.parser[d]["accepts_incoming"].upper().strip() == "FALSE":
+                    accepts_incoming = False
+                else:
+                    accepts_incoming = True
                 if self.parser[d]["translated"].upper().strip() == "TRUE":
                     translation[0] = True
                     translation[1] = self.parser[d]["translated_from"]
@@ -57,6 +70,7 @@ class Dweet2serConfiguration(object):
                             mode=dev_type,
                             name=name,
                             mute=mute,
+                            accepts_incoming=accepts_incoming,
                             baudrate=baudrate,
                             translation=translation)
                         self.bus.add_device(dev)
@@ -66,18 +80,14 @@ class Dweet2serConfiguration(object):
                         utils.print_to_ui(
                             f"Failed to add device '{name}' from default config: {e}", sys=True)
                 elif location == "remote":
-                    thing_name = self.parser[d]["thing_name"]
-                    if self.parser[d]["key"] == "" or self.parser[d]["key"].lower().strip() == "none":
-                        key = None
-                    else:
-                        key = self.parser[d]["key"]
+                    topic_name = self.parser[d]["topic_name"]
                     try:
                         dev = RemoteDevice(
-                            thing_id=thing_name,
+                            topic_name=topic_name,
                             mode=dev_type,
-                            thing_key=key,
-                            name=name,
                             mute=mute,
+                            accepts_incoming=accepts_incoming,
+                            name=name,
                             translation=translation)
                         self.bus.add_device(dev)
                         utils.print_to_ui(
@@ -103,9 +113,9 @@ class Dweet2serConfiguration(object):
                 self.parser[dev.name]["baud"] = str(dev.baudrate)
             if type(dev).__name__ == "RemoteDevice":
                 self.parser[dev.name]["location"] = "remote"
-                self.parser[dev.name]["thing_name"] = dev.thing_id
-                self.parser[dev.name]["key"] = str(dev.thing_key)
+                self.parser[dev.name]["topic_name"] = dev.topic_name
             self.parser[dev.name]["mute"] = str(dev.mute)
+            self.parser[dev.name]["accepts_incoming"] = str(dev.accepts_incoming)
             self.parser[dev.name]["translated"] = str(dev.translation[0])
             self.parser[dev.name]["translated_from"] = str(dev.translation[1])
             self.parser[dev.name]["translated_to"] = str(dev.translation[2])

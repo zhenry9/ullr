@@ -149,12 +149,12 @@
                                     <td><form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
                             </table>
                         {% endif %}
-                        {% if d.type == "dweet" %}
+                        {% if d.type == "mqtt" %}
                             <table class="dweet_device">
                                 <tr><td class="tape" colspan="3"><div class="timing_tape"></div></td></tr>
                                 <tr><th class="device_name" colspan="3" onclick="openAdvancedMenu('{{d.sku}}')">{{ d.name }}</th></tr>
-                                <tr><th>Dweet ID:</th><td colspan="2">{{ d.thing_id }}</td></tr>
-                                <tr><th>Locked?</th><td colspan="2">{{ d.locked }}</td></tr>
+                                <tr><th>Topic Name:</th><td colspan="2">{{ d.topic_name }}</td></tr>
+                                <tr><th>Accepts Incoming?</th><td colspan="2">{{ d.accepts_incoming }}</td></tr>
                                 <tr><th>Muted?</th><td>{{ d.mute }}</td>
                                     <td><form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
                             </table>
@@ -175,12 +175,12 @@
                                     <td><form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
                             </table>
                         {% endif %}
-                        {% if d.type == "dweet" %}
+                        {% if d.type == "mqtt" %}
                             <table class="dweet_device">
                                 <tr><td class="tape" colspan="3"><div class="timing_tape"></div></td></tr>
                                 <tr><th class="device_name" colspan="3">{{ d.name }}</th></tr>
-                                <tr><th>Dweet ID:</th><td colspan="2">{{ d.thing_id }}</td></tr>
-                                <tr><th>Locked?</th><td colspan="2">{{ d.locked }}</td></tr>
+                                <tr><th>Topic Name:</th><td colspan="2">{{ d.topic_name }}</td></tr>
+                                <tr><th>Accepts Incoming?</th><td colspan="2">{{ d.accepts_incoming }}</td></tr>
                                 <tr><th>Muted?</th><td>{{ d.mute }}</td>
                                     <td><form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
                             </table>

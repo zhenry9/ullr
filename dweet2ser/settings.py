@@ -15,13 +15,17 @@ CONFIG_COMMENTS = str("\n; The settings in the [DEFAULT] section reference the v
 # defaults when writing new configuration
 CONFIG_DEFAULTS = {"type": "",
                    "location": "",
-                   "port": "",
-                   "thing_name": "dweet2ser_default",
-                   "key": "None",
                    "mute": "False",
+                   "accepts_incoming": "True",
+                   "port": "",
+                   "topic_name": "default_device",
                    "baud": "9600",
                    "translated": "False",
                    "translated_from": "None",
                    "translated_to": "None",
-                   "channel_shift": "0"
+                   "channel_shift": "0",
+                   "mqtt_broker_url": "57edaf7763054ccc91c1c8b6e646a155.s1.eu.hivemq.cloud",
+                   "mqtt_broker_port": "8883",
+                   "mqtt_broker_user": "PiTiming",
+                   "mqtt_broker_pw": "Mammoth1"
                    }
