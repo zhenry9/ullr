@@ -86,6 +86,7 @@
                 <div class="tabs">
                     <button class="tablinks active" onclick="openTab(event, 'dce')">Devices</button>
                     <button class="tablinks" onclick="openTab(event, 'dte')">Computers</button>
+                    <span class="client_status" style="color: {% if client_online %}green{% else %}red{% endif %};">{% if client_online %}Online{% else %}Offline{% endif %}</span>
                 </div>
                 
                 <div class="devices" id="dce">

@@ -25,6 +25,9 @@ class Dweet2serConfiguration(object):
         if self._load_config_file(file):
             try:
                 self._connect_to_mqtt_broker()
+            except Exception as exc:
+                utils.print_to_ui(f"Unable to connect to MQTT broker: {exc}")
+            try:
                 self._add_devices()
             except Exception as exc:
                 utils.print_to_ui(

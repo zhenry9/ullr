@@ -10,6 +10,7 @@ from ..local_device import LocalDevice
 from ..remote_device import RemoteDevice
 from . import socketing, webapp, socketio
 from ..skiracetiming.translate import DECODE, ENCODE
+from .. import mqtt_client
 
 current_session = object()
 
@@ -30,7 +31,8 @@ def home():
         host_ip=utils.get_ip(),
         config_file=current_session.config_file.replace("\\", "\\\\"),
         translation_sources=DECODE.keys(),
-        translation_destinations=ENCODE.keys()
+        translation_destinations=ENCODE.keys(),
+        client_online=mqtt_client.CONNECTED
     )
 
 

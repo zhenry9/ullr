@@ -133,6 +133,10 @@ body {
     background-color: lightslategray;
 }
 
+.client_status {
+    justify-self: flex-end;
+}
+
 .devices {
     display: flex;
     flex-direction: row;
