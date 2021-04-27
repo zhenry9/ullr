@@ -93,3 +93,13 @@ socket.on("tape_feed", function(data){
     tape_cell.textContent = data["buffer"];
     tape_cell.scrollTop = tape_cell.scrollHeight;
 })
+
+socket.on("update_online_dot", function(data){
+    var dot = document.getElementById(data["target"]).getElementsByClassName("online_dot")[0];
+    if (data["online"] == "True") {
+        dot.style.backgroundColor = "green";
+    }
+    else {
+        dot.style.backgroundColor = "red";
+    }
+})

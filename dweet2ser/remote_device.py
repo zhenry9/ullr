@@ -3,7 +3,7 @@ import uuid
 from queue import Queue
 
 from . import utils, mqtt_client
-
+from .webapp.socketing import update_online_dot
 
 
 class RemoteDevice(object):
@@ -28,16 +28,17 @@ class RemoteDevice(object):
         self.listening = True
         self.remove_me = False
         self.translation = translation
-        mqtt_client.CLIENT.subscribe(self.remote_client+"/status")
-        mqtt_client.CLIENT.subscribe(topic_name+"/#", qos=1)
         mqtt_client.CLIENT.message_callback_add(self.remote_client+"/status", self._update_status)
         mqtt_client.CLIENT.message_callback_add(self.topic_name+"/from_device", self._new_message)
+        mqtt_client.CLIENT.subscribe(self.remote_client+"/status")
+        mqtt_client.CLIENT.subscribe(topic_name+"/#", qos=1)
 
     def _update_status(self, client, userdata, message):
-        if str(message.payload).upper == "ONLINE":
+        if message.payload == b"online":
             self.online = True
         else:
             self.online = False
+        update_online_dot(self.sku, self.online)
 
     def _new_message(self, client, userdata, message):
         self.message_queue.put(message.payload)

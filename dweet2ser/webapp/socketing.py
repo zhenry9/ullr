@@ -36,6 +36,10 @@ def load_tapes():
         socketio.emit("tape_feed", payload)
 
 
+def update_online_dot(device, online=False):
+    payload = {"target": str(device), "online": str(online)}
+    socketio.emit("update_online_dot", payload)
+
 @socketio.on("connect")
 def on_connect():
     client_name = request.remote_addr

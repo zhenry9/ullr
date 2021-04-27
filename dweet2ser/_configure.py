@@ -116,6 +116,7 @@ class Dweet2serConfiguration(object):
                 self.parser[dev.name]["location"] = "local"
                 self.parser[dev.name]["port"] = dev.port_name
                 self.parser[dev.name]["baud"] = str(dev.baudrate)
+                self.parser[dev.name]["published"] = str(dev.published)
             if type(dev).__name__ == "RemoteDevice":
                 self.parser[dev.name]["location"] = "remote"
                 self.parser[dev.name]["topic_name"] = dev.topic_name

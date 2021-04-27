@@ -164,6 +164,15 @@ body {
     opacity: 0.8;
 }
 
+.online_dot {
+    height: 8px;
+    width: 8px;
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 5px;
+    display: inline-block;
+}
+
 .device table form{
     text-align: right;
     margin-right: .5em;

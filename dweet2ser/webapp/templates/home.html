@@ -152,7 +152,7 @@
                         {% if d.type == "mqtt" %}
                             <table class="dweet_device">
                                 <tr><td class="tape" colspan="3"><div class="timing_tape"></div></td></tr>
-                                <tr><th class="device_name" colspan="3" onclick="openAdvancedMenu('{{d.sku}}')">{{ d.name }}</th></tr>
+                                <tr><th class="device_name" colspan="3" onclick="openAdvancedMenu('{{d.sku}}')">{{ d.name }}<span class="online_dot" style="background-color: {% if d.online %}green{% else %}red{% endif %}"></span></th></tr>
                                 <tr><th>Topic Name:</th><td colspan="2">{{ d.topic_name }}</td></tr>
                                 <tr><th>Accepts Incoming?</th><td colspan="2">{{ d.accepts_incoming }}</td></tr>
                                 <tr><th>Muted?</th><td>{{ d.mute }}</td>
@@ -178,7 +178,7 @@
                         {% if d.type == "mqtt" %}
                             <table class="dweet_device">
                                 <tr><td class="tape" colspan="3"><div class="timing_tape"></div></td></tr>
-                                <tr><th class="device_name" colspan="3">{{ d.name }}</th></tr>
+                                <tr><th class="device_name" colspan="3">{{ d.name }}<span class="online_dot" style="background-color: {% if d.online %}green{% else %}red{% endif %}"></span></th></tr>
                                 <tr><th>Topic Name:</th><td colspan="2">{{ d.topic_name }}</td></tr>
                                 <tr><th>Accepts Incoming?</th><td colspan="2">{{ d.accepts_incoming }}</td></tr>
                                 <tr><th>Muted?</th><td>{{ d.mute }}</td>

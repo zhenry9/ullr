@@ -75,6 +75,7 @@ class LocalDevice(object):
                 self.message_queue.put(message)
                 if self.published:
                     mqtt_client.CLIENT.publish(self.published_name+"/from_device", message, qos=1)
+                    print_to_ui("Published to MQTT.")
                 i = self.buffer.find(b"\r")
             time.sleep(.1)
             i = max(1, min(2048, ser.in_waiting))
