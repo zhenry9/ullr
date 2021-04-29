@@ -32,6 +32,7 @@ def home():
         config_file=current_session.config_file.replace("\\", "\\\\"),
         translation_sources=DECODE.keys(),
         translation_destinations=ENCODE.keys(),
+        client_id=mqtt_client.CLIENT_ID,
         client_online=mqtt_client.CONNECTED
     )
 
@@ -68,7 +69,7 @@ def add_remote():
 
         try:
             dev = RemoteDevice(
-                form["thing_id"],
+                form["topic_name"],
                 form["mode"],
                 name=form["name"],
                 mute=mute,

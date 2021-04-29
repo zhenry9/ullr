@@ -88,7 +88,11 @@ class Dweet2serConfiguration(object):
                         utils.print_to_ui(
                             f"Failed to add device '{name}' from default config: {e}", sys=True)
                 elif location == "remote":
-                    topic_name = self.parser[d]["topic_name"]
+                    # backwards compatibility for previous versions that used Dweet backend with thing names
+                    if self.parser[d].get("thing_name"):
+                        topic_name = self.parser[d].get("thing_name")
+                    else:
+                        topic_name = self.parser[d].get("topic_name")    
                     try:
                         dev = RemoteDevice(
                             topic_name=topic_name,

@@ -103,3 +103,15 @@ socket.on("update_online_dot", function(data){
         dot.style.backgroundColor = "red";
     }
 })
+
+socket.on("update_client_status", function(data){
+    var status = document.getElementById("client_status");
+    if (data["online"] == "True") {
+        status.style.color = "darkgreen";
+        status.textContent = "Online";
+    }
+    else {
+        status.style.color = "darkred";
+        status.textContent = "Offline";
+    }
+})

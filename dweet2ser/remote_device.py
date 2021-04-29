@@ -19,8 +19,16 @@ class RemoteDevice(object):
         self.accepts_incoming = accepts_incoming
         self.type = "mqtt"
         self.type_color = "cyan"
-        self.topic_name = topic_name
-        self.remote_client, self.remote_device_name = topic_name.split("/")
+        parsed_topic = topic_name.split("/")
+        self.remote_client = parsed_topic[0]
+
+        # if a device name was not given, subscribe to all devices on remote
+        if len(parsed_topic) > 1:
+            self.remote_device_name = parsed_topic[1]
+        else:
+            self.remote_device_name = "+"
+
+        self.topic_name = f"{self.remote_client}/{self.remote_device_name}"
         self.mode = mode
         self.message_queue = Queue()
         self._last_message = ''
@@ -31,7 +39,7 @@ class RemoteDevice(object):
         mqtt_client.CLIENT.message_callback_add(self.remote_client+"/status", self._update_status)
         mqtt_client.CLIENT.message_callback_add(self.topic_name+"/from_device", self._new_message)
         mqtt_client.CLIENT.subscribe(self.remote_client+"/status")
-        mqtt_client.CLIENT.subscribe(topic_name+"/#", qos=1)
+        mqtt_client.CLIENT.subscribe(self.topic_name+"/#", qos=1)
 
     def _update_status(self, client, userdata, message):
         if message.payload == b"online":

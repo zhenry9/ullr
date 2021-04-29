@@ -133,8 +133,10 @@ body {
     background-color: lightslategray;
 }
 
-.client_status {
-    justify-self: flex-end;
+#client_status {
+    display: flex;
+    width: fit-content;
+    margin: .3em .3em 0 auto;
 }
 
 .devices {
@@ -168,6 +170,10 @@ body {
     opacity: 0.8;
 }
 
+.device_name {
+    height: auto;
+}
+
 .online_dot {
     height: 8px;
     width: 8px;
@@ -186,6 +192,19 @@ body {
     border: 1px solid #ddd;
     padding: 2px;
   }
+
+.device th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    color: white;
+    height: 4.25em;
+}
+
+.device td {
+    max-width: 12em;
+    overflow: auto;
+}
   
 .device tr:nth-child(even){background-color: #f2f2f2;}
   
@@ -193,18 +212,10 @@ body {
   
 .serial_device th {
     background-color: rgb(170, 56, 56);
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: center;
-    color: white;
 }
 
 .dweet_device th {
     background-color: rgb(0, 201, 201);
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: center;
-    color: white;
 }
 
 .tape {
