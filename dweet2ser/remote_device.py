@@ -27,6 +27,8 @@ class RemoteDevice(object):
             self.remote_device_name = parsed_topic[1]
         else:
             self.remote_device_name = "+"
+            # cannot publish to device if no device name given
+            self.accepts_incoming = False
 
         self.topic_name = f"{self.remote_client}/{self.remote_device_name}"
         self.mode = mode
@@ -36,13 +38,12 @@ class RemoteDevice(object):
         self.listening = True
         self.remove_me = False
         self.translation = translation
-        mqtt_client.CLIENT.message_callback_add(self.remote_client+"/status", self._update_status)
         mqtt_client.CLIENT.message_callback_add(self.topic_name+"/from_device", self._new_message)
-        mqtt_client.CLIENT.subscribe(self.remote_client+"/status")
-        mqtt_client.CLIENT.subscribe(self.topic_name+"/#", qos=1)
+        mqtt_client.add_subscription(self.topic_name+"/#")
+        mqtt_client.subscribe_status(self.remote_client, self._update_status)
 
-    def _update_status(self, client, userdata, message):
-        if message.payload == b"online":
+    def _update_status(self, status):
+        if status == b"online":
             self.online = True
         else:
             self.online = False

@@ -43,17 +43,13 @@ class LocalDevice(object):
         self.listen_thread.daemon = True
         self.listen_thread.start()
 
-    def write(self, message: str):
+    def write(self, message: bytes):
         """
         Receives a hex string, converts to bytes and writes to the serial port.
         """
         if self.accepts_incoming:
-            if type(message) is not str:  # make sure the message is a string
-                message = str(message)
-            # convert dweet string into bytes for RS232.
-            message_bytes = bytes.fromhex(message)
             try:
-                self.serial_port.write(message_bytes)
+                self.serial_port.write(message)
                 return True
             except SerialTimeoutException:
                 return False

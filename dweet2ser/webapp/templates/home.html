@@ -15,7 +15,7 @@
     
                     <input type="text" placeholder="Enter Name" name="name" required>
     
-                    <input type="text" placeholder="Enter Topic Name" name="topic_name" required>
+                    <input type="text" placeholder="Host ID/Device ID" name="topic_name" required>
                     
                     <label for="type">Type: 
                     <select id="mode" name="mode">
@@ -26,6 +26,9 @@
 
                     <label>
                         Mute? <input type="checkbox" name="mute"/>
+                    </label>
+                    <label>
+                        Accept Incoming? <input type="checkbox" name="incoming" checked/>
                     </label>
     
                     <button type="submit" class="btn">Add</button>
@@ -66,6 +69,12 @@
                     <label>
                         Mute? <input type="checkbox" name="mute"/>
                     </label>
+                    <label>
+                        Accept Incoming? <input type="checkbox" name="incoming" checked/>
+                    </label>
+                    <label>
+                        Publish? <input type="checkbox" name="publish" checked/>
+                    </label>
     
                     <button type="submit" class="btn local">Add</button>
                     
@@ -91,102 +100,198 @@
                 
                 <div class="devices" id="dce">
                     {% for d in session.bus.dce_devices %}
-                    <div class="device" id="{{ d.sku }}">
-                        <div class="modal">
-                            <div class="advanced-menu">
-                                <div class="advanced-header">
-                                    <span class="close" onclick="closeAdvancedMenu('{{d.sku}}')">&times;</span>
-                                    <h2>Advanced Options for {{ d.name }}</h2>
-                                </div>
-                                <div class="advanced-body">
-                                    <form name>
-                                        <label for="translate">Translated?
-                                        <select name="translate">
-                                            <option value="{{ d.translation[0] }}">{{ d.translation[0] }}</option>
-                                            <option value="{{ not d.translation[0] }}">{{ not d.translation[0] }}</option>
-                                        </select>
-                                        </label>
-                                        <label for="source">Source:
-                                        <select name="source">
-                                            {% if d.translation[1] %}
-                                            <option value="{{ d.translation[1] }}">{{ d.translation[1] }}</option>
-                                            {% endif %}
-                                            {% for source in translation_sources %}
-                                            {% if source != d.translation[1] %}
-                                            <option value="{{source}}">{{source}}</option>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </select>
-                                        </label>
-                                        <label for="destination">Destination:
-                                        <select name="destination">
-                                            {% if d.translation[2] %}
-                                            <option value="{{ d.translation[2] }}">{{ d.translation[2] }}</option>
-                                            {% endif %}
-                                            {% for destination in translation_destinations %}
-                                            {% if destination != d.translation[2] %}
-                                            <option value="{{destination}}">{{destination}}</option>
-                                            {% endif %}
-                                            {% endfor %}
-                                        </select>
-                                        </label>
-                                        <label for="shift">Channel Shift:</label>
-                                        <input type="text" value="{{ d.translation[3] }}" name="shift" required>
-                                    </form>
-                                </div>
-                                <div class="advanced-footer">
-                                    <button class="apply" onclick="submitAdvancedMenu('{{d.sku}}')">Apply</button>
+                        <div class="device" id="{{ d.sku }}">
+                            <div class="modal">
+                                <div class="advanced-menu">
+                                    <div class="advanced-header">
+                                        <span class="close" onclick="closeAdvancedMenu('{{d.sku}}')">&times;</span>
+                                        <h2>Advanced Options for {{ d.name }}</h2>
+                                    </div>
+                                    <div class="advanced-body">
+                                        <form name>
+                                            <label for="translate">Translated?
+                                            <select name="translate">
+                                                <option value="{{ d.translation[0] }}">{{ d.translation[0] }}</option>
+                                                <option value="{{ not d.translation[0] }}">{{ not d.translation[0] }}</option>
+                                            </select>
+                                            </label>
+                                            <label for="source">Source:
+                                            <select name="source">
+                                                {% if d.translation[1] %}
+                                                <option value="{{ d.translation[1] }}">{{ d.translation[1] }}</option>
+                                                {% endif %}
+                                                {% for source in translation_sources %}
+                                                {% if source != d.translation[1] %}
+                                                <option value="{{source}}">{{source}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            </label>
+                                            <label for="destination">Destination:
+                                            <select name="destination">
+                                                {% if d.translation[2] %}
+                                                <option value="{{ d.translation[2] }}">{{ d.translation[2] }}</option>
+                                                {% endif %}
+                                                {% for destination in translation_destinations %}
+                                                {% if destination != d.translation[2] %}
+                                                <option value="{{destination}}">{{destination}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            </label>
+                                            <label for="shift">Channel Shift:</label>
+                                            <input type="text" value="{{ d.translation[3] }}" name="shift" required>
+                                        </form>
+                                    </div>
+                                    <div class="advanced-footer">
+                                        <button class="apply" onclick="submitAdvancedMenu('{{d.sku}}')">Apply</button>
+                                    </div>
                                 </div>
                             </div>
+                        
+                            {% if d.type == "serial" %}
+                                <table class="serial_device">
+                                    <tr><td class="tape" colspan="2"><div class="timing_tape"></div></td></tr>
+                                    <tr><th class="device_name" colspan="2" style="height: auto;">{{ d.name }}</th></tr>
+                                    <tr><th>Port:</th><td>{{ d.port_name }}</td></tr>
+                                    <tr><th>Baud:</th><td>{{ d.baudrate }}</td></tr>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <div class="hamburger_container" onclick="openAdvancedMenu('{{d.sku}}')">
+                                                    <div class="hamburger_bar"></div>
+                                                    <div class="hamburger_bar"></div>
+                                                    <div class="hamburger_bar"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            {% endif %}
+                            {% if d.type == "mqtt" %}
+                                <table class="dweet_device">
+                                    <tr><td class="tape" colspan="2"><div class="timing_tape"></div></td></tr>
+                                    <tr><th class="device_name" colspan="2" style="height: auto;">{{ d.name }}<span class="online_dot" style="background-color: {% if d.online %}green{% else %}red{% endif %}"></span></th></tr>
+                                    <tr><th>Client ID:</th><td>{{ d.remote_client }}</td></tr>
+                                    <tr><th>Device ID:</th><td>{{ d.remote_device_name }}</td></tr>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <div class="hamburger_container" onclick="openAdvancedMenu('{{d.sku}}')">
+                                                    <div class="hamburger_bar"></div>
+                                                    <div class="hamburger_bar"></div>
+                                                    <div class="hamburger_bar"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            {% endif %}
                         </div>
-                    
-                        {% if d.type == "serial" %}
-                            <table class="serial_device">
-                                <tr><td class="tape" colspan="3"><div class="timing_tape"></div></td></tr>
-                                <tr><th class="device_name" colspan="3" style="height: auto;" onclick="openAdvancedMenu('{{d.sku}}')">{{ d.name }}</th></tr>
-                                <tr><th>Port:</th><td colspan="2">{{ d.port_name }}</td></tr>
-                                <tr><th>Baud:</th><td colspan="2">{{ d.baudrate }}</td></tr>
-                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
-                                    <td><form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
-                            </table>
-                        {% endif %}
-                        {% if d.type == "mqtt" %}
-                            <table class="dweet_device">
-                                <tr><td class="tape" colspan="3"><div class="timing_tape"></div></td></tr>
-                                <tr><th class="device_name" colspan="3" style="height: auto;" onclick="openAdvancedMenu('{{d.sku}}')">{{ d.name }}<span class="online_dot" style="background-color: {% if d.online %}green{% else %}red{% endif %}"></span></th></tr>
-                                <tr><th>Topic Name:</th><td colspan="2">{{ d.topic_name }}</td></tr>
-                                <tr><th>Accepts Incoming?</th><td colspan="2">{{ d.accepts_incoming }}</td></tr>
-                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
-                                    <td><form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
-                            </table>
-                        {% endif %}
-                    </div>
                     {% endfor %}
                 </div>
                 <div class="devices" id="dte" style="display: none;">
                     {% for d in session.bus.dte_devices %}
-                    <div class="device" id="{{ d.sku }}">
-                        {% if d.type == "serial" %}
-                            <table class="serial_device">
-                                <tr><td class="tape" colspan="3"><div class="timing_tape"></div></td></tr>
-                                <tr><th class="device_name" colspan="3" style="height: auto;">{{ d.name }}</th></tr>
-                                <tr><th>Port:</th><td colspan="2">{{ d.port_name }}</td></tr>
-                                <tr><th>Baud:</th><td colspan="2">{{ d.baudrate }}</td></tr>
-                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
-                                    <td><form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
-                            </table>
-                        {% endif %}
-                        {% if d.type == "mqtt" %}
-                            <table class="dweet_device">
-                                <tr><td class="tape" colspan="3" style="height: auto;"><div class="timing_tape"></div></td></tr>
-                                <tr><th class="device_name" colspan="3">{{ d.name }}<span class="online_dot" style="background-color: {% if d.online %}green{% else %}red{% endif %}"></span></th></tr>
-                                <tr><th>Topic Name:</th><td colspan="2">{{ d.topic_name }}</td></tr>
-                                <tr><th>Accepts Incoming?</th><td colspan="2">{{ d.accepts_incoming }}</td></tr>
-                                <tr><th>Muted?</th><td>{{ d.mute }}</td>
-                                    <td><form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form></td></tr>
-                            </table>
-                        {% endif %}
-                    </div>
+                                                <div class="device" id="{{ d.sku }}">
+                            <div class="modal">
+                                <div class="advanced-menu">
+                                    <div class="advanced-header">
+                                        <span class="close" onclick="closeAdvancedMenu('{{d.sku}}')">&times;</span>
+                                        <h2>Advanced Options for {{ d.name }}</h2>
+                                    </div>
+                                    <div class="advanced-body">
+                                        <form name>
+                                            <label for="translate">Translated?
+                                            <select name="translate">
+                                                <option value="{{ d.translation[0] }}">{{ d.translation[0] }}</option>
+                                                <option value="{{ not d.translation[0] }}">{{ not d.translation[0] }}</option>
+                                            </select>
+                                            </label>
+                                            <label for="source">Source:
+                                            <select name="source">
+                                                {% if d.translation[1] %}
+                                                <option value="{{ d.translation[1] }}">{{ d.translation[1] }}</option>
+                                                {% endif %}
+                                                {% for source in translation_sources %}
+                                                {% if source != d.translation[1] %}
+                                                <option value="{{source}}">{{source}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            </label>
+                                            <label for="destination">Destination:
+                                            <select name="destination">
+                                                {% if d.translation[2] %}
+                                                <option value="{{ d.translation[2] }}">{{ d.translation[2] }}</option>
+                                                {% endif %}
+                                                {% for destination in translation_destinations %}
+                                                {% if destination != d.translation[2] %}
+                                                <option value="{{destination}}">{{destination}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            </label>
+                                            <label for="shift">Channel Shift:</label>
+                                            <input type="text" value="{{ d.translation[3] }}" name="shift" required>
+                                        </form>
+                                    </div>
+                                    <div class="advanced-footer">
+                                        <button class="apply" onclick="submitAdvancedMenu('{{d.sku}}')">Apply</button>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            {% if d.type == "serial" %}
+                                <table class="serial_device">
+                                    <tr><td class="tape" colspan="2"><div class="timing_tape"></div></td></tr>
+                                    <tr><th class="device_name" colspan="2" style="height: auto;">{{ d.name }}</th></tr>
+                                    <tr><th>Port:</th><td>{{ d.port_name }}</td></tr>
+                                    <tr><th>Baud:</th><td>{{ d.baudrate }}</td></tr>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <div class="hamburger_container" onclick="openAdvancedMenu('{{d.sku}}')">
+                                                    <div class="hamburger_bar"></div>
+                                                    <div class="hamburger_bar"></div>
+                                                    <div class="hamburger_bar"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            {% endif %}
+                            {% if d.type == "mqtt" %}
+                                <table class="dweet_device">
+                                    <tr><td class="tape" colspan="2"><div class="timing_tape"></div></td></tr>
+                                    <tr><th class="device_name" colspan="2" style="height: auto;">{{ d.name }}<span class="online_dot" style="background-color: {% if d.online %}green{% else %}red{% endif %}"></span></th></tr>
+                                    <tr><th>Client ID:</th><td>{{ d.remote_client }}</td></tr>
+                                    <tr><th>Device ID:</th><td>{{ d.remote_device_name }}</td></tr>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <div class="hamburger_container" onclick="openAdvancedMenu('{{d.sku}}')">
+                                                    <div class="hamburger_bar"></div>
+                                                    <div class="hamburger_bar"></div>
+                                                    <div class="hamburger_bar"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <form action="/remove/{{ d.sku }}" method="POST"><button type="submit" onclick="return confirm('Remove {{ d.name }}?')">X</button></form>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            {% endif %}
+                        </div>
                     {% endfor %}
                 </div>
             </div>

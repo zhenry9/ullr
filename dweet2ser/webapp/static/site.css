@@ -185,12 +185,13 @@ body {
 
 .device table form{
     text-align: right;
-    margin-right: .5em;
 }
   
 .device td, .device th {
     border: 1px solid #ddd;
     padding: 2px;
+    border-left: 0;
+    border-right: 0;
   }
 
 .device th {
@@ -201,8 +202,16 @@ body {
     height: 4.25em;
 }
 
+.device tfoot td {
+    padding: 10px;
+    text-align: left;
+    color: white;
+    height: auto;
+    border-width: 0;
+}
+
 .device td {
-    max-width: 12em;
+    min-width: 5.5em;
     overflow: auto;
 }
   
@@ -210,12 +219,24 @@ body {
   
 .device tr:nth-child(odd) {background-color: #ddd;}
   
-.serial_device th {
+.serial_device th, .serial_device tfoot td{
     background-color: rgb(170, 56, 56);
 }
 
-.dweet_device th {
+.dweet_device th, .dweet_device tfoot td{
     background-color: rgb(0, 201, 201);
+}
+
+.hamburger_container {
+    cursor: pointer;
+}
+  
+.hamburger_bar {
+    width: 20px;
+    height: 3px;
+    background-color: #333;
+    margin: 3px 0;
+    transition: 0.4s;
 }
 
 .tape {

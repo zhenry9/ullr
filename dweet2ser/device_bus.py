@@ -118,8 +118,9 @@ class DeviceBus(object):
                     except Exception as e:
                         print_to_ui(f"Translation failed: {e}")
 
-                    def write_to_device_list(list):
-                        for d in list:
+                def write_to_device_list(list):
+                    for d in list:
+                        if d.accepts_incoming:
                             if d.write(message):
                                 print_to_ui(
                                     f"{colored(d.type.capitalize(), d.type_color)} message sent to {d.name}: "
@@ -127,16 +128,17 @@ class DeviceBus(object):
                             else:
                                 print_to_ui(f"Writing to {d.name} failed.")
 
-                    if device.mode == "DTE":
-                        # Messages from DTE devices get sent to all DCE devices.
-                        write_to_device_list(self.dce_devices)
+                if device.mode == "DTE":
+                    # Messages from DTE devices get sent to all DCE devices.
+                    write_to_device_list(self.dce_devices)
 
-                    elif device.mode == "DCE":
-                        # Messages from DCE devices get sent to all DTE devices.
-                        write_to_device_list(self.dte_devices)
+                elif device.mode == "DCE":
+                    # Messages from DCE devices get sent to all DTE devices.
+                    write_to_device_list(self.dte_devices)
 
-                    else:
-                        print_to_ui("Mode not found")
+                else:
+                    print_to_ui("Mode not found")
+                    
             except SerialException as e:
                 print_to_ui(f"{e}")
                 print_to_ui(f"{device.name} unplugged. Removing device.")
