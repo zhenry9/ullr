@@ -76,9 +76,12 @@ function closeAdvancedMenu(id){
 }
 
 function submitAdvancedMenu(id){
-    var formdata = $("#" + id + " form:eq(0)").serializeArray();
-    formdata = JSON.stringify(formdata)
-    socket.emit('update_translation', id, formdata);
+    var device_data = $("#" + id + " form:eq(0)").serializeArray();
+    var translation_data = $("#" + id + " form:eq(1)").serializeArray();
+    translation_data = JSON.stringify(translation_data)
+    device_data = JSON.stringify(device_data)
+    socket.emit('update_translation', id, translation_data);
+    socket.emit('update_device', id, device_data);
     closeAdvancedMenu(id);
 }
 

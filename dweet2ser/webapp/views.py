@@ -128,3 +128,22 @@ def update_translation(id, data):
             0
         ]
     current_session.bus.update_translation(id, translation)
+
+@socketio.on("update_device")
+def update_device(id, data):
+    data = json.loads(data)
+    d = current_session.bus.find_device(id)
+    mute, incoming, publish = False, False, False
+    for item in data:
+        if item["value"] == "on":
+            if item["name"] == "mute":
+                mute = True
+            elif item["name"] == "incoming":
+                incoming = True
+            elif item["name"] == "publish":
+                publish = True
+        d.mute = mute
+        d.accepts_incoming = incoming
+        if d.type == "serial":
+            d.published = publish
+    

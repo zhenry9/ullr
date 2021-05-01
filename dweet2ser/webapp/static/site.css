@@ -467,6 +467,14 @@ body {
     justify-content: flex-end;
 }
 
+.advanced-menu form {
+    margin: 1em;
+}
+
+.device-options label {
+    margin-right: 3em;
+}
+
 @-webkit-keyframes fadeEffect {
     from {opacity: 0;}
     to {opacity: 1;}
