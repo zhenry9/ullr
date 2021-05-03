@@ -1,6 +1,7 @@
 import uuid
 
 import paho.mqtt.client as mqtt
+import ntplib
 
 from .utils import logger, print_to_ui
 from .webapp import socketing
@@ -10,12 +11,26 @@ MQTT_BROKER_PORT = 0
 CLIENT_ID = hex(uuid.getnode())[2:].zfill(12)
 CLIENT = None
 CONNECTED = False
+time_offset = 0
 
 status_functions = {}
 subscriptions = []
+ntp_client = ntplib.NTPClient()
+
+def update_time_offset():
+    global time_offset
+    try:
+        resp = ntp_client.request('pool.ntp.org')
+        time_offset = resp.offset
+        logger.info(f"Time offset set to {time_offset}.")
+        return True
+    except:
+        logger.warn("Unable to update time offset.")
+        return False
 
 def on_connect(client, userdata, flags, rc):
     global CONNECTED
+    update_time_offset()
     if rc == 0:
         CONNECTED = True
         CLIENT.publish(CLIENT_ID+"/status", "online", qos=1, retain=True)

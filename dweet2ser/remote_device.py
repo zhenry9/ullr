@@ -1,5 +1,7 @@
 
 import uuid
+import json
+from datetime import datetime
 from queue import Queue
 
 from . import utils, mqtt_client
@@ -11,7 +13,7 @@ class RemoteDevice(object):
     Implementation of a serial device remotely connected to an MQTT broker
     """
 
-    def __init__(self, topic_name, mode, mute=False, accepts_incoming=True, name="Remote Device",
+    def __init__(self, topic_name, mode, mute=False, accepts_incoming=True, name="Remote Device", on_time_max=0,
                  translation=[False, None, None, 0]):
         self.sku = id(self)
         self.name = name
@@ -33,11 +35,13 @@ class RemoteDevice(object):
         self.topic_name = f"{self.remote_client}/{self.remote_device_name}"
         self.mode = mode
         self.message_queue = Queue()
+        self.late_message_queue = Queue()
         self._last_message = ''
         self.online = False
         self.listening = True
         self.remove_me = False
         self.translation = translation
+        self.on_time_max = on_time_max
         mqtt_client.CLIENT.message_callback_add(self.topic_name+"/from_device", self._new_message)
         mqtt_client.add_subscription(self.topic_name+"/#")
         mqtt_client.subscribe_status(self.remote_client, self._update_status)
@@ -50,7 +54,15 @@ class RemoteDevice(object):
         update_online_dot(self.sku, self.online)
 
     def _new_message(self, client, userdata, message):
-        self.message_queue.put(message.payload)
+        payload = json.loads(message.payload.decode())
+        now_corrected = datetime.utcnow().timestamp() + mqtt_client.time_offset
+        message_transit_time = now_corrected - payload["timestamp"]
+        message_data = payload["message"]
+        utils.logger.info(f"Message {message_data} transit time: {message_transit_time}.")
+        if self.on_time_max == 0 or message_transit_time < self.on_time_max:
+            self.message_queue.put(message_data.encode())
+        else:
+            self.late_message_queue.put(message_data.encode())
 
     def write(self, message):
         if self.accepts_incoming:

@@ -1,7 +1,9 @@
 
 import time
+from datetime import datetime
 from queue import Queue
 import threading
+import json
 
 import serial
 from serial.serialutil import SerialTimeoutException
@@ -70,8 +72,7 @@ class LocalDevice(object):
                 self._last_message = message
                 self.message_queue.put(message)
                 if self.published:
-                    mqtt_client.CLIENT.publish(self.published_name+"/from_device", message, qos=1)
-                    print_to_ui("Published to MQTT.")
+                    self.publish(message)
                 i = self.buffer.find(b"\r")
             time.sleep(.1)
             i = max(1, min(2048, ser.in_waiting))
@@ -81,6 +82,13 @@ class LocalDevice(object):
         self.serial_port.close()
 
         return
+
+    def publish(self, message):
+        now = datetime.utcnow().timestamp()
+        timestamp = now + mqtt_client.time_offset
+        payload = json.dumps({"message": message.decode(), "timestamp": timestamp})
+        mqtt_client.CLIENT.publish(self.published_name+"/from_device", payload, qos=1)
+        print_to_ui("Published to MQTT.")
 
     def kill_listen_stream(self):
         """
