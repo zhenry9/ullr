@@ -92,7 +92,9 @@ class Dweet2serConfiguration(object):
                     if self.parser[d].get("thing_name"):
                         topic_name = self.parser[d].get("thing_name")
                     else:
-                        topic_name = self.parser[d].get("topic_name")    
+                        topic_name = self.parser[d].get("topic_name") 
+
+                    on_time_max = int(self.parser[d].get("on_time_max"))   
                     try:
                         dev = RemoteDevice(
                             topic_name=topic_name,
@@ -100,6 +102,7 @@ class Dweet2serConfiguration(object):
                             mute=mute,
                             accepts_incoming=accepts_incoming,
                             name=name,
+                            on_time_max=on_time_max,
                             translation=translation)
                         self.bus.add_device(dev)
                         utils.print_to_ui(
@@ -127,6 +130,7 @@ class Dweet2serConfiguration(object):
             if type(dev).__name__ == "RemoteDevice":
                 self.parser[dev.name]["location"] = "remote"
                 self.parser[dev.name]["topic_name"] = dev.topic_name
+                self.parser[dev.name]["on_time_max"] = str(dev.on_time_max)
             self.parser[dev.name]["mute"] = str(dev.mute)
             self.parser[dev.name]["accepts_incoming"] = str(dev.accepts_incoming)
             self.parser[dev.name]["translated"] = str(dev.translation[0])

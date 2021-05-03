@@ -76,6 +76,7 @@ def add_remote():
                 name=form["name"],
                 accepts_incoming=form["incoming"],
                 mute=mute,
+                on_time_max=form["on_time_max"]
             )
             current_session.bus.add_device(dev)
         except Exception as e:

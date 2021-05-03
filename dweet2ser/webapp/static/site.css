@@ -298,6 +298,10 @@ body {
     bottom: .08em; /* this is a better value for different fonts! */
 }
 
+.form-container input[type=number]{
+    width: 4em;
+}
+
 /* When the inputs get focus, do something */
 .form-container input[type=text]:focus, .form-container input[type=password]:focus {
   background-color: #ddd;
