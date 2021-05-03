@@ -86,7 +86,7 @@ class LocalDevice(object):
         now = time.time()
         timestamp = now + mqtt_client.time_offset
         payload = json.dumps({"message": message.decode(), "timestamp": timestamp})
-        mqtt_client.CLIENT.publish(self.published_name+"/from_device", payload, qos=1)
+        mqtt_client.safe_publish(self.published_name+"/from_device", payload, qos=1)
         print_to_ui("Published to MQTT.")
 
     def kill_listen_stream(self):

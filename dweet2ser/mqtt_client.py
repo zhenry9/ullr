@@ -1,4 +1,5 @@
 import uuid
+from threading import Lock
 
 import paho.mqtt.client as mqtt
 import ntplib
@@ -16,6 +17,7 @@ time_offset = 0
 status_functions = {}
 subscriptions = []
 ntp_client = ntplib.NTPClient()
+publish_lock = Lock()
 
 def update_time_offset():
     global time_offset
@@ -28,12 +30,16 @@ def update_time_offset():
         logger.warn("Unable to update time offset.")
         return False
 
+def safe_publish(*args, **kwargs):
+    with publish_lock:
+        CLIENT.publish(*args, **kwargs)
+
 def on_connect(client, userdata, flags, rc):
     global CONNECTED
     update_time_offset()
     if rc == 0:
         CONNECTED = True
-        CLIENT.publish(CLIENT_ID+"/status", "online", qos=1, retain=True)
+        safe_publish(CLIENT_ID+"/status", "online", qos=1, retain=True)
         for topic in subscriptions:
             CLIENT.subscribe(topic, qos=1)
         print_to_ui("Connected to MQTT broker.")
@@ -82,5 +88,6 @@ def start_client(url:str, port:int, username:str, pw:str):
     CLIENT.username_pw_set(MQTT_BROKER_USER, MQTT_BROKER_PW)
     CLIENT.will_set(CLIENT_ID+"/status", "offline", qos=1, retain=True)
     CLIENT.reconnect_delay_set(min_delay=1, max_delay=8)
+    CLIENT.message_retry_set(5)
     CLIENT.connect_async(MQTT_BROKER_URL, MQTT_BROKER_PORT, keepalive=4)
     CLIENT.loop_start()

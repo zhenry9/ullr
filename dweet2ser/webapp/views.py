@@ -42,18 +42,23 @@ def add_local():
     if request.method == "POST":
         form = request.form
         mute = False
+        incoming = False
+        published = False
         if form.get("mute"):
             mute = True
-
+        if form.get("incoming"):
+            incoming = True
+        if form.get("published"):
+            published = True
         try:
             dev = LocalDevice(
                 form["port"],
                 form["mode"],
                 name=form["name"],
                 mute=mute,
-                accepts_incoming=form["incoming"],
+                accepts_incoming=incoming,
                 baudrate=int(form["baud"]),
-                published=form["publish"])
+                published=published)
             current_session.bus.add_device(dev)
         except Exception as e:
             utils.print_to_ui(f"Failed to add device: {e}")
@@ -66,15 +71,18 @@ def add_remote():
     if request.method == "POST":
         form = request.form
         mute = False
+        incoming = False
         if form.get("mute"):
             mute = True
+        if form.get("incoming"):
+            incoming = True
 
         try:
             dev = RemoteDevice(
                 form["topic_name"],
                 form["mode"],
                 name=form["name"],
-                accepts_incoming=form["incoming"],
+                accepts_incoming=incoming,
                 mute=mute,
                 on_time_max=form["on_time_max"]
             )
