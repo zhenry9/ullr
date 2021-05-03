@@ -1,7 +1,7 @@
 
 import uuid
 import json
-from datetime import datetime
+import time
 from queue import Queue
 
 from . import utils, mqtt_client
@@ -54,8 +54,9 @@ class RemoteDevice(object):
         update_online_dot(self.sku, self.online)
 
     def _new_message(self, client, userdata, message):
+        print(message.payload.decode())
         payload = json.loads(message.payload.decode())
-        now_corrected = datetime.utcnow().timestamp() + mqtt_client.time_offset
+        now_corrected = time.time() + mqtt_client.time_offset
         message_transit_time = now_corrected - payload["timestamp"]
         message_data = payload["message"]
         utils.logger.info(f"Message {message_data} transit time: {message_transit_time}.")

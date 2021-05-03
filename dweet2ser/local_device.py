@@ -1,6 +1,5 @@
 
 import time
-from datetime import datetime
 from queue import Queue
 import threading
 import json
@@ -84,7 +83,7 @@ class LocalDevice(object):
         return
 
     def publish(self, message):
-        now = datetime.utcnow().timestamp()
+        now = time.time()
         timestamp = now + mqtt_client.time_offset
         payload = json.dumps({"message": message.decode(), "timestamp": timestamp})
         mqtt_client.CLIENT.publish(self.published_name+"/from_device", payload, qos=1)
