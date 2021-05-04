@@ -31,7 +31,7 @@ def update_time_offset():
         return True
     except:
         logger.warn("Unable to update time offset.")
-        return False
+        return update_time_offset()
 
 def safe_publish(*args, **kwargs):
     with publish_lock:
@@ -39,10 +39,10 @@ def safe_publish(*args, **kwargs):
 
 def on_connect(client, userdata, flags, rc):
     global CONNECTED
-    if time_offset == 0:
-        t = Thread(target=update_time_offset)
-        t.daemon = True
-        t.start()
+    
+    t = Thread(target=update_time_offset)
+    t.daemon = True
+    t.start()
     if rc == 0:
         CONNECTED = True
         safe_publish(CLIENT_ID+"/status", "online", qos=1, retain=True)

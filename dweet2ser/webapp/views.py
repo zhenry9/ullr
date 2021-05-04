@@ -70,7 +70,6 @@ def add_local():
 def add_remote():
     if request.method == "POST":
         form = request.form
-        print(form)
         mute = False
         incoming = False
         if form.get("mute"):
@@ -142,7 +141,6 @@ def update_translation(id, data):
 @socketio.on("update_device")
 def update_device(id, data):
     data = json.loads(data)
-    print(data)
     d = current_session.bus.find_device(id)
     mute, incoming, publish = False, False, False
     for item in data:
@@ -159,3 +157,15 @@ def update_device(id, data):
     if d.type == "serial":
         d.published = publish
     
+@socketio.on("send_late_messages")
+def send_late_messages(id, data):
+    d = current_session.bus.find_device(id)
+    data = json.loads(data)
+    index_list = []
+    for item in data:
+        try:
+            index_list.append(int(item["value"]))
+        except:
+            pass
+    d.accept_late_messages(message_index_list=index_list)
+    socketio.emit("update_late_messages")

@@ -68,7 +68,7 @@ window.onclick = function(event) {
 }
 
 function openAdvancedMenu(id){
-    $("#"+id).load(window.location.href = " #"+id+" > *", function(){
+    $("#"+id+"-menu").load(window.location.href = " #"+id+"-menu > *", function(){
         document.getElementById(id).getElementsByClassName("modal")[0].style.display = "flex";
     })
 }
@@ -80,12 +80,22 @@ function closeAdvancedMenu(id){
 function submitAdvancedMenu(id){
     var device_data = $("#" + id + " form:eq(0)").serializeArray();
     var translation_data = $("#" + id + " form:eq(1)").serializeArray();
-    translation_data = JSON.stringify(translation_data)
-    device_data = JSON.stringify(device_data)
+    translation_data = JSON.stringify(translation_data);
+    device_data = JSON.stringify(device_data);
     socket.emit('update_translation', id, translation_data);
     socket.emit('update_device', id, device_data);
     closeAdvancedMenu(id);
 }
+
+function sendLateMessages(id){
+    var data = $("#" + id + " form:eq(2)").serializeArray();
+    data = JSON.stringify(data);
+    socket.emit('send_late_messages', id, data);
+}
+
+socket.on("update_late_messages", function(){
+    $("#"+id+"-late-message-form").load(window.location.href = " #"+id+"-late-message-form > *");
+})
 
 socket.on("console", function(buffer){
     $("#console").text(buffer);

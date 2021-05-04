@@ -111,7 +111,7 @@
                     {% for d in list %}
                         <div class="device" id="{{ d.sku }}">
                             <div class="modal">
-                                <div class="advanced-menu">
+                                <div class="advanced-menu" id="{{ d.sku }}-menu">
                                     <div class="advanced-header">
                                         <span class="close" onclick="closeAdvancedMenu('{{d.sku}}')">&times;</span>
                                         <h2>Advanced Options for {{ d.name }}</h2>
@@ -168,7 +168,8 @@
                                             <input type="text" value="{{ d.translation[3] }}" name="shift" required>
                                         </form>
                                         {% if d.type == "mqtt" %}
-                                        <form name="late_message_form" class="late-message-form">
+                                        <div class="late-messages-box">
+                                        <form name="late_message_form" class="late-message-form" id="{{d.sku}}-late-message-form">
                                             <label for="late_messages">Late messages: </label>
                                             <select name="late_messages" placeholder="None" multiple>
                                                 {% if d.late_message_list|length == 0%}
@@ -179,6 +180,8 @@
                                                 {% endfor %}}
                                             </select>
                                         </form>
+                                        <button onclick="sendLateMessages('{{d.sku}}')">Send Selected</button>
+                                        </div>
                                         {% endif %}
                                     </div>
                                     <div class="advanced-footer">

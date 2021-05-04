@@ -461,7 +461,16 @@ body {
 .advanced-body {
     padding: 2px 16px;
     background-color: #919191;
-} 
+}
+
+.late-messages-box {
+    display: flex;
+    flex-direction: row;
+}
+
+.late-messages-box button {
+    height: 4em;
+}
 
 .advanced-footer {
     display: flex;

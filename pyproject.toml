@@ -1,7 +1,7 @@
 [tool.briefcase]
 project_name = "dweet2ser"
 bundle = "com.zhenry9"
-version = "0.5.4"
+version = "0.5.5"
 url = "https://github.com/zhenry9/dweet2ser"
 license = "GNU General Public License v3 or later (GPLv3+)"
 author = 'Zach Henry'
