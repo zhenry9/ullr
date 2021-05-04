@@ -475,6 +475,12 @@ body {
     margin: 1em;
 }
 
+.late-message-form select {
+    width: 18em;
+    height: 6em;
+    overflow: auto;
+}
+
 .device-options label {
     margin-right: 3em;
 }

@@ -5,6 +5,7 @@
         <title>dweet2ser status</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
         <div class="menu_bar" id="config_menu">
@@ -166,6 +167,19 @@
                                             <label for="shift">Channel Shift:</label>
                                             <input type="text" value="{{ d.translation[3] }}" name="shift" required>
                                         </form>
+                                        {% if d.type == "mqtt" %}
+                                        <form name="late_message_form" class="late-message-form">
+                                            <label for="late_messages">Late messages: </label>
+                                            <select name="late_messages" placeholder="None" multiple>
+                                                {% if d.late_message_list|length == 0%}
+                                                <option value="placeholder">None</option>
+                                                {% endif %}
+                                                {% for i in range(d.late_message_list|length) %}
+                                                <option value="{{ i }}">{{ d.late_message_list[i].decode('utf-8') }}</option>
+                                                {% endfor %}}
+                                            </select>
+                                        </form>
+                                        {% endif %}
                                     </div>
                                     <div class="advanced-footer">
                                         <button class="apply" onclick="submitAdvancedMenu('{{d.sku}}')">Apply</button>
@@ -234,7 +248,7 @@
             var version = "{{ version }}";
             var hostname = "{{ hostname }}";       
         </script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        
         <!--<script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery-3.6.0.min.js') }}">\x3C/script>')</script>-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.1/socket.io.js" 
             integrity="sha512-oFOCo2/3DtjrJG4N27BjSLQWoiBv171sK6a+JiWjp/7agxC2nCUP358AqzxkBUb5jX8g6CYLPdSKQTbC0weCwA==" crossorigin="anonymous"></script>

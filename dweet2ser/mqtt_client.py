@@ -1,10 +1,11 @@
 import uuid
-from threading import Lock
+from threading import Lock, Thread
+import time
 
 import paho.mqtt.client as mqtt
 import ntplib
 
-from .utils import logger, print_to_ui
+from .utils import logger, print_to_ui, internet_connection
 from .webapp import socketing
 
 MQTT_BROKER_URL, MQTT_BROKER_USER, MQTT_BROKER_PW = "", "", ""
@@ -20,6 +21,8 @@ ntp_client = ntplib.NTPClient()
 publish_lock = Lock()
 
 def update_time_offset():
+    while not internet_connection():
+        time.sleep(2)
     global time_offset
     try:
         resp = ntp_client.request('pool.ntp.org')
@@ -36,7 +39,10 @@ def safe_publish(*args, **kwargs):
 
 def on_connect(client, userdata, flags, rc):
     global CONNECTED
-    update_time_offset()
+    if time_offset == 0:
+        t = Thread(target=update_time_offset)
+        t.daemon = True
+        t.start()
     if rc == 0:
         CONNECTED = True
         safe_publish(CLIENT_ID+"/status", "online", qos=1, retain=True)

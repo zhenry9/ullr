@@ -68,7 +68,9 @@ window.onclick = function(event) {
 }
 
 function openAdvancedMenu(id){
-    document.getElementById(id).getElementsByClassName("modal")[0].style.display = "flex";
+    $("#"+id).load(window.location.href = " #"+id+" > *", function(){
+        document.getElementById(id).getElementsByClassName("modal")[0].style.display = "flex";
+    })
 }
 
 function closeAdvancedMenu(id){

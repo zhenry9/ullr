@@ -48,7 +48,7 @@ def add_local():
             mute = True
         if form.get("incoming"):
             incoming = True
-        if form.get("published"):
+        if form.get("publish"):
             published = True
         try:
             dev = LocalDevice(
@@ -70,6 +70,7 @@ def add_local():
 def add_remote():
     if request.method == "POST":
         form = request.form
+        print(form)
         mute = False
         incoming = False
         if form.get("mute"):
@@ -141,9 +142,11 @@ def update_translation(id, data):
 @socketio.on("update_device")
 def update_device(id, data):
     data = json.loads(data)
+    print(data)
     d = current_session.bus.find_device(id)
     mute, incoming, publish = False, False, False
     for item in data:
+        print(item)
         if item["value"] == "on":
             if item["name"] == "mute":
                 mute = True
@@ -151,8 +154,8 @@ def update_device(id, data):
                 incoming = True
             elif item["name"] == "publish":
                 publish = True
-        d.mute = mute
-        d.accepts_incoming = incoming
-        if d.type == "serial":
-            d.published = publish
+    d.mute = mute
+    d.accepts_incoming = incoming
+    if d.type == "serial":
+        d.published = publish
     

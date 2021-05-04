@@ -64,7 +64,7 @@ class RemoteDevice(object):
             self.message_queue.put(message_data.encode())
         else:
             self.late_message_list.append(message_data.encode())
-            utils.print_to_ui(f"Received message {stripped_message} "
+            utils.print_to_ui(f"Received message from {self.name} "
                               f"after max on-time window of {self.on_time_max}s ({message_transit_time}s). "
                               f"Adding to late message list.")
 
