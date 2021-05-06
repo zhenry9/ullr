@@ -63,7 +63,10 @@ class DeviceBus(object):
 
         if device:
             device.kill_listen_stream()
-            self.dce_devices.remove(device)
+            if device.mode.lower() == "dce":
+                self.dce_devices.remove(device)
+            elif device.mode.lower() == "dte":
+                self.dte_devices.remove(device)
             TAPES.pop(device.sku, "")
             print_to_ui(f"Device '{device.name}' removed.")
 
