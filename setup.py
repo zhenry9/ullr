@@ -35,7 +35,8 @@ setuptools.setup(
         "requests>=2.25.1, <3",
         "termcolor>=1.1.0, <2",
         "psutil>=5.8.0, <6",
-        "paho-mqtt"
+        "paho-mqtt",
+        "ntplib"
     ],
     python_requires='>=3.6',
     entry_points={
