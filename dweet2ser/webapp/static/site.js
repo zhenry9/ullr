@@ -91,10 +91,11 @@ function sendLateMessages(id){
     var data = $("#" + id + " form:eq(2)").serializeArray();
     data = JSON.stringify(data);
     socket.emit('send_late_messages', id, data);
+    $("#"+id+"-late-message-form").load(window.location.href = " #"+id+"-late-message-form > *");
 }
 
-socket.on("update_late_messages", function(){
-    $("#"+id+"-late-message-form").load(window.location.href = " #"+id+"-late-message-form > *");
+socket.on("update_late_messages", function(id){
+    
 })
 
 socket.on("console", function(buffer){
@@ -116,6 +117,17 @@ socket.on("update_online_dot", function(data){
     }
     else {
         dot.style.backgroundColor = "red";
+    }
+})
+
+socket.on("update_late_badge", function(data){
+    var badge = document.getElementById(data["target"]).getElementsByClassName("late_badge")[0];
+    if (data["count"] > 0) {
+        badge.style.display = "inherit";
+        badge.textContent = data["count"];
+    }
+    else {
+        badge.style.display = "none";
     }
 })
 

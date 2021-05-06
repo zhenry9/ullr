@@ -78,7 +78,7 @@ class LocalDevice(object):
             data = ser.read(i)
             self.buffer.extend(data)
 
-        self.serial_port.close()
+        ser.close()
 
         return
 

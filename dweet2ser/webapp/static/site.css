@@ -229,6 +229,8 @@ body {
 
 .hamburger_container {
     cursor: pointer;
+    position: relative;
+    padding-top: 3px;
 }
   
 .hamburger_bar {
@@ -237,7 +239,21 @@ body {
     background-color: #333;
     margin: 3px 0;
     transition: 0.4s;
+    
 }
+
+.late_badge {
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
+   
+    padding: 1px 3px;
+    font-size: 10px;
+    
+    position: absolute; /* Position the badge within the relatively positioned button */
+    top: 0;
+    left: 0;
+  }
 
 .tape {
     background-color: white;  
@@ -466,10 +482,11 @@ body {
 .late-messages-box {
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .late-messages-box button {
-    height: 4em;
+    height: 3em;
 }
 
 .advanced-footer {
@@ -482,6 +499,15 @@ body {
 
 .advanced-menu form {
     margin: 1em;
+}
+
+.advanced-menu table {
+    margin-left: auto;
+}
+
+.advanced-menu td, .advanced-menu th {
+    height: auto;
+    color: black;
 }
 
 .late-message-form select {

@@ -133,6 +133,7 @@
                                             </label>
                                             {% endif %}
                                         </form>
+                                        <hr>
                                         <form name="translation_form">
                                             <label for="translate">Translated?
                                             <select name="translate">
@@ -168,6 +169,7 @@
                                             <input type="text" value="{{ d.translation[3] }}" name="shift" required>
                                         </form>
                                         {% if d.type == "mqtt" %}
+                                        <hr>
                                         <div class="late-messages-box">
                                         <form name="late_message_form" class="late-message-form" id="{{d.sku}}-late-message-form">
                                             <label for="late_messages">Late messages: </label>
@@ -181,6 +183,14 @@
                                             </select>
                                         </form>
                                         <button onclick="sendLateMessages('{{d.sku}}')">Send Selected</button>
+                                        {% if d.received_messages_count > 0 %}
+                                        <table class="transit_stats">
+                                            <tr><th>Messages Received: </th><td>{{d.received_messages_count}}</td></tr>
+                                            <tr><th>Average Transit Time: </th><td>{{d.average_transit_time}}</td></tr>
+                                            <tr><th>Min Transit Time: </th><td>{{d.min_transit_time}}</td></tr>
+                                            <tr><th>Max Transit Time: </th><td>{{d.max_transit_time}}</td></tr>
+                                        </table>
+                                        {% endif %}
                                         </div>
                                         {% endif %}
                                     </div>
@@ -222,6 +232,7 @@
                                         <tr>
                                             <td>
                                                 <div class="hamburger_container" onclick="openAdvancedMenu('{{d.sku}}')">
+                                                    <span class="late_badge" {% if d.late_message_list|length == 0 %}style="display: none;"{% endif %}>{{d.late_message_list|length}}</span>
                                                     <div class="hamburger_bar"></div>
                                                     <div class="hamburger_bar"></div>
                                                     <div class="hamburger_bar"></div>

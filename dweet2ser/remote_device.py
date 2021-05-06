@@ -5,7 +5,7 @@ import time
 from queue import Queue
 
 from . import utils, mqtt_client
-from .webapp.socketing import update_online_dot
+from .webapp.socketing import update_online_dot, update_late_badge
 
 
 class RemoteDevice(object):
@@ -45,6 +45,10 @@ class RemoteDevice(object):
         mqtt_client.CLIENT.message_callback_add(self.topic_name+"/from_device", self._new_message)
         mqtt_client.add_subscription(self.topic_name+"/#")
         mqtt_client.subscribe_status(self.remote_client, self._update_status)
+        self.max_transit_time = 0
+        self.min_transit_time = 9999
+        self.average_transit_time = 0
+        self.received_messages_count = 0
 
     def _update_status(self, status):
         if status == b"online":
@@ -52,11 +56,19 @@ class RemoteDevice(object):
         else:
             self.online = False
         update_online_dot(self.sku, self.online)
+    
+    def _update_transit_stats(self, transit_time):
+        self.min_transit_time = min(self.min_transit_time, transit_time)
+        self.max_transit_time = max(self.max_transit_time, transit_time)
+        sum_recalc = self.average_transit_time * self.received_messages_count
+        self.received_messages_count += 1
+        self.average_transit_time = round((sum_recalc + transit_time)/self.received_messages_count, 2)
 
     def _new_message(self, client, userdata, message):
         payload = json.loads(message.payload.decode())
         now_corrected = time.time() + mqtt_client.time_offset
         message_transit_time = round(now_corrected - payload["timestamp"], 1)
+        self._update_transit_stats(message_transit_time)
         message_data = payload["message"]
         stripped_message = " ".join(message_data.split())
         utils.logger.info(f"Message {stripped_message} transit time: {message_transit_time}.")
@@ -67,11 +79,13 @@ class RemoteDevice(object):
             utils.print_to_ui(f"Received message from {self.name} "
                               f"after max on-time window of {self.on_time_max}s ({message_transit_time}s). "
                               f"Adding to late message list.")
+            update_late_badge(self.sku, len(self.late_message_list))
 
     def write(self, message):
-        if self.accepts_incoming:
+        if self.accepts_incoming and self.remote_device_name != "+":
             mqtt_client.CLIENT.publish(self.topic_name+"/from_remote", message, qos=1)
             return True
+        return False
 
     def accept_late_messages(self, message_index_list=None):
         if message_index_list is not None:
@@ -82,6 +96,7 @@ class RemoteDevice(object):
             for message in self.late_message_list:
                 self.message_queue.put(message)
                 self.late_message_list.remove(message)
+        update_late_badge(self.sku, len(self.late_message_list))
 
     def kill_listen_stream(self):
         self.listening = False

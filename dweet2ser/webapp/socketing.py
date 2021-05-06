@@ -40,6 +40,10 @@ def update_online_dot(device, online=False):
     payload = {"target": str(device), "online": str(online)}
     socketio.emit("update_online_dot", payload)
 
+def update_late_badge(device, count):
+    payload = {"target": str(device), "count": count}
+    socketio.emit("update_late_badge", payload)
+
 def update_client_status(online=False):
     payload = {"online": str(online)}
     socketio.emit("update_client_status", payload)

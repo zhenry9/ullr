@@ -168,4 +168,4 @@ def send_late_messages(id, data):
         except:
             pass
     d.accept_late_messages(message_index_list=index_list)
-    socketio.emit("update_late_messages")
+    socketio.emit("update_late_messages", id)
