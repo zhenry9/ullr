@@ -42,7 +42,7 @@ def on_connect(client, userdata, flags, rc):
     
     t = Thread(target=update_time_offset)
     t.daemon = True
-    t.start()
+    # t.start()  # removed due to inaccuracies running on raspberry pi at boot
     if rc == 0:
         CONNECTED = True
         safe_publish(CLIENT_ID+"/status", "online", qos=1, retain=True)
