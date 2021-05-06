@@ -113,7 +113,7 @@ class DeviceBus(object):
                     try:
                         message_decoded = skiracetiming.translate(message_decoded, device.translation[1],
                                                                     device.translation[2], device.translation[3])
-                        message = message_decoded.encode().hex()
+                        message = message_decoded.encode()
                         message_decoded = message_decoded.rstrip().replace('\r', '')
                         print_to_ui(f"Translated from {device.translation[1]} to {device.translation[2]} "
                                     f"with channel shift {device.translation[3]}.")
