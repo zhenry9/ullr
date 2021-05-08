@@ -89,9 +89,12 @@ class RemoteDevice(object):
 
     def accept_late_messages(self, message_index_list=None):
         if message_index_list is not None:
+            temp_list = []
             message_index_list.sort(reverse=True)
             for index in message_index_list:
-                self.message_queue.put(self.late_message_list.pop(index))
+                temp_list.append(self.late_message_list.pop(index))
+            for item in temp_list:
+                self.message_queue.put(item)
         else:
             for message in self.late_message_list:
                 self.message_queue.put(message)

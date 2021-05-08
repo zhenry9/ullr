@@ -5,6 +5,8 @@
         <title>dweet2ser status</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Skranji:wght@400;700&display=swap" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
@@ -90,7 +92,7 @@
         </div>
         <div class="main_window">
             <div class="status">
-                <div class="title"><h1>mqtt2Ser</h1></div><h3>v{{ version }}</h3>
+                <div class="title"><h1>ULLR</h1></div><h3>v{{ version }}</h3>
                 <div class="subtitle">Running on: {{ hostname }}({{ host_ip }})({{ client_id }})</div>
                 <button onclick="openMenuBar()" id="config_button">Configure</button>
 

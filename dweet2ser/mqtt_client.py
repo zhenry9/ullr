@@ -1,16 +1,17 @@
-import uuid
+
 from threading import Lock, Thread
 import time
 
 import paho.mqtt.client as mqtt
 import ntplib
 
+from .getmac import get_mac_address
 from .utils import logger, print_to_ui, internet_connection
 from .webapp import socketing
 
 MQTT_BROKER_URL, MQTT_BROKER_USER, MQTT_BROKER_PW = "", "", ""
 MQTT_BROKER_PORT = 0
-CLIENT_ID = hex(uuid.getnode())[2:].zfill(12)
+CLIENT_ID = get_mac_address().replace(":", "")
 CLIENT = None
 CONNECTED = False
 time_offset = 0
