@@ -484,11 +484,20 @@ body {
 .late-messages-box {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: start;
 }
 
 .late-messages-box button {
     height: 3em;
+    margin: 1em 0;
+    border-width: thin;
+    border-style: double;
+    background-color: #292929;
+    color: white;
+}
+
+.late-messages-box label {
+    vertical-align: top;
 }
 
 .advanced-footer {
