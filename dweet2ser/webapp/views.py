@@ -19,7 +19,6 @@ def init(session):
     global current_session
     current_session = session
 
-
 @webapp.route("/")
 def home():
     return render_template(
@@ -33,7 +32,11 @@ def home():
         translation_sources=DECODE.keys(),
         translation_destinations=ENCODE.keys(),
         client_id=mqtt_client.CLIENT_ID,
-        client_online=mqtt_client.CONNECTED
+        client_online=mqtt_client.CONNECTED,
+        broker_url=mqtt_client.MQTT_BROKER_URL,
+        broker_port=mqtt_client.MQTT_BROKER_PORT,
+        broker_user=mqtt_client.MQTT_BROKER_USER,
+        broker_pw=mqtt_client.MQTT_BROKER_PW,
     )
 
 

@@ -67,6 +67,22 @@ window.onclick = function(event) {
     }
 }
 
+function closeMqtt(){
+    document.getElementById("mqttSettings").style.display = "none";
+}
+
+function openMqtt(){
+    $("#mqtt-menu").load(window.location.href = " #mqtt-menu > *", function(){
+        document.getElementById("mqttSettings").style.display = "flex";
+    })
+}
+
+function submitMqtt(){
+    var data = $("#" + id + " form:eq(0)").serializeArray();
+    data = JSON.stringify(data);
+    socket.emit("update_mqtt", data);
+    closeMqtt();
+}
 function openAdvancedMenu(id){
     $("#"+id+"-menu").load(window.location.href = " #"+id+"-menu > *", function(){
         document.getElementById(id).getElementsByClassName("modal")[0].style.display = "flex";

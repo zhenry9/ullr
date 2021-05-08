@@ -34,11 +34,11 @@ class Dweet2serConfiguration(object):
                     f"Invalid config file format: {exc}", sys=True)
 
     def _connect_to_mqtt_broker(self):
-        defaults = self.parser.defaults()
-        broker_url = defaults["mqtt_broker_url"]
-        broker_port = int(defaults["mqtt_broker_port"])
-        broker_user = defaults["mqtt_broker_user"]
-        broker_pw = defaults["mqtt_broker_pw"]
+        section = self.parser["mqtt"]
+        broker_url = section["mqtt_broker_url"]
+        broker_port = int(section["mqtt_broker_port"])
+        broker_user = section["mqtt_broker_user"]
+        broker_pw = section["mqtt_broker_pw"]
         mqtt_client.start_client(broker_url, broker_port, broker_user, broker_pw)
 
     def _add_devices(self):
@@ -150,6 +150,12 @@ class Dweet2serConfiguration(object):
             self.parser[dev.name]["type"] = "DTE"
             add_device_to_config(dev)
 
+        # add MQTT settings to parser
+        self.parser["mqtt"]["mqtt_broker_url"] = mqtt_client.MQTT_BROKER_URL
+        self.parser["mqtt"]["mqtt_broker_port"] = mqtt_client.MQTT_BROKER_PORT
+        self.parser["mqtt"]["mqtt_broker_user"] = mqtt_client.MQTT_BROKER_USER
+        self.parser["mqtt"]["mqtt_broker_pw"] = mqtt_client.MQTT_BROKER_PW
+
         os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
 
         with open(self.config_file, 'w') as configfile:
@@ -187,3 +193,5 @@ class Dweet2serConfiguration(object):
         for item in CONFIG_DEFAULTS:
             if not self.parser.has_option("DEFAULT", item):
                 self.parser["DEFAULT"][item] = CONFIG_DEFAULTS[item]
+        if not self.parser.has_section("mqtt"):
+            self.parser.add_section("mqtt")

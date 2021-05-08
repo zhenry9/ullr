@@ -88,6 +88,31 @@
             </div>
             <form action="/get_log" metod="POST" style="margin-bottom: auto;"><button>Get Log File</button></form>
             <button onclick="saveConfig()">Save Configuration</button>
+            <button onclick="openMqtt()">MQTT Settings</button>
+            <div class="modal" id="mqttSettings">
+                <div class="advanced-menu" id="mqtt-menu">
+                <div class="advanced-header">
+                    <span class="close" onclick="closeMqtt()">&times;</span>
+                    <h2>MQTT Broker Settings</h2>
+                </div>
+                <div class="advanced-body">
+                    <form>
+                        <label for="url">Broker URL:</label>
+                        <input type="text" placeholder="{{ broker_url }}" name="url" required>
+                        <label for="port">Broker Port:</label>
+                        <input type="text" placeholder="{{ broker_port }}" name="port" required>
+                        <label for="user">Broker Username:</label>
+                        <input type="text" placeholder="{{ broker_user }}" name="user" required>
+                        <label for="pw">Broker Password:</label>
+                        <input type="text" placeholder="{{ broker_pw }}" name="pw" required>
+                    </form>
+                </div>
+                    <div class="advanced-footer">
+                        <button class="apply" onclick="submitMqtt()">Apply</button>
+                    </div>
+                </div>
+            </div>
+
             <button onclick="closeMenuBar()">Close Menu</button>
         </div>
         <div class="main_window">
@@ -172,9 +197,9 @@
                                         </form>
                                         {% if d.type == "mqtt" %}
                                         <hr>
+                                        <h3 style="margin: 1em 0 0">Late Messages</h3>
                                         <div class="late-messages-box">
                                         <form name="late_message_form" class="late-message-form" id="{{d.sku}}-late-message-form">
-                                            <label for="late_messages">Late messages: </label>
                                             <select name="late_messages" placeholder="None" multiple>
                                                 {% if d.late_message_list|length == 0%}
                                                 <option value="placeholder">None</option>
@@ -188,7 +213,9 @@
                                         {% if d.received_messages_count > 0 %}
                                         <table class="transit_stats">
                                             <tr><th>Messages Received: </th><td>{{d.received_messages_count}}</td></tr>
-                                            <tr><th>Average Transit Time: </th><td>{{d.average_transit_time}}</td></tr>
+                                            <tr><th>Avg. Transit Time: </th><td>{{d.average_transit_time}}</td></tr>
+                                        </table>
+                                        <table class="transit_stats">
                                             <tr><th>Min Transit Time: </th><td>{{d.min_transit_time}}</td></tr>
                                             <tr><th>Max Transit Time: </th><td>{{d.max_transit_time}}</td></tr>
                                         </table>

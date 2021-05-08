@@ -93,8 +93,8 @@ class RemoteDevice(object):
             message_index_list.sort(reverse=True)
             for index in message_index_list:
                 temp_list.append(self.late_message_list.pop(index))
-            for item in temp_list:
-                self.message_queue.put(item)
+            while len(temp_list) > 0:
+                self.message_queue.put(temp_list.pop())
         else:
             for message in self.late_message_list:
                 self.message_queue.put(message)

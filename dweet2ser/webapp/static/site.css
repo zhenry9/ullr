@@ -489,7 +489,7 @@ body {
 
 .late-messages-box button {
     height: 3em;
-    margin: 1em 0;
+    margin: 1em 1em 0 0;
     border-width: thin;
     border-style: double;
     background-color: #292929;
@@ -512,8 +512,9 @@ body {
     margin: 1em;
 }
 
-.advanced-menu table {
-    margin-left: auto;
+.late-messages-box table {
+    margin: 1em 2px;
+    font-size: .8em;
 }
 
 .advanced-menu td, .advanced-menu th {
