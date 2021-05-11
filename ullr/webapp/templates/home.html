@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>dweet2ser status</title>
+        <title>ULLR status</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='site.css')}}" />
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -224,7 +224,7 @@
                                         <h3 style="margin: 1em 0 0">Late Messages</h3>
                                         <form name="ota_form" class="ota-form">
                                         <label for="on_time_max">On-time arrival (s) (0=off):
-                                            <input type="number" name="on_time_max" min="0" max="86400" step="1" value="0">
+                                            <input type="number" name="on_time_max" min="0" max="86400" step="1" value="{{ d.on_time_max }}">
                                         </label>
                                         </form>
                                         <div class="late-messages-box">

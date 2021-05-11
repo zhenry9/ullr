@@ -180,7 +180,7 @@ def update_device(id, data):
 @socketio.on("update_ota")
 def update_ota(id, data):
     d = current_session.bus.find_device(id)
-    data - json.loads(data)
+    data = json.loads(data)
     ota = int(data[0]["value"])
     d.on_time_max = ota
     

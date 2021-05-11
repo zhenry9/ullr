@@ -6,10 +6,10 @@ import os
 from . import __version__ as version
 from . import local_device, remote_device, utils, webapp
 from .cli import cli
-from .session import DweetSession
+from .session import Session
 from .webapp import views
 
-current_session = DweetSession()
+current_session = Session()
 
 # turn off console output if run as windows GUI
 if sys.executable.endswith("pythonw.exe"):
