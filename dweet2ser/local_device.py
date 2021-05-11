@@ -28,8 +28,8 @@ class LocalDevice(object):
         self.published = published
         self.published_name = f"{mqtt_client.CLIENT_ID}/{self.name.replace(' ', '_')}"
         if self.published and self.accepts_incoming:
-            mqtt_client.CLIENT.subscribe(self.published_name+"/from_remote")
-            mqtt_client.CLIENT.message_callback_add(self.published_name+"/from_remote", self._remote_message)
+            mqtt_client.client.subscribe(self.published_name+"/from_remote")
+            mqtt_client.client.message_callback_add(self.published_name+"/from_remote", self._remote_message)
         self.serial_port = serial.Serial(port=port,
                                          baudrate=baudrate,
                                          write_timeout=3)

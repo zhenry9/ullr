@@ -32,11 +32,11 @@ def home():
         translation_sources=DECODE.keys(),
         translation_destinations=ENCODE.keys(),
         client_id=mqtt_client.CLIENT_ID,
-        client_online=mqtt_client.CONNECTED,
-        broker_url=mqtt_client.MQTT_BROKER_URL,
-        broker_port=mqtt_client.MQTT_BROKER_PORT,
-        broker_user=mqtt_client.MQTT_BROKER_USER,
-        broker_pw=mqtt_client.MQTT_BROKER_PW,
+        client_online=mqtt_client.connected,
+        broker_url=mqtt_client.mqtt_broker_url,
+        broker_port=mqtt_client.mqtt_broker_port,
+        broker_user=mqtt_client.mqtt_broker_user,
+        broker_pw=mqtt_client.mqtt_broker_pw,
     )
 
 
@@ -121,6 +121,23 @@ def get_log():
 def save_config():
     current_session.save_current_to_file()
 
+@socketio.on("update_mqtt")
+def update_mqtt(data):
+    data = json.loads(data)
+    url, user, pw = "", "", ""
+    port = 0
+    for item in data:
+        if item["name"] == "url":
+            url = item["value"]
+        elif item["name"] == "port":
+            port = int(item["value"])
+        elif item["name"] == "user":
+            user = item["value"]
+        elif item["name"]  == "pw":
+            pw = item["value"]
+    mqtt_client.client.disconnect()
+    mqtt_client.start_client(url=url, port=port, username=user, pw=pw)
+
 
 @socketio.on("update_translation")
 def update_translation(id, data):
@@ -159,6 +176,13 @@ def update_device(id, data):
     d.accepts_incoming = incoming
     if d.type == "serial":
         d.published = publish
+
+@socketio.on("update_ota")
+def update_ota(id, data):
+    d = current_session.bus.find_device(id)
+    data - json.loads(data)
+    ota = int(data[0]["value"])
+    d.on_time_max = ota
     
 @socketio.on("send_late_messages")
 def send_late_messages(id, data):

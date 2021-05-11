@@ -481,6 +481,35 @@ body {
     background-color: #919191;
 }
 
+.advanced-body input[type=text] {
+    width: 2em;
+}
+
+/* Floating column for labels: 25% width */
+.col-25 {
+    float: left;
+    width: 20%;
+    margin-top: 6px;
+}
+  
+  /* Floating column for inputs: 75% width */
+.col-75 {
+    float: left;
+    width: 80%;
+    margin-top: 6px;
+}
+
+.col-75 input[type=text]{
+    width: 80%;
+}
+  
+  /* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 .late-messages-box {
     display: flex;
     flex-direction: row;

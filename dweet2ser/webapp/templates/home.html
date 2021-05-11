@@ -19,7 +19,7 @@
                     <input type="text" placeholder="Enter Name" name="name" required>
                     <input type="text" placeholder="Host ID/Device ID" name="topic_name" required>
 
-                    <label for="quantity">On-time arrival (s) (0=off):
+                    <label for="on_time_max">On-time arrival (s) (0=off):
                         <input type="number" name="on_time_max" min="0" max="86400" step="1" value="0">
                     </label>
                     
@@ -97,14 +97,38 @@
                 </div>
                 <div class="advanced-body">
                     <form>
-                        <label for="url">Broker URL:</label>
-                        <input type="text" placeholder="{{ broker_url }}" name="url" required>
-                        <label for="port">Broker Port:</label>
-                        <input type="text" placeholder="{{ broker_port }}" name="port" required>
-                        <label for="user">Broker Username:</label>
-                        <input type="text" placeholder="{{ broker_user }}" name="user" required>
-                        <label for="pw">Broker Password:</label>
-                        <input type="text" placeholder="{{ broker_pw }}" name="pw" required>
+                        <div class="row">
+                            <div class="col-25">
+                            <label for="url">URL:</label>
+                            </div>
+                            <div class="col-75">
+                            <input type="text" value="{{ broker_url }}" name="url" id="url" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                            <label for="mqtt_port">Port:</label>
+                            </div>
+                            <div class="col-75">
+                            <input type="text" value="{{ broker_port }}" name="port" id="mqtt_port" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                            <label for="user">Username:</label>
+                            </div>
+                            <div class="col-75">
+                            <input type="text" value="{{ broker_user }}" name="user" id="user" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                            <label for="pw">Password:</label>
+                            </div>
+                            <div class="col-75">
+                            <input type="text" value="{{ broker_pw }}" name="pw" id="pw" required>
+                            </div>
+                        </div>
                     </form>
                 </div>
                     <div class="advanced-footer">
@@ -198,6 +222,11 @@
                                         {% if d.type == "mqtt" %}
                                         <hr>
                                         <h3 style="margin: 1em 0 0">Late Messages</h3>
+                                        <form name="ota_form" class="ota-form">
+                                        <label for="on_time_max">On-time arrival (s) (0=off):
+                                            <input type="number" name="on_time_max" min="0" max="86400" step="1" value="0">
+                                        </label>
+                                        </form>
                                         <div class="late-messages-box">
                                         <form name="late_message_form" class="late-message-form" id="{{d.sku}}-late-message-form">
                                             <select name="late_messages" placeholder="None" multiple>

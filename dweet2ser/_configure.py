@@ -151,10 +151,10 @@ class Dweet2serConfiguration(object):
             add_device_to_config(dev)
 
         # add MQTT settings to parser
-        self.parser["mqtt"]["mqtt_broker_url"] = mqtt_client.MQTT_BROKER_URL
-        self.parser["mqtt"]["mqtt_broker_port"] = mqtt_client.MQTT_BROKER_PORT
-        self.parser["mqtt"]["mqtt_broker_user"] = mqtt_client.MQTT_BROKER_USER
-        self.parser["mqtt"]["mqtt_broker_pw"] = mqtt_client.MQTT_BROKER_PW
+        self.parser["mqtt"]["mqtt_broker_url"] = mqtt_client.mqtt_broker_url
+        self.parser["mqtt"]["mqtt_broker_port"] = mqtt_client.mqtt_broker_port
+        self.parser["mqtt"]["mqtt_broker_user"] = mqtt_client.mqtt_broker_user
+        self.parser["mqtt"]["mqtt_broker_pw"] = mqtt_client.mqtt_broker_pw
 
         os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
 

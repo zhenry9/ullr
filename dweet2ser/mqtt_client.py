@@ -9,11 +9,17 @@ from .getmac import get_mac_address
 from .utils import logger, print_to_ui, internet_connection
 from .webapp import socketing
 
-MQTT_BROKER_URL, MQTT_BROKER_USER, MQTT_BROKER_PW = "", "", ""
-MQTT_BROKER_PORT = 0
+mqtt_broker_url, mqtt_broker_user, mqtt_broker_pw = "", "", ""
+mqtt_broker_port = 0
 CLIENT_ID = get_mac_address().replace(":", "")
-CLIENT = None
-CONNECTED = False
+
+client = mqtt.Client(CLIENT_ID, clean_session=False)
+client.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
+client.will_set(CLIENT_ID+"/status", "offline", qos=1, retain=True)
+client.reconnect_delay_set(min_delay=1, max_delay=8)
+client.message_retry_set(5)
+
+connected = False
 time_offset = 0
 
 status_functions = {}
@@ -36,19 +42,19 @@ def update_time_offset():
 
 def safe_publish(*args, **kwargs):
     with publish_lock:
-        CLIENT.publish(*args, **kwargs)
+        client.publish(*args, **kwargs)
 
 def on_connect(client, userdata, flags, rc):
-    global CONNECTED
+    global connected
     
     t = Thread(target=update_time_offset)
     t.daemon = True
     # t.start()  # removed due to inaccuracies running on raspberry pi at boot
     if rc == 0:
-        CONNECTED = True
+        connected = True
         safe_publish(CLIENT_ID+"/status", "online", qos=1, retain=True)
         for topic in subscriptions:
-            CLIENT.subscribe(topic, qos=1)
+            client.subscribe(topic, qos=1)
         print_to_ui("Connected to MQTT broker.")
         socketing.update_client_status(True)
     else:
@@ -56,8 +62,8 @@ def on_connect(client, userdata, flags, rc):
         socketing.update_client_status(False)
 
 def on_disconnect(client, userdata, rc):
-    global CONNECTED
-    CONNECTED = False
+    global connected
+    connected = False
     print_to_ui("Disconnected from MQTT broker.")
     socketing.update_client_status(False)
 
@@ -72,7 +78,7 @@ def on_message(client, userdata, message):
 def add_subscription(topic):
     global subscriptions
     subscriptions.append(topic)
-    CLIENT.subscribe(topic, qos=1)
+    client.subscribe(topic, qos=1)
 
 def subscribe_status(host_name, cb_function):
     global status_functions
@@ -82,19 +88,14 @@ def subscribe_status(host_name, cb_function):
     add_subscription(host_name+"/status")
 
 def start_client(url:str, port:int, username:str, pw:str):
-    global CLIENT, MQTT_BROKER_PW, MQTT_BROKER_URL, MQTT_BROKER_USER, MQTT_BROKER_PORT
-    MQTT_BROKER_URL = url
-    MQTT_BROKER_PORT = port
-    MQTT_BROKER_USER = username
-    MQTT_BROKER_PW = pw
-    CLIENT = mqtt.Client(CLIENT_ID, clean_session=False)
-    CLIENT.on_connect = on_connect
-    CLIENT.on_disconnect = on_disconnect
-    CLIENT.on_message = on_message
-    CLIENT.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
-    CLIENT.username_pw_set(MQTT_BROKER_USER, MQTT_BROKER_PW)
-    CLIENT.will_set(CLIENT_ID+"/status", "offline", qos=1, retain=True)
-    CLIENT.reconnect_delay_set(min_delay=1, max_delay=8)
-    CLIENT.message_retry_set(5)
-    CLIENT.connect_async(MQTT_BROKER_URL, MQTT_BROKER_PORT, keepalive=4)
-    CLIENT.loop_start()
+    global client, mqtt_broker_pw, mqtt_broker_url, mqtt_broker_user, mqtt_broker_port
+    mqtt_broker_url = url
+    mqtt_broker_port = port
+    mqtt_broker_user = username
+    mqtt_broker_pw = pw
+    client.on_connect = on_connect
+    client.on_disconnect = on_disconnect
+    client.on_message = on_message
+    client.username_pw_set(mqtt_broker_user, mqtt_broker_pw)
+    client.connect_async(mqtt_broker_url, mqtt_broker_port, keepalive=4)
+    client.loop_start()

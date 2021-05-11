@@ -42,7 +42,7 @@ class RemoteDevice(object):
         self.remove_me = False
         self.translation = translation
         self.on_time_max = int(on_time_max)
-        mqtt_client.CLIENT.message_callback_add(self.topic_name+"/from_device", self._new_message)
+        mqtt_client.client.message_callback_add(self.topic_name+"/from_device", self._new_message)
         mqtt_client.add_subscription(self.topic_name+"/#")
         mqtt_client.subscribe_status(self.remote_client, self._update_status)
         self.max_transit_time = 0
@@ -83,7 +83,7 @@ class RemoteDevice(object):
 
     def write(self, message):
         if self.accepts_incoming and self.remote_device_name != "+":
-            mqtt_client.CLIENT.publish(self.topic_name+"/from_remote", message, qos=1)
+            mqtt_client.client.publish(self.topic_name+"/from_remote", message, qos=1)
             return True
         return False
 
