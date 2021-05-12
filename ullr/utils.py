@@ -33,7 +33,7 @@ def get_default_config_file():
         else:
             home_path = os.path.join(home_path, '.config')
         file_name = "config.ini"
-        return os.path.join(home_path, 'dweet2ser', file_name)
+        return os.path.join(home_path, 'ullr', file_name)
     else:
         return USER_SPECIFIED_DEFAULT_CONFIG_FILE
 
@@ -46,8 +46,8 @@ def get_log_file():
             home_path = "/var/log"
         else:
             home_path = os.path.join(home_path, '.log')
-        file_name = "dweet2ser.log"
-        path = os.path.join(home_path, 'dweet2ser', file_name)
+        file_name = "ullr.log"
+        path = os.path.join(home_path, 'ullr', file_name)
     else:
         path = USER_SPECIFIED_DEFAULT_CONFIG_FILE
     os.makedirs(os.path.dirname(path), exist_ok=True)

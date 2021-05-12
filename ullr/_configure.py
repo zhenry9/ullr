@@ -152,7 +152,7 @@ class Dweet2serConfiguration(object):
 
         # add MQTT settings to parser
         self.parser["mqtt"]["mqtt_broker_url"] = mqtt_client.mqtt_broker_url
-        self.parser["mqtt"]["mqtt_broker_port"] = mqtt_client.mqtt_broker_port
+        self.parser["mqtt"]["mqtt_broker_port"] = str(mqtt_client.mqtt_broker_port)
         self.parser["mqtt"]["mqtt_broker_user"] = mqtt_client.mqtt_broker_user
         self.parser["mqtt"]["mqtt_broker_pw"] = mqtt_client.mqtt_broker_pw
 
