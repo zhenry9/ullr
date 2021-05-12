@@ -91,8 +91,7 @@ def add_remote():
             )
             current_session.bus.add_device(dev)
         except Exception as e:
-            socketing.print_to_web_console(
-                f"{utils.timestamp()}Failed to add device: {e}")
+            utils.print_to_ui(f"Failed to add device: {e}")
 
     return redirect("/")
 
@@ -135,7 +134,8 @@ def update_mqtt(data):
             user = item["value"]
         elif item["name"]  == "pw":
             pw = item["value"]
-    mqtt_client.client.disconnect()
+    if mqtt_client.client.is_connected():
+        mqtt_client.client.disconnect()
     mqtt_client.start_client(url=url, port=port, username=user, pw=pw)
 
 

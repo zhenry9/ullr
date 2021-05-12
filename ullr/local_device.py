@@ -18,6 +18,8 @@ class LocalDevice(object):
 
     def __init__(self, port, mode, name="Local Device", mute=False, accepts_incoming=True, baudrate=9600, published=False, translation=[False, None, None, 0]):
         self.sku = id(self)
+        if name[0] == "$":
+            raise ValueError("Device name cannot start with '$'.")
         self.name = name
         self.type = "serial"
         self.type_color = "red"

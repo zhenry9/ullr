@@ -34,7 +34,7 @@ class UllrConfiguration(object):
                     f"Invalid config file format: {exc}", sys=True)
 
     def _connect_to_mqtt_broker(self):
-        section = self.parser["mqtt"]
+        section = self.parser["$mqtt"]
         broker_url = section["mqtt_broker_url"]
         broker_port = int(section["mqtt_broker_port"])
         broker_user = section["mqtt_broker_user"]
@@ -48,71 +48,72 @@ class UllrConfiguration(object):
             utils.print_to_ui(f"Loading devices from config...", sys=True)
             for d in devices:
                 name = d
-                translation = [False, None, None, 0]
-                location = self.parser[d]["location"]
-                dev_type = self.parser[d]["type"]
-                if self.parser[d]["mute"].upper().strip() == "TRUE":
-                    mute = True
-                else:
-                    mute = False
-                if self.parser[d]["published"].upper().strip() == "TRUE":
-                    published = True
-                else:
-                    published = False
-                if self.parser[d]["accepts_incoming"].upper().strip() == "FALSE":
-                    accepts_incoming = False
-                else:
-                    accepts_incoming = True
-                if self.parser[d]["translated"].upper().strip() == "TRUE":
-                    translation[0] = True
-                    translation[1] = self.parser[d]["translated_from"]
-                    translation[2] = self.parser[d]["translated_to"]
-                    translation[3] = int(self.parser[d]["channel_shift"])
-                if location == "local":
-                    port = self.parser[d]["port"]
-                    baudrate = int(self.parser[d]["baud"])
-                    try:
-                        dev = LocalDevice(
-                            port=port,
-                            mode=dev_type,
-                            name=name,
-                            mute=mute,
-                            accepts_incoming=accepts_incoming,
-                            baudrate=baudrate,
-                            published=published,
-                            translation=translation)
-                        self.bus.add_device(dev)
-                        utils.print_to_ui(
-                            f"Added {location} {dev_type} device '{name}' from config.", sys=True)
-                    except Exception as e:
-                        utils.print_to_ui(
-                            f"Failed to add device '{name}' from default config: {e}", sys=True)
-                elif location == "remote":
-                    # backwards compatibility for previous versions that used Dweet backend with thing names
-                    if self.parser[d].get("thing_name"):
-                        topic_name = self.parser[d].get("thing_name")
+                if name[0] != "$":
+                    translation = [False, None, None, 0]
+                    location = self.parser[d]["location"]
+                    dev_type = self.parser[d]["type"]
+                    if self.parser[d]["mute"].upper().strip() == "TRUE":
+                        mute = True
                     else:
-                        topic_name = self.parser[d].get("topic_name") 
+                        mute = False
+                    if self.parser[d]["published"].upper().strip() == "TRUE":
+                        published = True
+                    else:
+                        published = False
+                    if self.parser[d]["accepts_incoming"].upper().strip() == "FALSE":
+                        accepts_incoming = False
+                    else:
+                        accepts_incoming = True
+                    if self.parser[d]["translated"].upper().strip() == "TRUE":
+                        translation[0] = True
+                        translation[1] = self.parser[d]["translated_from"]
+                        translation[2] = self.parser[d]["translated_to"]
+                        translation[3] = int(self.parser[d]["channel_shift"])
+                    if location == "local":
+                        port = self.parser[d]["port"]
+                        baudrate = int(self.parser[d]["baud"])
+                        try:
+                            dev = LocalDevice(
+                                port=port,
+                                mode=dev_type,
+                                name=name,
+                                mute=mute,
+                                accepts_incoming=accepts_incoming,
+                                baudrate=baudrate,
+                                published=published,
+                                translation=translation)
+                            self.bus.add_device(dev)
+                            utils.print_to_ui(
+                                f"Added {location} {dev_type} device '{name}' from config.", sys=True)
+                        except Exception as e:
+                            utils.print_to_ui(
+                                f"Failed to add device '{name}' from default config: {e}", sys=True)
+                    elif location == "remote":
+                        # backwards compatibility for previous versions that used Dweet backend with thing names
+                        if self.parser[d].get("thing_name"):
+                            topic_name = self.parser[d].get("thing_name")
+                        else:
+                            topic_name = self.parser[d].get("topic_name") 
 
-                    on_time_max = int(self.parser[d].get("on_time_max"))   
-                    try:
-                        dev = RemoteDevice(
-                            topic_name=topic_name,
-                            mode=dev_type,
-                            mute=mute,
-                            accepts_incoming=accepts_incoming,
-                            name=name,
-                            on_time_max=on_time_max,
-                            translation=translation)
-                        self.bus.add_device(dev)
-                        utils.print_to_ui(
-                            f"Added {location} {dev_type} device '{name}' from config.", sys=True)
-                    except Exception as e:
-                        utils.print_to_ui(
-                            f"Failed to add device '{name}' from default config: {e}", sys=True)
-                else:
-                    utils.print_to_ui(f"Failed to add device '{name}' from default config: "
-                                      f"invalid location '{location}'", sys=True)
+                        on_time_max = int(self.parser[d].get("on_time_max"))   
+                        try:
+                            dev = RemoteDevice(
+                                topic_name=topic_name,
+                                mode=dev_type,
+                                mute=mute,
+                                accepts_incoming=accepts_incoming,
+                                name=name,
+                                on_time_max=on_time_max,
+                                translation=translation)
+                            self.bus.add_device(dev)
+                            utils.print_to_ui(
+                                f"Added {location} {dev_type} device '{name}' from config.", sys=True)
+                        except Exception as e:
+                            utils.print_to_ui(
+                                f"Failed to add device '{name}' from default config: {e}", sys=True)
+                    else:
+                        utils.print_to_ui(f"Failed to add device '{name}' from default config: "
+                                        f"invalid location '{location}'", sys=True)
 
     def save_current_to_file(self):
         """ Save the current device bus to default config file
@@ -151,10 +152,10 @@ class UllrConfiguration(object):
             add_device_to_config(dev)
 
         # add MQTT settings to parser
-        self.parser["mqtt"]["mqtt_broker_url"] = mqtt_client.mqtt_broker_url
-        self.parser["mqtt"]["mqtt_broker_port"] = str(mqtt_client.mqtt_broker_port)
-        self.parser["mqtt"]["mqtt_broker_user"] = mqtt_client.mqtt_broker_user
-        self.parser["mqtt"]["mqtt_broker_pw"] = mqtt_client.mqtt_broker_pw
+        self.parser["$mqtt"]["mqtt_broker_url"] = mqtt_client.mqtt_broker_url
+        self.parser["$mqtt"]["mqtt_broker_port"] = str(mqtt_client.mqtt_broker_port)
+        self.parser["$mqtt"]["mqtt_broker_user"] = mqtt_client.mqtt_broker_user
+        self.parser["$mqtt"]["mqtt_broker_pw"] = mqtt_client.mqtt_broker_pw
 
         os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
 
@@ -182,6 +183,10 @@ class UllrConfiguration(object):
 
         else:
             self._add_defaults_to_parser()
+            try:
+                self._connect_to_mqtt_broker()
+            except Exception as exc:
+                utils.print_to_ui(f"Unable to connect to MQTT broker: {exc}")
             utils.print_to_ui(f"Config file {file} not found.", sys=True)
             if file == self.config_file:
                 utils.print_to_ui(
@@ -193,5 +198,5 @@ class UllrConfiguration(object):
         for item in CONFIG_DEFAULTS:
             if not self.parser.has_option("DEFAULT", item):
                 self.parser["DEFAULT"][item] = CONFIG_DEFAULTS[item]
-        if not self.parser.has_section("mqtt"):
-            self.parser.add_section("mqtt")
+        if not self.parser.has_section("$mqtt"):
+            self.parser.add_section("$mqtt")

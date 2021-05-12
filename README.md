@@ -2,7 +2,7 @@
 ### Pronounced "OOH-ler"
 A serial <-> MQTT interface for sports timing.
 
-<img src="https://github.com/zhenry9/Ullr/raw/main/Ullr-signal-flow.png" height="300" align="middle">
+<img src="https://github.com/zhenry9/ullr/raw/main/ullr-signal-flow.png" height="300" align="middle">
 
 Ullr allows for the two-way exchange of data between serial devices and computers over the internet, 
 using MQTT as an intermediary. 
@@ -10,16 +10,15 @@ This is particularly useful for connecting to faraway devices that aren't on the
 Ullr allows for connecting an arbitrary number of devices to an arbitrary number of computers.
 
 Ullr works for connecting remotely to things like weather stations, sensors, or other devices that send 
-simple data intermittently. It is not going to work for things like modems or printers, due to the limitations of 
-dweet.io among other things.
+simple data intermittently. It is not designed for high volume devices like modems or printers.
 
 ## Installation
 ### Python environment
   
-`pip install Ullr`
+`pip install ullr`
   
 ### Windows executable
-If you don't have or don't wish to use a Python environment, a Windows executable version is available on the source
+If you don't have or don't wish to use a Python environment, a Windows executable version is available in the source
 repository on GitHub.
 
 ### Get the source
@@ -31,15 +30,7 @@ configurations can be seen in the example-configs directory in the project repos
 
 ## Usage
 
-Ullr borrows terminology from the original RS232 protocol. "DCE" stands for Data Circuit-terminating Equipment. These 
-are the serial devices themselves, such as sensors or synchronized timers. "DTE" stands for Data Terminal Equipment. 
-These are the computers, or software instances that the DCE devices connect to. Ullr facilitates the connection of 
-DCE devices to DTE devices using dweet.io and local serial ports. Every message received from a DCE device is written to 
-every DTE device, and every message received from a DTE device is written to every DCE device. Ullr allows for 
-connecting an arbitrary number of devices, either local or remote. In this way it is possible to connect one DCE device 
-to many computers, or many DCE devices to one serial port. 
-
-Ullr needs to be running and individually configured on all DTE and DCE devices that are part of the connection.
+Ullr borrows terminology from the original RS232 protocol. 
 
 ### Default
 `Ullr`

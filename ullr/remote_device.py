@@ -16,6 +16,8 @@ class RemoteDevice(object):
     def __init__(self, topic_name, mode, mute=False, accepts_incoming=True, name="Remote Device", on_time_max=0,
                  translation=[False, None, None, 0]):
         self.sku = id(self)
+        if name[0] == "$":
+            raise ValueError("Device name cannot start with '$'.")
         self.name = name
         self.mute = mute
         self.accepts_incoming = accepts_incoming
