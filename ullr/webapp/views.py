@@ -113,7 +113,7 @@ def get_log():
         log,
         mimetype="text/plain",
         headers={
-            "Content-disposition": f"attachment; filename={now}-dweet2ser-{socket.gethostname()}.log"}
+            "Content-disposition": f"attachment; filename={now}-ullr-{socket.gethostname()}.log"}
     )
 
 

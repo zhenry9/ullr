@@ -23,13 +23,13 @@ def main():
     options = arg_parser.add_mutually_exclusive_group()
     options.add_argument(
         "--file", type=str, help="Specify config file to use, overriding defaults.")
-    options.add_argument("--empty", action='store_true', help="Start dweet2ser with no devices. "
+    options.add_argument("--empty", action='store_true', help="Start Ullr with no devices. "
                                                               "Useful for fixing broken config files "
                                                               "or creating new ones.")
     options.add_argument("--override", metavar=('MODE', 'PORT', 'THING_NAME'), action="store", type=str, nargs=3,
                          help="Setup a basic connection with command line arguments."
-                              "\ne.g. --override DCE /dev/ttyUSB0 dweet2ser_default.")
-    arg_parser.add_argument("--nowebui", action="store_true", help="Use dweet2ser from the command line."
+                              "\ne.g. --override DCE /dev/ttyUSB0 Ullr_default.")
+    arg_parser.add_argument("--nowebui", action="store_true", help="Use Ullr from the command line."
                                                                    "Don't run GUI on webserver.")
     arg_parser.add_argument("--uiport", type=int,
                             default=5000, help="Port for web interface.")
@@ -37,7 +37,7 @@ def main():
                             help="Open a browser window to the web interface on run.")
     args = arg_parser.parse_args()
 
-    utils.print_to_ui(f"Starting dweet2ser v{version}...", sys=True)
+    utils.print_to_ui(f"Starting Ullr v{version}...", sys=True)
 
     if args.override:
         if args.override[0].upper() == "DTE":

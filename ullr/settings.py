@@ -1,6 +1,6 @@
 
 # Used to override the default config file location. If set to None the standard will be used,
-# which is ~/.config/dweet2ser/config.ini or /etc/dweet2ser/config.ini if superuser
+# which is ~/.config/ullr/config.ini or /etc/ullr/config.ini if superuser
 USER_SPECIFIED_DEFAULT_CONFIG_FILE = None
 
 USER_SPECIFIED_LOG_FILE = None

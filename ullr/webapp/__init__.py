@@ -41,7 +41,7 @@ def run(port=PORT, popup=False):
     if popup and enough_memory():
         webbrowser.open(f"http://localhost:{port}", new=1)
     if not port_in_use(port):
-        print(f"dweet2ser started on localhost:{port}")
+        print(f"Ullr started on localhost:{port}")
         socketio.run(webapp, host="0.0.0.0", port=port)
     else:
-        print(f"dweet2ser already running on localhost:{port}")
+        print(f"Ullr already running on localhost:{port}")

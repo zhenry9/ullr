@@ -8,7 +8,7 @@ from .settings import CONFIG_COMMENTS, CONFIG_DEFAULTS
 from . import utils, mqtt_client
 
 
-class Dweet2serConfiguration(object):
+class UllrConfiguration(object):
 
     def __init__(self):
         self.parser = ConfigParser()

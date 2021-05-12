@@ -22,7 +22,7 @@ var/
 .installed.cfg
 *.egg
 windows/msi
-dweet2ser/resources
+ullr/resources
 *.wixpdb
 
 # Installer logs
