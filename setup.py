@@ -1,6 +1,6 @@
 import setuptools
 
-from dweet2ser import __version__ as version
+from ullr import __version__ as version
 
 # except ImportError:
 #    from distutils.core import setup
@@ -9,15 +9,15 @@ with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='dweet2ser',
+    name='ULLR',
     version=version,
     author='Zach Henry',
     author_email='zhenry9@gmail.com',
     description='A dweet.io <-> serial interface',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/zhenry9/dweet2ser',
-    download_url=f'https://github.com/zhenry9/dweet2ser/archive/{version}.tar.gz',
+    url='https://github.com/zhenry9/ullr',
+    download_url=f'https://github.com/zhenry9/ullr/archive/{version}.tar.gz',
     packages=setuptools.find_packages(exclude=('tests',)),
     include_package_data=True,
     classifiers=[
@@ -41,7 +41,7 @@ setuptools.setup(
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [
-            'dweet2ser = dweet2ser.__main__:main',
+            'ullr = ullr.__main__:main',
         ]
     },
     zip_safe=False,

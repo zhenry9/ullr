@@ -1,17 +1,17 @@
 [tool.briefcase]
-project_name = "dweet2ser"
+project_name = "ULLR"
 bundle = "com.zhenry9"
 version = "0.5.7"
-url = "https://github.com/zhenry9/dweet2ser"
+url = "https://github.com/zhenry9/ullr"
 license = "GNU General Public License v3 or later (GPLv3+)"
 author = 'Zach Henry'
 author_email = "zhenry9@gmail.com"
 
-[tool.briefcase.app.dweet2ser]
-formal_name = "dweet2ser"
-description = "A serial to dweet.io interface."
-icon = "dweet2ser/resources/dweet2ser"
-sources = ['dweet2ser']
+[tool.briefcase.app.ullr]
+formal_name = "ULLR"
+description = "A serial to MQTT interface for sports timing."
+icon = "ullr/resources/ullr"
+sources = ['ullr']
 requires = [
     "colorama>=0.4.4, <1",
     "Flask>=1.1.2, <2",
@@ -25,41 +25,7 @@ requires = [
 ]
 
 
-[tool.briefcase.app.dweet2ser.macOS]
-requires = []
 
-[tool.briefcase.app.dweet2ser.linux]
-requires = []
-system_requires = []
-
-[tool.briefcase.app.dweet2ser.windows]
-requires = []
-
-# Mobile deployments
-[tool.briefcase.app.dweet2ser.iOS]
-requires = []
-
-[tool.briefcase.app.dweet2ser.android]
-requires = []
-
-[tool.poetry]
-name = "dweet2ser"
-version = "0.2.3"
-description = "A serial <-"
-authors = ["Zach Henry"]
-license = "GNU GPL 3.0"
-
-[tool.poetry.dependencies]
-python = "^3.9"
-colorama = "^0.4.4"
-briefcase = "^0.3.5"
-Flask = "^1.1.2"
-Flask-SocketIO = "^5.0.1"
-pyserial = "^3.5"
-requests = "^2.25.1"
-termcolor = "^1.1.0"
-
-[tool.poetry.dev-dependencies]
 
 [build-system]
 requires = ["setuptools"]
