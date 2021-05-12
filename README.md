@@ -25,8 +25,7 @@ repository on GitHub.
 The source code is always available at [https://github.com/zhenry9/Ullr](https://github.com/zhenry9/Ullr).
 
 ## Configuration
-Modify `config.ini` to suit your needs, or configure interactively using the prompts in the software. Some example
-configurations can be seen in the example-configs directory in the project repository.
+Modify `config.ini` to suit your needs, or configure interactively using the the software. The web interface is fully featured to alow for the configuration of device and MQTT broker settings.
 
 ## Usage
 
@@ -37,46 +36,27 @@ Ullr borrows terminology from the original RS232 protocol.
 
 This starts Ullr with a web interface on `localhost:5000`.
 If Ullr is run without command line options, it will attempt to load devices from the default config file. This
-will be '~/.config/Ullr/config.ini', or '/etc/Ullr/config.ini' if run as superuser. 
+will be '~/.config/ullr/config.ini', or '/etc/ullr/config.ini' if run as superuser. 
 If you are running Ullr for the first time or with an empty config file, no devices will be loaded. You can add
 devices interactively using the web interface.
 
 ### CLI
-`Ullr --nowebui`
+`ullr --nowebui`
 
 This will load Ullr with a command line interface only, whithout the web interface. 
 Configuration can be done interactively from the command line.
 
 ### Empty
-`Ullr --empty`
+`ullr --empty`
 
 This will ignore the default config file and start Ullr without any devices loaded. This is useful for fixing bad
 config files, or creating new ones from scratch.
 
 ### From file
-`Ullr --file FILENAME`
+`ullr --file FILENAME`
 
 This will attempt to start Ullr by loading the devices specified in an arbitrary config file at FILENAME.
 
-### Override
-`Ullr --override MODE PORT THING_NAME`
-
-This allows Ullr to be configured for a simple connection directly from the command line. MODE is the type of device
-connected to the local serial port PORT, either DCE or DTE. THING_NAME is the dweet.io name of the device on the other
-side of the connection. For example, to set up a connection to a DCE device connected to a Raspberry Pi:
-
-```Ullr --override DCE /dev/ttyUSB0 Ullr_default```
-
-This starts Ullr listening for messages from a DCE device on Linux port '/dev/ttyUSB0'. Any messages it receives will
-be sent to dweet.io using the thing name 'Ullr_default'. It will also listen for incoming messages from 
-'Ullr_default', and write them to the serial port.
-
-To set up the same connection on the DTE side:
-
-```Ullr --override DTE COM20 Ullr_default```
-
-This will listen for dweet.io messages from 'Ullr_default' and write them to the Windows port 'COM20'. It will also
- send any messages received from 'COM20' to dweet.io using the name 'Ullr_default'.
 
 ### Display help page
 
