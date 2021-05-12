@@ -13,7 +13,7 @@ setuptools.setup(
     version=version,
     author='Zach Henry',
     author_email='zhenry9@gmail.com',
-    description='A dweet.io <-> serial interface',
+    description='A serial <-> MQTT interface for sports timing.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/zhenry9/ullr',
