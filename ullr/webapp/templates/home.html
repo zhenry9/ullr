@@ -152,14 +152,15 @@
                     <button class="tablinks" onclick="openTab(event, 'dte')">Computers</button>
                     <span id="client_status" style="color: {% if client_online %}darkgreen{% else %}darkred{% endif %};">{% if client_online %}Online{% else %}Offline{% endif %}</span>
                 </div>
-                {% for list in [session.bus.dce_devices, session.bus.dte_devices] %}
-                    {% if list == session.bus.dce_devices %}
+                {% set lists = [session.bus.dce_devices, session.bus.dte_devices] %}
+                {% for i in range(2)  %}
+                    {% if i == 0 %}
                     <div class="devices" id="dce">
                     {% endif %}
-                    {% if list == session.bus.dte_devices %}
+                    {% if i == 1 %}
                     <div class="devices" id="dte" style="display: none;">
                     {% endif %}
-                    {% for d in list %}
+                    {% for d in lists[i] %}
                         <div class="device" id="{{ d.sku }}">
                             <div class="modal">
                                 <div class="advanced-menu" id="{{ d.sku }}-menu">
