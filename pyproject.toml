@@ -1,5 +1,5 @@
 [tool.briefcase]
-project_name = "ULLR"
+project_name = "Ullr"
 bundle = "com.zhenry9"
 version = "0.5.7"
 url = "https://github.com/zhenry9/ullr"
@@ -8,7 +8,7 @@ author = 'Zach Henry'
 author_email = "zhenry9@gmail.com"
 
 [tool.briefcase.app.ullr]
-formal_name = "ULLR"
+formal_name = "Ullr"
 description = "A serial to MQTT interface for sports timing."
 icon = "ullr/resources/ullr"
 sources = ['ullr']

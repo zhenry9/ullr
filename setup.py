@@ -9,7 +9,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='ULLR',
+    name='Ullr',
     version=version,
     author='Zach Henry',
     author_email='zhenry9@gmail.com',
