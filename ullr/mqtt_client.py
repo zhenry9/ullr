@@ -18,7 +18,7 @@ try:
 except:
     time.sleep(1)
     logger.warn("getmac process failed. Falling back on uuid.getnode().")
-    CLIENT_ID = hex(uuid.getnode())
+    CLIENT_ID = hex(uuid.getnode())[2:]
 
 client = mqtt.Client(CLIENT_ID, clean_session=False)
 client.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
