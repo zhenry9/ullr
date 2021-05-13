@@ -17,6 +17,7 @@ try:
     CLIENT_ID = get_mac_address().replace(":", "")
 except:
     time.sleep(1)
+    logger.warn("getmac process failed. Falling back on uuid.getnode().")
     CLIENT_ID = hex(uuid.getnode())
 
 client = mqtt.Client(CLIENT_ID, clean_session=False)
