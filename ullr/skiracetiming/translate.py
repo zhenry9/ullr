@@ -1,10 +1,13 @@
-# All encode functions take a channel and tod (time of day) argument. The channel argument is a list.
-# The first item on the list is an integer representing the actual channel number. The channel number should
-# be normalized, so the first channel is 0, whether or not the timer itself starts its channel counts at 0.
-# The second item in the channel list argument is a boolean value indicating whether or not the impulse was
-# manual, eg. from a pushbutton on the timer. So, a channel argument of [0, True] would compute to "c0M" on
-# an Alge Timy, because Timy channels start at 0. It would compute to "M1" on a Tag CP540 because CP540
-# channels start at 1, and "SZ " on an s4 because s4s are weird. The same logic applies to decoding.
+# All encode functions take a channel and tod (time of day) argument. The
+# channel argument is a list. The first item on the list is an integer
+# representing the actual channel number. The channel number should be
+# normalized, so the first channel is 0, whether or not the timer itself starts
+# its channel counts at 0. The second item in the channel list argument is a
+# boolean value indicating whether or not the impulse was manual, eg. from a
+# pushbutton on the timer. So, a channel argument of [0, True] would compute to
+# "c0M" on an Alge Timy, because Timy channels start at 0. It would compute to
+# "M1" on a Tag CP540 because CP540 channels start at 1, and "SZ " on an s4
+# because s4s are weird. The same logic applies to decoding.
 
 class TranslationError(Exception):
     pass
