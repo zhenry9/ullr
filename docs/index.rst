@@ -28,3 +28,12 @@ shortcut. By default, Ullr starts a web interface on localhost:5000. navigate
 to this page from a browser.
 
 IMAGE HERE
+
+.. toctree::
+   :maxdepth: 2
+   :includehidden:
+   :hidden:
+   :caption: Getting Started
+
+   tutorial
+   advanced
