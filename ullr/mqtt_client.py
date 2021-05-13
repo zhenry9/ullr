@@ -1,6 +1,7 @@
 
 from threading import Lock, Thread
 import time
+import uuid
 
 import paho.mqtt.client as mqtt
 import ntplib
@@ -11,7 +12,12 @@ from .webapp import socketing
 
 mqtt_broker_url, mqtt_broker_user, mqtt_broker_pw = "", "", ""
 mqtt_broker_port = 0
-CLIENT_ID = get_mac_address().replace(":", "")
+
+try:
+    CLIENT_ID = get_mac_address().replace(":", "")
+except:
+    time.sleep(1)
+    CLIENT_ID = hex(uuid.getnode())
 
 client = mqtt.Client(CLIENT_ID, clean_session=False)
 client.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
@@ -26,6 +32,7 @@ status_functions = {}
 subscriptions = []
 ntp_client = ntplib.NTPClient()
 publish_lock = Lock()
+
 
 def update_time_offset():
     while not internet_connection():
