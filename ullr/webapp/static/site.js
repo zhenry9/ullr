@@ -125,13 +125,19 @@ socket.on("console", function(buffer){
 })
 
 socket.on("tape_feed", function(data){
-    var tape_cell = document.getElementById(data["target"]).getElementsByClassName("timing_tape")[0];
+    try{
+        var tape_cell = document.getElementById(data["target"]).getElementsByClassName("timing_tape")[0];
+    }
+    catch{}
     tape_cell.textContent = data["buffer"];
     tape_cell.scrollTop = tape_cell.scrollHeight;
 })
 
 socket.on("update_online_dot", function(data){
-    var dot = document.getElementById(data["target"]).getElementsByClassName("online_dot")[0];
+    try{
+        var dot = document.getElementById(data["target"]).getElementsByClassName("online_dot")[0];
+    }
+    catch{}
     if (data["online"] == "True") {
         dot.style.backgroundColor = "green";
     }
@@ -141,7 +147,10 @@ socket.on("update_online_dot", function(data){
 })
 
 socket.on("update_late_badge", function(data){
-    var badge = document.getElementById(data["target"]).getElementsByClassName("late_badge")[0];
+    try{
+        var badge = document.getElementById(data["target"]).getElementsByClassName("late_badge")[0];
+    }
+    catch{}
     if (data["count"] > 0) {
         badge.style.display = "inherit";
         badge.textContent = data["count"];

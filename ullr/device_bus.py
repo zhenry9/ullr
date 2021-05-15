@@ -13,7 +13,6 @@ from . import skiracetiming
 
 colorama_init()
 
-
 class DeviceBus(object):
     """
     Holds all the devices in a connection and facilitates communication between them. All DCE devices
