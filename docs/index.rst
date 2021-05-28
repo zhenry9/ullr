@@ -35,7 +35,6 @@ IMAGE HERE
     :maxdepth: 2
     :includehidden:
     :hidden:
-    :caption:
 
     intro
     tutorial
