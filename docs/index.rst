@@ -7,7 +7,9 @@ A serial <-> MQTT interface for sports timing.
 
 Ullr allows for reading and writing data from remote serial devices. It was
 designed with ski racing in mind, but can be used to access any remote serial 
-device with an available internet connection.
+device with an available internet connection. It also acts as a hub, allowing 
+for an arbitrary number of serial devices to be connected to an arbitrary 
+number of software instances.
 
 Installation
 ~~~~~~~~~~~~
@@ -24,16 +26,19 @@ An .msi for the latest Windows release can be found here:
 Quick Start
 ~~~~~~~~~~~
 From a command line, type :code:`ullr`. Or navigate to the Windows start 
-shortcut. By default, Ullr starts a web interface on localhost:5000. navigate
+shortcut. By default, Ullr starts a web interface on localhost:5000. Navigate
 to this page from a browser.
 
 IMAGE HERE
 
 .. toctree::
-   :maxdepth: 2
-   :includehidden:
-   :hidden:
-   :caption: Getting Started
+    :maxdepth: 2
+    :includehidden:
+    :hidden:
+    :caption:
 
-   tutorial
-   advanced
+    intro
+    tutorial
+    advanced
+    use-cases
+    raspberry-pi
