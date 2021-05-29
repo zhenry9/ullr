@@ -4,6 +4,10 @@ Ullr Quickstart
 
 .. rubric:: A serial <-> MQTT interface for sports timing.
 
+.. figure:: /_static/ullr-signal.flow.png
+    
+    Ullr signal flow.
+
 Ullr allows for reading and writing data from remote serial devices. It was
 designed with ski racing in mind, but can be used to access any remote serial 
 device with an available internet connection. It also acts as a hub, allowing 
