@@ -38,4 +38,86 @@ Installation
 
 Installing Python
 '''''''''''''''''
-The first step on a fresh Raspberry Pi OS install is to install python.
+The first step on a fresh Raspberry Pi OS install is to install python. We'll 
+use apt, the built in package manager. On a command line, type:
+
+.. code-block::
+
+    sudo apt install python3 python3-pip
+
+This will install the latest available version on Python, as well as pip, the 
+Python package manager. 
+
+Installing Ullr
+'''''''''''''''
+The next step is to install Ullr using pip. Type:
+
+.. code-block::
+
+    sudo pip3 install ullr
+
+Ullr should now be downloaded and installed! To run, just type:
+
+.. code-block::
+
+    sudo ullr
+
+You should get the following message in the terminal:
+
+.. code-block::
+
+    Ullr running on port 5000
+
+Ullr is now up and running! A web configuration interface is available on port 
+5000 of the Raspberry Pi. If you're running a Raspberry Pi OS with a graphical 
+interface, you can open a browser window to :code:`localhost:5000`. This isn't 
+the best way to access the interface, however, due to the web rendering 
+limitations of the Raspberry Pi. A better way is to access the interface 
+remotely from a computer on the same LAN. From the remote PC navigate to 
+:code:`raspberrypi.local:5000/`, or :code:`<pi-ip-address>:5000/`.
+
+Why sudo? Ullr requires access to serial ports, which by default are not 
+accessible by regular users. If you don't want to run as superuser, make sure 
+you run as a user with serial port permissions.
+
+Setting Ullr to run on boot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Running Ullr from the command line is easy enough when we have a monitor and 
+keyboard or remote access available, but that isn't always the case. We can make 
+things easier by setting Ullr to start whenever the Raspberry Pi is powered on.
+
+Using cron
+''''''''''
+The simplest way is to use cron, the Linux task scheduler. Before we start 
+changing settings, we need to make sure the nano text editor is installed. Type: 
+
+.. code-block::
+
+    sudo apt install nano
+
+Once we're sure nano is there, the next step is to edit the cron table to 
+schedule Ullr to run at boot. Type:
+
+.. code-block::
+
+    sudo crontab -e
+
+There may be a prompt asking you to select a text editor. Choose nano. Next you 
+will see a screen with a rather lengthy comment explanation. Below these 
+comments, add the following line:
+
+.. code-block::
+
+    @reboot sudo ullr
+
+The file should look similar to this when you're done:
+
+.. figure:: /_static/cron-settings.png
+    :caption: The cron table with ullr task added.
+
+Hit control-x, y for yes, then enter to confirm. That's it! Ullr will now run 
+whenever the Raspberry Pi is powered on.
+
+Adding a systemd service
+''''''''''''''''''''''''
+More info to come!

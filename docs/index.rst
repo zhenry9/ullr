@@ -35,9 +35,27 @@ IMAGE HERE
     :maxdepth: 2
     :includehidden:
     :hidden:
+    :caption: Getting Started
 
+    index
     intro
-    tutorial
+
+.. toctree::
+    :maxdepth: 2
+    :includehidden:
+    :hidden:
+    :caption: Installation In-Depth
+
+    raspberry-pi
+
+.. toctree::
+    :maxdepth: 2
+    :includehidden:
+    :hidden:
+    :caption: Configuration and Use
+
+    configuration
+    use
     advanced
     use-cases
-    raspberry-pi
+    

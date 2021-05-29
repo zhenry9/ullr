@@ -1,5 +1,5 @@
-Getting Started
-===============
+Configuration
+=============
 Ullr functions just like a really long serial cable, to connect software and 
 serial devices over long distances. Ullr needs to be installed and configured on both
 sides of the connection: on the computer running the target software, and on
