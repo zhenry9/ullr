@@ -1,9 +1,8 @@
-=====
-Ullr
-=====
+===============
+Ullr Quickstart
+===============
 
-A serial <-> MQTT interface for sports timing.
-==============================================
+.. rubric:: A serial <-> MQTT interface for sports timing.
 
 Ullr allows for reading and writing data from remote serial devices. It was
 designed with ski racing in mind, but can be used to access any remote serial 
@@ -23,8 +22,8 @@ recommended, if possible, to install as superuser in Linux environments.
 An .msi for the latest Windows release can be found here: 
 :xref:`Latest Windows Release`.
 
-Quick Start
-~~~~~~~~~~~
+Running
+~~~~~~~
 From a command line, type :code:`ullr`. Or navigate to the Windows start 
 shortcut. By default, Ullr starts a web interface on localhost:5000. Navigate
 to this page from a browser.
@@ -46,6 +45,7 @@ IMAGE HERE
     :hidden:
     :caption: Installation In-Depth
 
+    null-modems
     raspberry-pi
 
 .. toctree::

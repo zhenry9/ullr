@@ -1,9 +1,6 @@
 Advanced Operation
 ==================
 
-Virtual Null Modems
-~~~~~~~~~~~~~~~~~~~
-
 
 Command Line Operation
 ~~~~~~~~~~~~~~~~~~~~~~

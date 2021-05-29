@@ -113,7 +113,8 @@ comments, add the following line:
 The file should look similar to this when you're done:
 
 .. figure:: /_static/cron-settings.png
-    :caption: The cron table with ullr task added.
+    
+    Cron table with ullr task added.
 
 Hit control-x, y for yes, then enter to confirm. That's it! Ullr will now run 
 whenever the Raspberry Pi is powered on.
