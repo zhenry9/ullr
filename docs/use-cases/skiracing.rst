@@ -1,8 +1,5 @@
-Example Use Cases
-=================
-
 Timing a ski race without a wire to the start
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=============================================
 This is the specific use case for which this software was originally designed. 
 Ullr allows for FIS-legal timing of Level 3 races or lower anywhere there is an 
 internet connection. We'll examine the setup for a homologated race step by 
@@ -11,7 +8,7 @@ step.
 DIAGRAM
 
 At the start
-''''''''''''
+~~~~~~~~~~~~
 
 DIAGRAM
 

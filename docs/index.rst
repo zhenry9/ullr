@@ -28,7 +28,9 @@ From a command line, type :code:`ullr`. Or navigate to the Windows start
 shortcut. By default, Ullr starts a web interface on localhost:5000. Navigate
 to this page from a browser.
 
-IMAGE HERE
+.. figure:: /_static/webui-empty.png
+
+    The Ullr web interface.
 
 .. toctree::
     :maxdepth: 2
@@ -36,7 +38,7 @@ IMAGE HERE
     :hidden:
     :caption: Getting Started
 
-    index
+    self
     intro
 
 .. toctree::
@@ -57,5 +59,13 @@ IMAGE HERE
     configuration
     use
     advanced
-    use-cases
-    
+
+
+.. toctree::
+    :maxdepth: 2
+    :includehidden:
+    :hidden:
+    :caption: Example Use Cases
+    :glob:
+
+    use-cases/*    

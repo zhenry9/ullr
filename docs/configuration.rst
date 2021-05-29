@@ -20,14 +20,18 @@ To get started, we need to setup Ullr for our needs. The configuration
 settings can be accessed by clicking the "Configure" button on the top right of 
 the screen.
 
-PICTURE
+.. figure:: /_static/webui-configure-menu.png
+
+    WebUI with configuration menu open.
 
 MQTT Broker Settings
 ~~~~~~~~~~~~~~~~~~~~
 The first step is to configure the MQTT broker. By default, these settings are
 set to the free shared Ullr broker. 
 
-PICTURE
+.. figure:: /_static/webui-mqtt-settings.png
+
+    The MQTT settings dialog.
 
 However, Ullr can be configured to use any MQTT broker. Some free options are 
 available at `Hive MQ <hivemq.com>` and . For more information on how MQTT 
@@ -39,7 +43,9 @@ A local device is a device that is plugged into the local machine with a
 serial cable, or a piece of software running on the local machine. Click on 
 the "Add Local" button to open the add device dialog.
 
-PICTURE
+.. figure:: /_static/webui-add-local.png
+
+    The local device dialog.
 
 Give the device a descriptive name. It can be anything that makes sense to you, 
 like "CP540", "Start Timer", or "Split Second Software". Next, we need to tell 
@@ -70,7 +76,9 @@ published, any message it sends will also be sent to the MQTT broker (the
 Click the red "Add" button to add the device. It will then appear in the device
 window under the appropriate tab: "Devices" if DCE, and "Computers" if DTE. 
 
-PICTURE
+.. figure:: /_static/webui-local-added.png
+
+    Local device added.
 
 Clicking the hamburger icon in the lower left will bring up some advanced 
 options for the device, which will be covered elsewhere in this document. 
@@ -78,7 +86,9 @@ At the top of the window is the "Published Name". This is what is necessary to
 connect to the device remotely. Clicking on the "X" in the lower right of the 
 device will remove it.
 
-PICTURE
+.. figure:: /_static/webui-local-advanced.png
+
+    Local device advanced settings.
 
 Adding Remote Devices
 ~~~~~~~~~~~~~~~~~~~~~
@@ -86,7 +96,9 @@ A remote device is something that's plugged into a remote computer. We'll use
 Ullr and the :ref:`MQTT Protocol` to access it. Click on the "Add Remote 
 Device" button in the "Configure" menu to bring up the dialog.
 
-PICTURE
+.. figure:: /_static/webui-add-remote.png
+
+    The remote device dialog.
 
 Give the device a descriptive name. It could be "Split Timer", "Remote Sensor", 
 "Display Board", or anything else that makes sense. The next field is labeled 
@@ -112,7 +124,9 @@ The bottom 3 fields are identical to those described above in the
 Click the blue "Add" button to add the device. It will then appear in the device
 window under the appropriate tab: "Devices" if DCE, and "Computers" if DTE. 
 
-PICTURE
+.. figure:: /_static/webui-remote-added.png
+
+    Remote device added.
 
 Clicking the hamburger icon in the lower left will bring up some advanced 
 options for the device, which will be covered elsewhere in this document. 
