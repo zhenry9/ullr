@@ -14,6 +14,8 @@ import os
 import sys
 # sys.path.insert(0, os.path.abspath('......\AppData\Local\Programs\Python\Python39\Lib\site-packages'))
 sys.path.append('.')
+sys.path.append(os.path.abspath('ext'))
+
 from links.link import *
 from links import *
 
@@ -40,6 +42,7 @@ extensions = [
     'sphinx.ext.autosectionlabel',
     'hoverxref.extension',
     'sphinx_rtd_theme',
+    'xref'
     ]
 
 # Add any paths that contain templates here, relative to this directory.

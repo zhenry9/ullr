@@ -5,6 +5,7 @@ Ullr Quickstart
 .. rubric:: A serial <-> MQTT interface for sports timing.
 
 .. figure:: /_static/ullr-signal-flow.png
+    :scale: 50%
     
     Ullr signal flow.
 
