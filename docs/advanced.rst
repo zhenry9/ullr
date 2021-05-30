@@ -1,12 +1,6 @@
-Advanced Operation
-==================
+Usage
+=====
 
-
-Command Line Operation
-~~~~~~~~~~~~~~~~~~~~~~
-
-The Configuration File
-~~~~~~~~~~~~~~~~~~~~~~
 
 Handling Late Messages
 ~~~~~~~~~~~~~~~~~~~~~~
