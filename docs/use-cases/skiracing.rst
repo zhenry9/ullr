@@ -29,7 +29,7 @@ the start computer is a Raspberry Pi Zero W.
 Ullr Configuration on the Raspberry Pi
 ''''''''''''''''''''''''''''''''''''''
 Next we need to configure Ullr on the Raspberry Pi. This is fairly simple, as 
-we only have one device! Navigate to the Raspberry Pi web interface, either 
+we only have one device to configure! Navigate to the Raspberry Pi web interface, either 
 from the Pi itself or from another computer on the same LAN. See 
 :ref:`Running on a Raspberry Pi` for more information on how to do this.
 
@@ -113,7 +113,7 @@ Null modem setup
 For Ullr to be able to connect to Split Second (or any other timing software), 
 we'll need to setup a :ref:`virtual null modem <Virtual Null Modems>`. You can 
 think of a null modem as two serial ports connected by a serial cable: Ullr 
-will connect to one port, and split second to the other. A virtual serial port 
+will connect to one port, and split second to the other. A virtual null modem 
 is just a software implementation of this. It is the pipe that carries 
 information from Ullr to Split Second.
 
