@@ -123,11 +123,11 @@ installer is available from the Alge website here: :xref:`com0com`.
 
 Once com0com is installed, we'll need to run the configuration to add a linked 
 pair of com ports. You can choose any two port numbers you like, as long as 
-they're not in use. I like to use COM50 and COM51.
+they're not already in use. I like to use COM50 and COM51.
 
 Ullr configuration on the finish PC
 '''''''''''''''''''''''''''''''''''
-Next we'll need to get Ullr setup on the finish PC. We have two device to add 
+Next we'll need to get Ullr setup on the finish PC. We have two devices to add 
 this time: our start timer (a remote DCE device), and Split Second (a local DTE 
 device).
 
@@ -139,7 +139,7 @@ Next we'll add our remote start timer, using the information from the previous
 step. Click the "Add Remote Device" button to bring up the dialog. The device 
 name can be anything that makes sense to you. For this guide we'll use "Start 
 Timer". The Host ID/Device ID field is where we'll put the "published name" from 
-the previous section. In our case its "b827ebeb3f16/CP540".
+the previous section. In our case it's "b827ebeb3f16/CP540".
 
 The next field determines how late messages will be handled. If there is an 
 interruption in internet connection, it's possible that messages from the start 
@@ -148,8 +148,8 @@ Split Second. For example, a start impulse that arrives after a finish impulse
 or a start impulse that arrives out of order will both result in trouble. Let's 
 imagine we are running a GS on a 30s interval. An on-time arrival setting of 
 25s should be safe. Any message that arrives after 25s will appear in the late 
-messages list and can manually be sent to Split Second. For more info on late 
-messages, see :ref:`Handling Late Messages`.
+messages list and can manually be sent to Split Second later on. For more info 
+on late messages, see :ref:`Handling Late Messages`.
 
 Since our start timer is a DCE device, select DCE from the dropdown.
 
@@ -196,7 +196,7 @@ Manual configuration
 Again, it's possible to add these settings to the config file directly rather 
 than using the web interface. On Windows the config file will be located in a 
 subdirectory of your home folder. For example, my config file is located at 
-C:\users\zhenry\.config\ullr\config.ini. The same configuration as above can be 
+C:\\users\\zhenry\\.config\\ullr\\config.ini. The same configuration as above can be 
 achieved by adding the following sections:
 
 .. code-block::
@@ -218,3 +218,9 @@ achieved by adding the following sections:
     mute = True
     accepts_incoming = True
 
+Split Second configuration
+''''''''''''''''''''''''''
+All that's left to do is configure Split Second. This is no different from 
+the usual configuration. All we have to do is enter the setup and test window, 
+select TAG CP540/545 from the dropdown menu, and choose COM51, the other end of 
+our virtual null modem.
