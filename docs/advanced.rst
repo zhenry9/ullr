@@ -1,7 +1,6 @@
 Usage
 =====
 
-
 Handling Late Messages
 ~~~~~~~~~~~~~~~~~~~~~~
 

@@ -35,7 +35,6 @@ user, NOT the "pi" user. Changes we make will happen system wide.
 
 Installation
 ~~~~~~~~~~~~
-
 Installing Python
 '''''''''''''''''
 The first step on a fresh Raspberry Pi OS install is to install python. We'll 
