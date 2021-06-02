@@ -40,10 +40,10 @@ Open WebUI on run
 This opens a browser to the web interface when Ullr is run. This is the defualt 
 for Windows .msi package installations.
 
-Running on the Command Line
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Running in the Terminal
+~~~~~~~~~~~~~~~~~~~~~~~
 ``ullr --nowebui``
 
-This starts Ullr with a command line interface rather than the web interface. 
+This runs Ullr in the terminal without starting the web interface. 
 Configuration can be done interactively, though not all of the WebUI features 
 are available, most notably the late message handling features.

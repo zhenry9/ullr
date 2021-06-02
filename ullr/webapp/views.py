@@ -164,7 +164,6 @@ def update_device(id, data):
     d = current_session.bus.find_device(id)
     mute, incoming, publish = False, False, False
     for item in data:
-        print(item)
         if item["value"] == "on":
             if item["name"] == "mute":
                 mute = True

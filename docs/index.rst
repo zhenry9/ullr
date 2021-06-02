@@ -5,7 +5,6 @@ Ullr Quickstart
 .. rubric:: A serial <-> MQTT interface for sports timing.
 
 .. figure:: /_static/ullr-signal-flow.png
-    :scale: 75%
     
     Ullr signal flow.
 
@@ -14,6 +13,10 @@ designed with ski racing in mind, but can be used to access any remote serial
 device with an available internet connection. It also acts as a hub, allowing 
 for an arbitrary number of serial devices to be connected to an arbitrary 
 number of software instances.
+
+.. figure:: /_static/device-bus.png
+
+    Multiple devices sharing a single serial connection.
 
 Installation
 ~~~~~~~~~~~~
@@ -63,8 +66,6 @@ to this page from a browser.
 
     configuration
     use
-    advanced
-
 
 .. toctree::
     :maxdepth: 2

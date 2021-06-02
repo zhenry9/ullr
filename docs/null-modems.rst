@@ -6,12 +6,17 @@ You can think of it as two com ports connected by a serial cable: what is sent
 to one com port is received by the other, and vice versa.
 
 What do virtual null modems have to do with Ullr? A virtual null modem is what 
-we need to connect Ullr to another piece of software. It is the pipe that carries serial data from Ullr to the target 
-software. Ullr is connected to one end of the virtual null modem, and the target 
-software to the other.
+we need to connect Ullr to another piece of software. It is the pipe that carries 
+serial data from Ullr to the target software. Ullr is connected to one end of the 
+virtual null modem, and the target software to the other.
+
+.. figure:: /_static/virtual-null-modem.png
+
+    Diagram of virtual null modem functionality.
 
 In practice, a virtual null modem just appears as two available serial ports on 
-your machine. We'll go through setting it up on various operating systems below.
+your machine. In the example above they would be ports COM50 and COM51. We'll go 
+through setting it up on various operating systems below.
 
 Windows
 ~~~~~~~
