@@ -119,6 +119,8 @@ def get_available_com_ports():
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
         # this excludes your current terminal "/dev/tty"
         ports = glob.glob('/dev/tty[A-Za-z]*')
+        for item in glob.glob('/dev/serial[0-9]*'):
+            ports.append(item)
     elif sys.platform.startswith('darwin'):
         ports = glob.glob('/dev/tty.*')
     else:

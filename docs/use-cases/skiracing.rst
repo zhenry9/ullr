@@ -84,7 +84,7 @@ superuser (and we should be!) on the Raspberr Pi, the config file will be
 located at /etc/ullr/config.ini. We can achieve the same configuration by adding 
 the following section to the file:
 
-.. code-block:: 
+.. code-block:: toml
 
     [CP540]
     type = DCE
@@ -199,7 +199,7 @@ subdirectory of your home folder. For example, my config file is located at
 C:\\users\\zhenry\\.config\\ullr\\config.ini. The same configuration as above can be 
 achieved by adding the following sections:
 
-.. code-block::
+.. code-block:: toml
 
     [Start Timer]
     type = DCE
