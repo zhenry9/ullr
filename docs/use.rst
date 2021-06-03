@@ -57,19 +57,24 @@ same.
 
 Message Transmission Settings
 '''''''''''''''''''''''''''''
+
+.. figure:: /_static/usage/transmission-settings.png
+
+    The transmission settings section of the advanced menu.
+
 The first section of the advanced menu deals with how messages are sent and 
 received. Ticking the "Mute" checkbox will ignore any messages originating from 
 the device. Ticking the "Accept Incoming" checkbox will allow messages to be sent 
-to the device. And, if it's a local device ticking the "Publish" checkbox will 
+to the device. And, if it's a local device, ticking the "Publish" checkbox will 
 connect the device to the MQTT broker using the "Published name" field as the 
 topic name.
 
 Device Translation
 ''''''''''''''''''
 The next section has to do with device translation settings. Device translation 
-is currently only applicable to sports timing applications. 
+is currently only applicable to sports timing uses. 
 
-"Translating" a device means converting it's message format to that of a 
+"Translating" a device means converting its message format to that of a 
 different device. For example, if a Tag Heuer CP545 receives a new impulse on its
 first channel at 11:15:33.33261, it will send a message similar to the following:
 
@@ -111,6 +116,19 @@ can use both built-in ports on up to 4 Timys without conflict.
 For more information on setting up device translation for skiing or other sports 
 timing, see :ref:`Wireless ski race timing`.
 
+.. figure:: /_static/usage/translation.png
+
+    The translation settings in the advanced menu.
+
+By default translation is off. To turn it on, select "True" from the dropdown 
+menu. Next, set the source and destination settings according to your needs. The 
+list of supported devices is growing, and :ref:`contributions <Contributing>` are always welcome! 
+Finally, you can choose to shift the channels. This number can be either positive 
+or negative as long as the resulting channel falls in the allowable range for the 
+destination device. For example, 0-7 for an Alge Timy. It is possible to shift 
+channels without translating to a different device format. Just select the same 
+device for both source and destination.
+
 Handling Late Messages
 ''''''''''''''''''''''
 The late message feature is specific to remote devices only.
@@ -130,4 +148,39 @@ accepted by the software.
 If set to 0s, all messages will be accepted regardless of transit time. If set 
 higher than 0, any message with a longer transit time will NOT be processed and 
 sent to other devices. It will end up in the "Late Messages" section of the 
-advanced menu, where it can then be manually sent, 
+advanced menu, where it can then be manually sent, copied or discarded.
+
+.. figure:: /_static/usage/late-messages.png
+
+    The late messages window showing three late messages.
+
+To accept and send these messages, select one or more and then hit the "Send 
+Selected" button.
+
+When a device has received late messages, a red badge will appear above the 
+hamburger icon with the number of late messages.
+
+.. figure:: /_static/usage/late-message-badge.png
+
+    Remote device showing 3 late messages.
+
+Using the Console
+~~~~~~~~~~~~~~~~~
+The console can be viewed by clicking the "Console" tab on the bottom middle of 
+the screen. This provides a verbose output from the software. If you are having 
+trouble, it is the first place to look for error feedback.
+
+.. figure:: /_static/usage/console.png
+
+    The console tab.
+
+Using the Log File
+~~~~~~~~~~~~~~~~~~
+Sometimes it is necessary to debug with more detail than the console provides. 
+Ullr keeps a log file with detailed operation information. By default this file 
+is located in the user's home directory. For example, on Windows it might be in 
+C:\\users\\zhenry\\.log\\ullr\\ullr.log. If run as superuser on Linux it will be 
+located at /var/log/ullr/ullr.log.
+
+The log file can also be downloaded directly through the web interface. Just 
+open the "Configure" menu and click "Get Log File".

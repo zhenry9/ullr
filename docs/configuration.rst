@@ -84,7 +84,8 @@ Clicking the hamburger icon in the lower left will bring up some advanced
 options for the device, which will be covered elsewhere in this document. 
 At the top of the window is the "Published Name". This is what is necessary to
 connect to the device remotely. Clicking on the "X" in the lower right of the 
-device will remove it.
+device will remove it. If you run into trouble, check the :ref:`console 
+<Using the Console>` for more information.
 
 .. figure:: /_static/webui-local-advanced.png
 
@@ -130,7 +131,8 @@ window under the appropriate tab: "Devices" if DCE, and "Computers" if DTE.
 
 Clicking the hamburger icon in the lower left will bring up some advanced 
 options for the device, which will be covered elsewhere in this document. 
-Clicking the "X" in the bottom right will remove the device.
+Clicking the "X" in the bottom right will remove the device. If you run into 
+trouble, check the :ref:`console <Using the Console>` for more information.
 
 Saving configuration
 ~~~~~~~~~~~~~~~~~~~~
@@ -140,9 +142,3 @@ the next time Ullr is run. Click the "Save Configuration" button in the
 Windows machines this might be C:\Users\jdoe\.config\ullr\config.ini. On linux 
 machines it might be /home/jdoe/.config/ullr/config.ini, or /etc/ullr/config.ini 
 if run as Superuser.
-
-Using the Console
-~~~~~~~~~~~~~~~~~
-The console can be viewed by clicking the "Console" tab on the bottom middle of 
-the screen. This provides a verbose output from the software. If you are having 
-trouble, it is the first place to look for error feedback.

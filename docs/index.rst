@@ -27,8 +27,8 @@ Installation
 The simplest way to install Ullr is in a Python environment using pip. It is 
 recommended, if possible, to install as superuser in Linux environments.
 
-An .msi for the latest Windows release can be found here: 
-:xref:`Latest Windows Release`.
+An installer for the latest Windows release can be found here: 
+:xref:`windows`.
 
 Running
 ~~~~~~~
@@ -80,7 +80,16 @@ to this page from a browser.
     :maxdepth: 2
     :includehidden:
     :hidden:
-    :caption: advanced
+    :caption: Advanced
 
     cli
-    config-file        
+    config-file   
+
+.. toctree::
+    :maxdepth: 2
+    :includehidden:
+    :hidden:
+    :caption: Reference
+
+    links
+    contributing
