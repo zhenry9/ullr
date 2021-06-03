@@ -16,7 +16,7 @@ setuptools.setup(
     description='A serial <-> MQTT interface for sports timing.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/zhenry9/ullr',
+    url='https://ullr.rtfd.io',
     download_url=f'https://github.com/zhenry9/ullr/archive/{version}.tar.gz',
     packages=setuptools.find_packages(exclude=('tests',)),
     include_package_data=True,
