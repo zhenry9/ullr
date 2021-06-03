@@ -36,7 +36,7 @@ set to the free shared Ullr broker.
     The MQTT settings dialog.
 
 However, Ullr can be configured to use any MQTT broker. Some free options are 
-available at `Hive MQ <hivemq.com>` and . For more information on how MQTT 
+available at `Hive MQ <hivemq.com>`_. For more information on how MQTT 
 works, see :ref:`MQTT Messaging Protocol`.
 
 Adding Local Devices

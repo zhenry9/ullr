@@ -19,8 +19,8 @@ possible to use a graphical interface as well.
 Some Linux Basics
 ~~~~~~~~~~~~~~~~~
 How to use Linux is mostly outside the scope of this guide. There are some 
-excellent resources on the web at <resources here>. However, we'll go over a 
-few essential concepts.
+excellent `resources <https://ryanstutorials.net/linuxtutorial/>`_ on the web. 
+However, we'll go over a few essential concepts.
 
 Superuser
 '''''''''

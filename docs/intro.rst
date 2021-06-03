@@ -20,7 +20,8 @@ has information to send, it publishes it to the broker along with a topic name.
 The broker then sends this message to all devices that are subscribed to the 
 topic. The protocol makes it possible to guarantee that all published messages 
 get delivered to all subscribed clients at least once. For an excellent 
-in-depth description of the MQTT protocol, see <hivemq link here>.
+in-depth description of the MQTT protocol, see the `HiveMQ MQTT Essentials 
+Guide <https://www.hivemq.com/mqtt-essentials/>`_.
 
 Ullr makes use of this protocol by allowing local serial devices to be 
 published. Ticking the "Published" checkbox on a local device will send all 

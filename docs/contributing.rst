@@ -16,12 +16,11 @@ Use `Github Flow <https://guides.github.com/introduction/flow/index.html>`_, So 
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Pull requests are the best way to propose changes to the codebase. Pull requests are actively welcomed!
 
-1. Fork the repo and create your branch from `master`.
-2. If you've added code that should be tested, add tests.
-3. If you've changed APIs, update the documentation.
-4. Ensure the test suite passes.
-5. Make sure your code lints.
-6. Issue that pull request!
+1. Fork the repo and create your branch from `main`.
+2. Make your changes.
+3. If your code changes how Ullr works, update the docs.
+4. Make sure your code lints (works).
+5. Issue that pull request!
 
 Any contributions you make will be under the GNU GPL v3 license.
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''

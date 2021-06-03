@@ -220,7 +220,19 @@ achieved by adding the following sections:
 
 Split Second configuration
 ''''''''''''''''''''''''''
-All that's left to do is configure Split Second. This is no different from 
-the usual configuration. All we have to do is enter the setup and test window, 
-select TAG CP540/545 from the dropdown menu, and choose COM51, the other end of 
-our virtual null modem.
+All that's left to do is configure Split Second. This is similar to the usual 
+Split Second configuration, but this time we have two timers: our finish timer 
+that's wired to the timing computer with a serial cable, and our start timer 
+that is connected by Ullr and a virtual null modem.
+
+Configure the hardwired finish timer the way you usually do.
+
+Then, go to the second timer tab and configure the remote start timer. Choose 
+the device name and baudrate as usual. For the port, select the other end of the 
+virtual null modem. In our case, our null modem connects ports COM50 and COM51. 
+We connected Ullr to COM50, so we'll connect Split Second to COM51.
+
+Note that this only works with timing programs that support multiple timers, such 
+as Split Second's National/FIS and Vola. Using Ski Club or another program that 
+only supports one timer? No problem! Read on to :ref:`the next section 
+<Connecting multiple timers to Ski Club>`.
