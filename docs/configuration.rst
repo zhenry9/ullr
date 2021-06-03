@@ -14,7 +14,9 @@ Ullr hosts a web interface on port 5000 of the local machine by default. You
 can get there by typing :code:`localhost:5000` in a browser window. If you used 
 a Windows installer, there will also be a shortcut in the start menu.
 
-PICTURE
+.. figure:: /_static/webui-empty.png
+
+    The Ullr web interface.
 
 To get started, we need to setup Ullr for our needs. The configuration 
 settings can be accessed by clicking the "Configure" button on the top right of 
@@ -35,7 +37,7 @@ set to the free shared Ullr broker.
 
 However, Ullr can be configured to use any MQTT broker. Some free options are 
 available at `Hive MQ <hivemq.com>` and . For more information on how MQTT 
-works, see :ref:`MQTT Protocol`.
+works, see :ref:`MQTT Messaging Protocol`.
 
 Adding Local Devices
 ~~~~~~~~~~~~~~~~~~~~
@@ -94,7 +96,7 @@ device will remove it. If you run into trouble, check the :ref:`console
 Adding Remote Devices
 ~~~~~~~~~~~~~~~~~~~~~
 A remote device is something that's plugged into a remote computer. We'll use 
-Ullr and the :ref:`MQTT Protocol` to access it. Click on the "Add Remote 
+Ullr and the :ref:`MQTT Messaging Protocol` to access it. Click on the "Add Remote 
 Device" button in the "Configure" menu to bring up the dialog.
 
 .. figure:: /_static/webui-add-remote.png

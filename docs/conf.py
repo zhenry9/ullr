@@ -14,10 +14,12 @@ import os
 import sys
 # sys.path.insert(0, os.path.abspath('......\AppData\Local\Programs\Python\Python39\Lib\site-packages'))
 sys.path.append('.')
+sys.path.insert(0, os.path.abspath('..'))
 sys.path.append(os.path.abspath('ext'))
 
 from links.link import *
 from links import *
+from ullr import __version__
 
 # -- Project information -----------------------------------------------------
 
@@ -26,7 +28,8 @@ copyright = '2021, Zach Henry'
 author = 'Zach Henry'
 
 # The full version, including alpha/beta/rc tags
-release = "0.1.2"
+release = __version__
+version = __version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -61,7 +64,7 @@ exclude_patterns = []
 #
 html_theme = 'sphinx_rtd_theme'
 
-html_favicon = 'favicon-32x32.png'
+html_favicon = '_static/favicon.ico'
 
 # html_logo = 'mammoth-logo.jpg'
 

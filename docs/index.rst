@@ -40,6 +40,13 @@ to this page from a browser.
 
     The Ullr web interface.
 
+Get the Source
+~~~~~~~~~~~~~~
+Ullr is published with under GNU GPL 3 license.
+
+The source is always available on the :xref:`github repo` and available for 
+download :xref:`here <source>`.
+
 .. toctree::
     :maxdepth: 2
     :includehidden:
