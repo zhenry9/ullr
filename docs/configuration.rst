@@ -7,6 +7,9 @@ the computer connected to the serial device. Ullr can run on
 a laptop, a Raspberry Pi, or any device capable of running Python applications. 
 See :ref:`Installation` for installation info.
 
+The following is a guide for interactive configuration using the web interface. 
+However, configuration can be done by simply :ref:`editing the config file 
+<Using the Config File>`.
 
 Navigating to the WebUI
 ~~~~~~~~~~~~~~~~~~~~~~~

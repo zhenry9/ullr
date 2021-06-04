@@ -40,6 +40,10 @@ to this page from a browser.
 
     The Ullr web interface.
 
+Configuration
+~~~~~~~~~~~~~
+See the :ref:`Configuration` section for an in-depth guide on configuring Ullr.
+
 Get the Source
 ~~~~~~~~~~~~~~
 Ullr is published with under GNU GPL 3 license.
