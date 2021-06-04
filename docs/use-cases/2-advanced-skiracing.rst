@@ -31,7 +31,7 @@ We'll use the same :ref:`Null modem setup` as in our previous example.
 
 All that changes is the flow of serial information inside the computer.
 
-.. figure:: /_static/skiracing/skiclub-finish-software-flow.
+.. figure:: /_static/skiracing/skiclub-finish-software-flow.png
 
     Signal flow within the finish PC.
 
