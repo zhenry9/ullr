@@ -50,7 +50,7 @@ settings that Ullr falls back to if you don't specify anything different.
     mqtt_broker_user = PiTiming
     mqtt_broker_pw = Mammoth1
 
-Type and location have no default. Type can be either DCE or DTE, and localtion 
+Type and location have no default. Type can be either DCE or DTE, and location 
 can be either remote or local. The rest of the default settings are fairly 
 self-explanatory.
 
@@ -58,7 +58,7 @@ MQTT broker settings
 ~~~~~~~~~~~~~~~~~~~~
 The :ref:`MQTT broker <MQTT Messaging Protocol>` settings are under a special 
 section named '$mqtt'. We'll stick with the default settings for this example, 
-but you can use any broker setings you'd like. Using a private broker provides 
+but you can use any broker settings you'd like. Using a private broker provides 
 added security.
 
 .. code-block:: toml

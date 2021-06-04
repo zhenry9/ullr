@@ -173,7 +173,7 @@ advanced menu, where it can then be manually sent, copied or discarded.
 
 .. figure:: /_static/usage/late-messages.png
 
-    The late messages window showing three late messages.
+    The late messages window showing four late messages.
 
 To accept and send these messages, select one or more and then hit the "Send 
 Selected" button.
@@ -183,4 +183,4 @@ hamburger icon with the number of late messages.
 
 .. figure:: /_static/usage/late-message-badge.png
 
-    Remote device showing 3 late messages.
+    Remote device showing 4 late messages.
