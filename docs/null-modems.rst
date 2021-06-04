@@ -23,7 +23,7 @@ Windows
 There are multiple virtual null modem products available for Windows, but we'll 
 focus on `com0com <https://sourceforge.net/projects/com0com/>`_, as it is stable 
 as well as free and open source. There is a signed Windows installer available 
-from alge at :xref:`com0com`. Using the signed installer avoids possible 
+from Alge at :xref:`com0com`. Using the signed installer avoids possible 
 permission and security issues with Windows.
 
 Once com0com is installed, it is necessary to open the configuration program 

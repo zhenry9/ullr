@@ -106,7 +106,11 @@ Wire the finish according to standard FIS rules. For example:
     A FIS legal finish setup.
 
 All that's need to connect to the start is an internet connection and an Ullr 
-installation.
+installation. When we're done, our software will be set up like this:
+
+.. figure:: /_static/skiracing/basic-finish-software-flow.png
+
+    Signal flow within the finish PC.
 
 Null modem setup
 ''''''''''''''''

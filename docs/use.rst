@@ -134,7 +134,7 @@ Timys wihout ending up with overlapping channel numbers. By shifting channels we
 can use both built-in ports on up to 4 Timys without conflict.
 
 For more information on setting up device translation for skiing or other sports 
-timing, see :ref:`Connecting multiple timers to Ski Club`.
+timing, see :ref:`Advanced Ski Racing`.
 
 .. figure:: /_static/usage/translation.png
 
