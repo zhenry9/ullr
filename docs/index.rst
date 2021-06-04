@@ -30,6 +30,9 @@ recommended, if possible, to install as superuser in Linux environments.
 An installer for the latest Windows release can be found here: 
 :xref:`windows`.
 
+An in-depth guide to installation on a Raspberry Pi can be found :ref:`here 
+<Installing on a Raspberry Pi>`.
+
 Running
 ~~~~~~~
 From a command line, type :code:`ullr`. Or navigate to the Windows start 

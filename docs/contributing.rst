@@ -25,7 +25,7 @@ Pull requests are the best way to propose changes to the codebase. Pull requests
 Any contributions you make will be under the GNU GPL v3 license.
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 In short, when you submit code changes, your submissions are understood to be 
-under the same `MIT License <https://choosealicense.com/licenses/gpl-3.0/>`_ that 
+under the same `GPL License <https://choosealicense.com/licenses/gpl-3.0/>`_ that 
 covers the project.
 
 Report bugs using Github's `issues <https://github.com/zhenry9/ullr/issues>`_

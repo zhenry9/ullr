@@ -10,9 +10,8 @@ message from a DTE device is sent to all DCE devices. See the diagram below:
 
 In this way it is possible to access a device such as a GPS receiver from 
 multiple remote computers, as well as the computer the device is actually 
-connected to. It would also be possible to connect multiple GPS receivers 
-(or sports timing devices) to one piece of software as if they were a single 
-device.
+plugged into. It is also possible to connecte multiple devices to one piece of 
+software as if they were a single device.
 
 Once Ullr is configured and running (see :ref:`Configuration`) it is not 
 necessary to use the web interface. It is sufficient to just run your target 
@@ -41,8 +40,8 @@ When a device receives a message, either from the :ref:`MQTT broker <MQTT
 Messaging Protocol>` (the "cloud") or from a physical serial port, it will appear 
 in the white space above the device. You can think of this similar to a receipt 
 printer, with the newest message at the bottom and the oldest message at the top. 
-In the image below, you can see that "My Remote Device" has received two messages 
-and "My Local Device" has received three.
+In the image below, you can see that "My Remote Device" has received three messages 
+and "My Local Device" has received two.
 
 .. figure:: /_static/usage/messages-received.png
 

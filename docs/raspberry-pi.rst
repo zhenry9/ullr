@@ -33,8 +33,8 @@ the command. This will execute the command as as superuser with admin (root)
 priveleges. Keep in mind that whenver we use sudo we are acting as a different 
 user, NOT the "pi" user. Changes we make will happen system wide.
 
-Installation
-~~~~~~~~~~~~
+Installing on a Raspberry Pi
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Installing Python
 '''''''''''''''''
 The first step on a fresh Raspberry Pi OS install is to install python. We'll 
