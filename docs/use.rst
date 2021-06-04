@@ -142,7 +142,7 @@ timing, see :ref:`Advanced Ski Racing`.
 
 By default translation is off. To turn it on, select "True" from the dropdown 
 menu. Next, set the source and destination settings according to your needs. The 
-list of supported devices is growing, and :ref:`contributions <Contributing>` are always welcome! 
+list of supported devices is growing, and :ref:`contributions <Contributing to Ullr>` are always welcome! 
 Finally, you can choose to shift the channels. This number can be either positive 
 or negative as long as the resulting channel falls in the allowable range for the 
 destination device. For example, 0-7 for an Alge Timy. It is possible to shift 
