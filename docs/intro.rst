@@ -2,9 +2,13 @@ RS-232 Terminology
 ~~~~~~~~~~~~~~~~~~
 Ullr borrows terminology from the original RS-232 specification, specifically
 the terms "DCE" and "DTE". "DCE" stands for Data Circuit-terminating Equipment. 
-These are the serial devices, such as timers, sensors, and printers. "DTE" 
+These are the serial devices, such as timers, sensors, and thermometers. "DTE" 
 stands for Data Terminal Equipment. These are the computers and software 
-instances. The RS-232 protocol connects DCE equipment to DTE equipment.
+instances. The RS-232 protocol is how DCE devices communicate with DTE devices 
+over a serial cable.
+
+Serial cables have a major drawback: they are only good for ten meters or so. 
+Ullr solves this problem by tranporting serial messages with the MQTT protocol.
 
 MQTT Messaging Protocol
 ~~~~~~~~~~~~~~~~~~~~~~~

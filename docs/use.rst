@@ -39,7 +39,7 @@ Target Software" will be sent to both "My Local Device" and "My Remote Device".
 
 When a device receives a message, either from the :ref:`MQTT broker <MQTT 
 Messaging Protocol>` (the "cloud") or from a physical serial port, it will appear 
-in the white space above the device. You can think of it similar to a receipt 
+in the white space above the device. You can think of this similar to a receipt 
 printer, with the newest message at the bottom and the oldest message at the top. 
 In the image below, you can see that "My Remote Device" has received two messages 
 and "My Local Device" has received three.
@@ -47,6 +47,27 @@ and "My Local Device" has received three.
 .. figure:: /_static/usage/messages-received.png
 
     The device window with several messages received.
+
+Using the Console
+~~~~~~~~~~~~~~~~~
+The console can be viewed by clicking the "Console" tab on the bottom middle of 
+the screen. This provides a verbose output from the software. If you are having 
+trouble, it is the first place to look for error feedback.
+
+.. figure:: /_static/usage/console.png
+
+    The console tab.
+
+Using the Log File
+~~~~~~~~~~~~~~~~~~
+Sometimes it is necessary to debug with more detail than the console provides. 
+Ullr keeps a log file with detailed operation information. By default this file 
+is located in the user's home directory. For example, on Windows it might be in 
+C:\\users\\zhenry\\.log\\ullr\\ullr.log. If run as superuser on Linux it will be 
+located at /var/log/ullr/ullr.log.
+
+The log file can also be downloaded directly through the web interface. Just 
+open the "Configure" menu and click "Get Log File".
 
 The Advanced Menu
 ~~~~~~~~~~~~~~~~~
@@ -136,11 +157,11 @@ The late message feature is specific to remote devices only.
 Ullr is designed to be used in portable, outdoor situations. If the quality of 
 the internet connection is poor, messages can arrive later than expected. 
 Depending on the use case, this can cause trouble on the receiving end. For 
-example, Split Second software does not behave well when a competitors start 
+example, Split Second software does not behave well when a competitor's start 
 impulse arrives after their finish impulse, or when start impulses arrive out of 
 order.
 
-To prevent this, on on-time arrival window can be set. This is set when adding 
+To prevent this, an on-time arrival window can be set. This is set when adding 
 the device, and can also be edited in the advanced menu. The on-time arrival 
 setting is the number of seconds a message can spend in transit and still be 
 accepted by the software. 
@@ -163,24 +184,3 @@ hamburger icon with the number of late messages.
 .. figure:: /_static/usage/late-message-badge.png
 
     Remote device showing 3 late messages.
-
-Using the Console
-~~~~~~~~~~~~~~~~~
-The console can be viewed by clicking the "Console" tab on the bottom middle of 
-the screen. This provides a verbose output from the software. If you are having 
-trouble, it is the first place to look for error feedback.
-
-.. figure:: /_static/usage/console.png
-
-    The console tab.
-
-Using the Log File
-~~~~~~~~~~~~~~~~~~
-Sometimes it is necessary to debug with more detail than the console provides. 
-Ullr keeps a log file with detailed operation information. By default this file 
-is located in the user's home directory. For example, on Windows it might be in 
-C:\\users\\zhenry\\.log\\ullr\\ullr.log. If run as superuser on Linux it will be 
-located at /var/log/ullr/ullr.log.
-
-The log file can also be downloaded directly through the web interface. Just 
-open the "Configure" menu and click "Get Log File".
