@@ -64,3 +64,7 @@ channels, which will be described below.
 
 Adding additional timers
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. figure:: /_static/skiracing/advanced-finish-software-flow.png
+
+    Signal flow within the finish PC with multiple timers.
