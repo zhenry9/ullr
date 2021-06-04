@@ -8,8 +8,8 @@ Ullr Quickstart
     
     Ullr signal flow.
 
-Ullr allows for reading and writing data from remote serial devices. It was
-designed with ski racing in mind, but can be used to access any remote serial 
+Ullr (pronounce "OOH-ler") allows for reading and writing data from remote serial devices. It was
+designed with :ref:`ski racing <Wireless ski race timing>` in mind, but can be used to access any remote serial 
 device with an available internet connection. It also acts as a hub, allowing 
 for an arbitrary number of serial devices to be connected to an arbitrary 
 number of software instances.
@@ -57,7 +57,6 @@ download :xref:`here <source>`.
 .. toctree::
     :maxdepth: 2
     :includehidden:
-    :hidden:
     :caption: Getting Started
 
     self
@@ -66,7 +65,6 @@ download :xref:`here <source>`.
 .. toctree::
     :maxdepth: 2
     :includehidden:
-    :hidden:
     :caption: Installation In-Depth
 
     null-modems
@@ -75,7 +73,6 @@ download :xref:`here <source>`.
 .. toctree::
     :maxdepth: 2
     :includehidden:
-    :hidden:
     :caption: Configuration and Use
 
     configuration
@@ -84,7 +81,6 @@ download :xref:`here <source>`.
 .. toctree::
     :maxdepth: 2
     :includehidden:
-    :hidden:
     :caption: Example Use Cases
     :glob:
 
@@ -93,7 +89,6 @@ download :xref:`here <source>`.
 .. toctree::
     :maxdepth: 2
     :includehidden:
-    :hidden:
     :caption: Advanced
 
     cli
@@ -102,7 +97,6 @@ download :xref:`here <source>`.
 .. toctree::
     :maxdepth: 2
     :includehidden:
-    :hidden:
     :caption: Reference
 
     links
