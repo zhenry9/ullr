@@ -129,13 +129,13 @@ connection of one timer, such as Split Second Ski Club.
 
 To further support this feature, you can shift the channel numbers while 
 translating. For example, the only ports accessible on an Alge Timy, without 
-accessories, are c0 and c1, even though it is possible to map channels c0-c7 in 
+accessories, are c0 and c1, even though it is possible to map channels c0 through c7 in 
 Split Second. Without channel shifting we would be unable to use more than two 
 Timys wihout ending up with overlapping channel numbers. By shifting channels we 
 can use both built-in ports on up to 4 Timys without conflict.
 
 For more information on setting up device translation for skiing or other sports 
-timing, see :ref:`Wireless ski race timing`.
+timing, see :ref:`Connecting multiple timers to Ski Club`.
 
 .. figure:: /_static/usage/translation.png
 
