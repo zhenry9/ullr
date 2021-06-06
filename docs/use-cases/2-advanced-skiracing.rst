@@ -54,6 +54,33 @@ Click the Add button. You should now have two devices in the Devices tab: the
 remote start timer, and the local finish timer. You should also have Split Second 
 under the Computers tab from the previous section.
 
+You'll end up with a config file similar to this:
+
+.. code-block:: toml
+
+    [Start Timer]
+    type = DCE
+    location = remote
+    topic_name = b827ebeb3f16/CP540
+    on_time_max = 25
+    accepts_incoming = False
+
+    [Finish Timer]
+    type = DCE
+    location = local
+    port = COM3
+    baud = 9600
+    published = False
+    accepts_incoming = False
+
+    [Split Second]
+    type = DTE
+    location = local
+    port = COM50
+    baud = 9600
+    published = False
+    mute = True
+
 There are a couple things to consider with this setup. Since Ski Club doesn't 
 know that it is reading from two timing devices, not one, it is up to you to 
 setup input mapping in a safe and logical way. It is important not to allow 
@@ -64,7 +91,81 @@ channels, which will be described below.
 
 Adding additional timers
 ~~~~~~~~~~~~~~~~~~~~~~~~
+There may be times when it's convenient to connect even more than 2 timers to our 
+timing software. Consider the setup with a wireless speed trap below:
+
+.. figure:: /_static/skiracing/pi-with-interval-signal-flow.png
+    Signal flow with a homologated wireless start and non-homologated speed trap.
+
+We've kept our homologated wireless setup at the start and our hardwired finish 
+timer, but added a third timer to handle a speed trap, for this example a 
+Microgate Racetime2. Since there are no homologation requirements for splits and 
+speed traps it's possible to use a radio transmitted photocell such as the 
+Microgate.
+
+However, even Vola and NATFis software only allow the connection of 2 timers, and 
+now we have three. We can set Ullr up to send all of the timing information over 
+one port, as below.
 
 .. figure:: /_static/skiracing/advanced-finish-software-flow.png
 
     Signal flow within the finish PC with multiple timers.
+
+It's just a matter of :ref:`configuring <Configuration>` Ullr correctly. For this 
+example, we have one remote device, our start timer. We have two local devices 
+connected to the timing PC with a serial cable: the finish timer and the split 
+timer. Ullr will intercept messages from all 3 devices and pass them on to Split 
+Second through our null modem. 
+
+If we configure Ullr through the Web UI, our device window will look something 
+like this:
+
+FIGURE here
+
+We could also just manually enter the info into the :ref:`config file <Using the 
+Config File>`. We'll end up with something like this:
+
+.. code-block:: toml
+
+    [Start Timer]
+    type = DCE
+    location = remote
+    topic_name = b827ebeb3f16/CP540
+    on_time_max = 25
+    accepts_incoming = False
+
+    [Finish Timer]
+    type = DCE
+    location = local
+    port = COM3
+    baud = 9600
+    published = False
+    accepts_incoming = False
+
+    [Split Timer]
+    type = DCE
+    location = local
+    port = COM4
+    baud = 9600
+    published = False
+    accepts_incoming = False
+
+    [Split Second]
+    type = DTE
+    location = local
+    port = COM50
+    baud = 9600
+    published = False
+    mute = True
+
+This example assumes that all three of your timers (start, finish and split) are 
+the same. Since we are sending information from all three to Split Second over a 
+single serial port, Split Second will assume that all of the messages are in the 
+same format. Mixed format messages will cause errors.
+
+What if all 3 timers aren't the same? How can we get the messages into a uniform 
+format that Split Second can understand? That's where translation comes into 
+play.
+
+Translation Settings
+~~~~~~~~~~~~~~~~~~~~
