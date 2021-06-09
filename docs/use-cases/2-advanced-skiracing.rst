@@ -95,6 +95,7 @@ There may be times when it's convenient to connect even more than 2 timers to ou
 timing software. Consider the setup with a wireless speed trap below:
 
 .. figure:: /_static/skiracing/pi-with-interval-signal-flow.png
+
     Signal flow with a homologated wireless start and non-homologated speed trap.
 
 We've kept our homologated wireless setup at the start and our hardwired finish 
