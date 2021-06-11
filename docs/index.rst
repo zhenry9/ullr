@@ -33,6 +33,10 @@ An installer for the latest Windows release can be found here:
 An in-depth guide to installation on a Raspberry Pi can be found :ref:`here 
 <Installing on a Raspberry Pi>`.
 
+Configuring Ullr
+~~~~~~~~~~~~~~~~
+See the :ref:`Configuration` section for an in-depth guide to configuring Ullr.
+
 Running
 ~~~~~~~
 From a command line, type :code:`ullr`. Or navigate to the Windows start 
@@ -43,9 +47,7 @@ to this page from a browser.
 
     The Ullr web interface.
 
-Configuring Ullr
-~~~~~~~~~~~~~~~~
-See the :ref:`Configuration` section for an in-depth guide on configuring Ullr.
+See the :ref:`Usage` section for more information.
 
 Get the Source
 ~~~~~~~~~~~~~~
