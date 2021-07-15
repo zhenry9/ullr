@@ -125,10 +125,9 @@ a few important advantages:
 
 - Ullr is run as a service, that can be stopped, started or monitored at any time.
 - Ullr will automatically restart in case of any failure.
-- Ullr can be set to start only after other services, such as network connectivity, 
-are functional.
+- Ullr can be set to start only after other services, such as network connectivity, are functional.
 
-The second point is particularly helpful for our use case. Ullr depends on an 
+The last point is particularly helpful for our use case. Ullr depends on an 
 internet connection to make the initial connection to the MQTT broker. A connected 
 network interface also makes determining the device's MAC address more reliable. 
 Waiting to start Ullr until the network service is running will therefore help 
@@ -137,13 +136,13 @@ avoid any unexpected behavior.
 To setup Ullr as a systemd service, we need to create a service file in the 
 systemd directory. Open a blank file using nano:
 
-..code-block::
+.. code-block::
 
     sudo nano /etc/systemd/system/ullr.service
 
 Then, copy and paste the following:
 
-..code-block::
+.. code-block::
 
     [Unit]
     Description=Ullr Startup Service
@@ -163,28 +162,28 @@ Then, copy and paste the following:
 
 Exit nano and save the file. Now, we need systemd to reload our changes. Type:
 
-..code-block::
+.. code-block::
 
     sudo systemctl daemon-reload
 
 Now we can start and stop Ullr as a service. Test it by typing:
 
-..code-block::
+.. code-block::
 
     sudo systemctl start ullr
 
 and
 
-..code-block::
+.. code-block::
 
     sudo systemctl stop ullr
 
 Once you're satisfied that the service runs correctly, all that's left is to 
 enable it to run on boot. 
 
-..code-block::
+.. code-block::
 
     sudo systemctl enable ullr
 
 That's it! Ullr is now set to run on boot, after internet is connected, and restart 
-in case of failure.
+in case of failure.pi
