@@ -48,13 +48,15 @@ def update_time_offset():
         logger.warn("Unable to update time offset.")
         return update_time_offset()
 
+
 def safe_publish(*args, **kwargs):
     with publish_lock:
         client.publish(*args, **kwargs)
 
+
 def on_connect(client, userdata, flags, rc):
     global connected
-    
+
     t = Thread(target=update_time_offset)
     t.daemon = True
     # t.start()  # removed due to inaccuracies running on raspberry pi at boot
@@ -69,11 +71,13 @@ def on_connect(client, userdata, flags, rc):
         print_to_ui(f"Connection to MQTT broker failed: code {rc}")
         socketing.update_client_status(False)
 
+
 def on_disconnect(client, userdata, rc):
     global connected
     connected = False
     print_to_ui("Disconnected from MQTT broker.")
     socketing.update_client_status(False)
+
 
 def on_message(client, userdata, message):
     split_topic = message.topic.split("/")
@@ -83,10 +87,12 @@ def on_message(client, userdata, message):
                 for func in status_functions[client_name]:
                     func(message.payload)
 
+
 def add_subscription(topic):
     global subscriptions
     subscriptions.append(topic)
     client.subscribe(topic, qos=1)
+
 
 def subscribe_status(host_name, cb_function):
     global status_functions
@@ -95,7 +101,8 @@ def subscribe_status(host_name, cb_function):
     status_functions[host_name].append(cb_function)
     add_subscription(host_name+"/status")
 
-def start_client(url:str, port:int, username:str, pw:str):
+
+def start_client(url: str, port: int, username: str, pw: str):
     global client, mqtt_broker_pw, mqtt_broker_url, mqtt_broker_user, mqtt_broker_port
     mqtt_broker_url = url
     mqtt_broker_port = port

@@ -120,4 +120,71 @@ whenever the Raspberry Pi is powered on.
 
 Adding a systemd service
 ''''''''''''''''''''''''
-More info to come!
+The system daemon (systemd) can run Ullr at boot just like cron. However, it has 
+a few important advantages:
+
+- Ullr is run as a service, that can be stopped, started or monitored at any time.
+- Ullr will automatically restart in case of any failure.
+- Ullr can be set to start only after other services, such as network connectivity, 
+are functional.
+
+The second point is particularly helpful for our use case. Ullr depends on an 
+internet connection to make the initial connection to the MQTT broker. A connected 
+network interface also makes determining the device's MAC address more reliable. 
+Waiting to start Ullr until the network service is running will therefore help 
+avoid any unexpected behavior.
+
+To setup Ullr as a systemd service, we need to create a service file in the 
+systemd directory. Open a blank file using nano:
+
+..code-block::
+
+    sudo nano /etc/systemd/system/ullr.service
+
+Then, copy and paste the following:
+
+..code-block::
+
+    [Unit]
+    Description=Ullr Startup Service
+    After=network-online.target
+    Wants=network-online.target
+
+    [Service]
+    ExecStart=/usr/bin/python3 -m ullr
+    WorkingDirectory=/usr/bin
+    StandardOutput=inherit
+    StandardError=inherit
+    Restart=always
+    User=root
+
+    [Install]
+    WantedBy=multi-user.target
+
+Exit nano and save the file. Now, we need systemd to reload our changes. Type:
+
+..code-block::
+
+    sudo systemctl daemon-reload
+
+Now we can start and stop Ullr as a service. Test it by typing:
+
+..code-block::
+
+    sudo systemctl start ullr
+
+and
+
+..code-block::
+
+    sudo systemctl stop ullr
+
+Once you're satisfied that the service runs correctly, all that's left is to 
+enable it to run on boot. 
+
+..code-block::
+
+    sudo systemctl enable ullr
+
+That's it! Ullr is now set to run on boot, after internet is connected, and restart 
+in case of failure.
