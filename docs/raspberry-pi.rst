@@ -186,4 +186,4 @@ enable it to run on boot.
     sudo systemctl enable ullr
 
 That's it! Ullr is now set to run on boot, after internet is connected, and restart 
-in case of failure.pi
+in case of failure.
