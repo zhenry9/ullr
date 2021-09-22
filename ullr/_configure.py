@@ -1,6 +1,9 @@
 import os
 from configparser import ConfigParser
+import uuid
+import time
 
+from .getmac import get_mac_address
 from .local_device import LocalDevice
 from .remote_device import RemoteDevice
 from .device_bus import DeviceBus
@@ -14,6 +17,17 @@ class UllrConfiguration(object):
         self.parser = ConfigParser()
         self.bus = DeviceBus()
         self.config_file = utils.get_default_config_file()
+        self.update_client_id = False
+
+    def _get_client_id(self):
+        try:
+            CLIENT_ID = get_mac_address().replace(":", "")
+            self.update_client_id = True
+        except:
+            time.sleep(1)
+            utils.logger.warn("getmac process failed. Falling back on uuid.getnode().")
+            CLIENT_ID = hex(uuid.getnode())[2:]
+        return CLIENT_ID
 
     def add_devices_from_file(self, file=None):
         """ Attempt to add devices from an arbitrary file. If no file is given
@@ -39,7 +53,10 @@ class UllrConfiguration(object):
         broker_port = int(section["mqtt_broker_port"])
         broker_user = section["mqtt_broker_user"]
         broker_pw = section["mqtt_broker_pw"]
-        mqtt_client.start_client(broker_url, broker_port, broker_user, broker_pw)
+        client_id = section.get("client_id")
+        if not client_id:
+            client_id = self._get_client_id()
+        mqtt_client.start_client(broker_url, broker_port, broker_user, broker_pw, client_id)
 
     def _add_devices(self):
         devices = self.parser.sections()
@@ -156,6 +173,8 @@ class UllrConfiguration(object):
         self.parser["$mqtt"]["mqtt_broker_port"] = str(mqtt_client.mqtt_broker_port)
         self.parser["$mqtt"]["mqtt_broker_user"] = mqtt_client.mqtt_broker_user
         self.parser["$mqtt"]["mqtt_broker_pw"] = mqtt_client.mqtt_broker_pw
+        if self.update_client_id:
+            self.parser["$mqtt"]["client_id"] = mqtt_client.CLIENT_ID
 
         os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
 
