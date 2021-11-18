@@ -1,30 +1,17 @@
 
 from threading import Lock, Thread
 import time
-import uuid
 
 import paho.mqtt.client as mqtt
 import ntplib
 
-from .getmac import get_mac_address
 from .utils import logger, print_to_ui, internet_connection
 from .webapp import socketing
 
-mqtt_broker_url, mqtt_broker_user, mqtt_broker_pw = "", "", ""
+mqtt_broker_url, mqtt_broker_user, mqtt_broker_pw, CLIENT_ID = "", "", "", ""
 mqtt_broker_port = 0
 
-try:
-    CLIENT_ID = get_mac_address().replace(":", "")
-except:
-    time.sleep(1)
-    logger.warn("getmac process failed. Falling back on uuid.getnode().")
-    CLIENT_ID = hex(uuid.getnode())[2:]
-
-client = mqtt.Client(CLIENT_ID, clean_session=False)
-client.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
-client.will_set(CLIENT_ID+"/status", "offline", qos=1, retain=True)
-client.reconnect_delay_set(min_delay=1, max_delay=8)
-client.message_retry_set(5)
+client = None
 
 connected = False
 time_offset = 0
@@ -102,8 +89,16 @@ def subscribe_status(host_name, cb_function):
     add_subscription(host_name+"/status")
 
 
-def start_client(url: str, port: int, username: str, pw: str):
-    global client, mqtt_broker_pw, mqtt_broker_url, mqtt_broker_user, mqtt_broker_port
+def start_client(url: str, port: int, username: str, pw: str, client_id: str):
+    global CLIENT_ID, client, mqtt_broker_pw, mqtt_broker_url, mqtt_broker_user, mqtt_broker_port
+    
+    CLIENT_ID = client_id
+    client = mqtt.Client(CLIENT_ID, clean_session=False)
+    client.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
+    client.will_set(CLIENT_ID+"/status", "offline", qos=1, retain=True)
+    client.reconnect_delay_set(min_delay=1, max_delay=8)
+    client.message_retry_set(5)
+    
     mqtt_broker_url = url
     mqtt_broker_port = port
     mqtt_broker_user = username
