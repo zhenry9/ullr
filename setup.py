@@ -49,7 +49,6 @@ setuptools.setup(
         "mccabe~=0.6.1",
         "ntplib~=0.4.0",
         "paho-mqtt~=1.6.1",
-        "pkg-resources~=0.0.0",
         "platformdirs~=2.4.0",
         "psutil~=5.8.0",
         "pylint~=2.11.1",
