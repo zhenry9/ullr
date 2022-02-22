@@ -42,6 +42,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@master
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
     - name: Disable .gitignore for build
       run: |
         sudo rm ./.gitignore
