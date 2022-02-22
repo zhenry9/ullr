@@ -32,7 +32,7 @@ clean:
 	test ! -d dist || rm -rf dist
 	test ! -d $(SDIST_DIR) || rm -rf $(SDIST_DIR)
 	pwd
-	ls
+	ls debian
 	dh $@ $(DH_VENV_ARGS) --buildsystem=pybuild -v
 
 build-arch:
