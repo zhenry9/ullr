@@ -53,7 +53,7 @@ jobs:
         sudo find . -name ".gitignore" -delete
     - name: Prepare dh venv
       run: |
-        sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+        sudo add-apt-repository "deb http://deb.debian.org/debian/ buster main"
         sudo apt-get update
         sudo apt-get install dh-virtualenv build-essential debhelper devscripts equivs
     - name: Install Build Dependencies    
