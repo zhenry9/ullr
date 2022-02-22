@@ -64,8 +64,8 @@ jobs:
       uses: actions/upload-artifact@v2
       working-directory: ..
       with:
-        name: deb
-        path: '*.deb'
+        name: deb_64
+        path: /home/runner/work/ullr/*.deb
 
   briefcase:
     name: Build Windows and Mac with Briefcase
