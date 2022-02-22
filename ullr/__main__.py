@@ -33,8 +33,8 @@ def main():
                                                                    "Don't run GUI on webserver.")
     arg_parser.add_argument("--uiport", type=int,
                             default=5000, help="Port for web interface.")
-    arg_parser.add_argument("--popup", action="store_true",
-                            help="Open a browser window to the web interface on run.")
+    arg_parser.add_argument("--nopopup", action="store_true",
+                            help="Disable automatic opening of browser window to web interface on run.")
     args = arg_parser.parse_args()
 
     utils.print_to_ui(f"Starting Ullr v{version}...", sys=True)
@@ -67,7 +67,7 @@ def main():
     else:
         views.init(current_session)
         utils.set_ui("webapp")
-        webapp.run(port=args.uiport, popup=args.popup)
+        webapp.run(port=args.uiport, nopopup=args.nopopup)
 
 
 if __name__ == "__main__":

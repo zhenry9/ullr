@@ -37,8 +37,8 @@ def enough_memory():
     return memory > 2
 
 
-def run(port=PORT, popup=True):
-    if popup and enough_memory():
+def run(port=PORT, nopopup=False):
+    if (not nopopup) and enough_memory():
         webbrowser.open(f"http://localhost:{port}", new=1)
     if not port_in_use(port):
         print(f"Ullr started on localhost:{port}")
