@@ -63,7 +63,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: deb_64
+        name: deb
         path: /home/runner/work/ullr/*.deb
 
   briefcase:
@@ -138,12 +138,14 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        file_type: [ msi, dmg ]
+        file_type: [ msi, dmg, deb ]
         include:
           - file_type: msi
             output_dir: windows
           - file_type: dmg
             output_dir: macOS
+          - file_type: deb
+            output_dir: deb_64
     runs-on: ubuntu-latest
     steps:
     - name: Download ${{ matrix.file_type }}
@@ -166,7 +168,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ env.RELEASE_URL }}
-        asset_path: ${{ matrix.output_dir }}/EddingtonGUI-${{ env.RELEASE_VERSION }}.${{ matrix.file_type }}
-        asset_name: EddingtonGUI-${{ env.RELEASE_VERSION }}.${{ matrix.file_type }}
+        asset_path: ${{ matrix.output_dir }}/ullr-${{ env.RELEASE_VERSION }}.${{ matrix.file_type }}
+        asset_name: ullr-${{ env.RELEASE_VERSION }}.${{ matrix.file_type }}
         asset_content_type: application/x-ole-storage
 
