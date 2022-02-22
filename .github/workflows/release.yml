@@ -54,6 +54,8 @@ jobs:
         sudo mk-build-deps --install debian/control
     - name: Build .deb package
       run: sudo dpkg-buildpackage -uc -us -b
+      with:
+        exclude_assets: '**/.gitignore'
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
