@@ -47,10 +47,10 @@ jobs:
     - name: Build .deb package
       run: sudo dpkg-buildpackage -uc -us -b
     - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: deb
-          path: ../*.deb
+      uses: actions/upload-artifact@v2
+      with:
+        name: deb
+        path: ../*.deb
 
   briefcase:
     name: Build Windows and Mac with Briefcase
