@@ -38,7 +38,7 @@ jobs:
 
   build-deb:
     name: Build deb package
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@master
@@ -47,7 +47,7 @@ jobs:
         sudo apt install dh-virtualenv build-essential debhelper devscripts equivs
     - name: Install Build Dependencies    
       run: |
-        sudo apt install python3-setuptools
+        sudo mk-build-deps --install debian/control
     - name: Build .deb package
       run: sudo dpkg-buildpackage -uc -us -b
     - name: Upload artifact
