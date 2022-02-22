@@ -62,9 +62,10 @@ jobs:
       run: sudo dpkg-buildpackage -uc -us -b
     - name: Upload artifact
       uses: actions/upload-artifact@v2
+      working-directory: ..
       with:
         name: deb
-        path: ../*.deb
+        path: *.deb
 
   briefcase:
     name: Build Windows and Mac with Briefcase
