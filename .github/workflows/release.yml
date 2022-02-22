@@ -38,7 +38,7 @@ jobs:
 
   build-deb:
     name: Build deb package
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
     - name: Checkout code
       uses: actions/checkout@master
@@ -53,10 +53,6 @@ jobs:
         sudo find . -name ".gitignore" -delete
     - name: Prepare dh venv
       run: |
-        sudo add-apt-repository "deb http://deb.debian.org/debian/ buster main"
-        sudo apt-key adv --keyserver keyring.debian.org --recv-keys 648ACFD622F3D138
-        sudo apt-key adv --keyserver keyring.debian.org --recv-keys 0E98404D386FA1D9
-        sudo apt-key adv --keyserver keyring.debian.org --recv-keys DCC9EFBF77E11517
         sudo apt-get update
         sudo apt-get install --allow-unauthenticated dh-virtualenv build-essential debhelper devscripts equivs
     - name: Install Build Dependencies    
