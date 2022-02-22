@@ -37,10 +37,13 @@ build-arch:
 	$(SNAKE) setup.py sdist --formats tar
 	mkdir -p $(SDIST_DIR)
 	tar -x -C $(SDIST_DIR) --strip-components=1 --exclude '*.egg-info' -f dist/*.tar
+	pwd
+	ls
 	dh $@ $(DH_VENV_ARGS) --sourcedir $(SDIST_DIR) --buildsystem=pybuild
+	ls
 
 %:
-	dh $@ --with python-virtualenv --sourcedir $(SDIST_DIR) --buildsystem=pybuild
+	dh $@ --with python-virtualenv --sourcedir $(SDIST_DIR) --buildsystem=pybuild -v
 
 override_dh_virtualenv:
 	dh_virtualenv $(DH_VENV_ARGS)
