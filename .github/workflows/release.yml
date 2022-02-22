@@ -44,6 +44,7 @@ jobs:
       uses: actions/checkout@master
     - name: Prepare dh venv
       run: |
+        sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
         sudo apt-get update
         sudo apt-get install dh-virtualenv build-essential debhelper devscripts equivs
     - name: Install Build Dependencies    
