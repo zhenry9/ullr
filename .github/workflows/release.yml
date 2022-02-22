@@ -42,6 +42,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@master
+      run: find ./debian -name ".gitignore" -delete
     - name: Prepare dh venv
       run: |
         sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
