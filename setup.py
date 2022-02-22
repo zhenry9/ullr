@@ -1,9 +1,11 @@
-import setuptools
+try:
+    import setuptools
+
+except ImportError:
+    from distutils.core import setup
+    from io import open
 
 from ullr import __version__ as version
-
-# except ImportError:
-#    from distutils.core import setup
 
 with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
@@ -17,7 +19,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://ullr.rtfd.io',
-    download_url=f'https://github.com/zhenry9/ullr/archive/{version}.tar.gz',
+    # download_url=f'https://github.com/zhenry9/ullr/archive/{version}.tar.gz',
     packages=setuptools.find_packages(exclude=('tests',)),
     include_package_data=True,
     classifiers=[

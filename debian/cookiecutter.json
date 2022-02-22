@@ -1,0 +1,13 @@
+{
+    "_template": "https://github.com/Springerle/dh-virtualenv-mold.git",
+    "distro": "UNRELEASED",
+    "email": "zhenry9@gmail.com",
+    "full_name": "Zach Henry",
+    "package": "ullr",
+    "repo_name": "debian",
+    "short_description": "A package to facilitate the wireless use of serial devices, specifically for sports timing.",
+    "snake": "./.venv/bin/python3",
+    "url": "https://github.com/zhenry9/ullr",
+    "version": "0.1.5",
+    "year": "2022"
+}

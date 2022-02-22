@@ -1,0 +1,91 @@
+name: Publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - '*'
+
+jobs:
+  build-n-publish:
+    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install pypa/build
+      run: >-
+        python -m
+        pip install
+        build
+        --user
+    - name: Build a binary wheel and a source tarball
+      run: >-
+        python -m
+        build
+        --sdist
+        --wheel
+        --outdir dist/
+        .
+    - name: Publish distribution 📦 to PyPI
+      if: startsWith(github.ref, 'refs/tags')
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+
+  build-deb:
+    name: Build deb package
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Prepare dh venv
+      run: |
+        sudo apt install dh-virtualenv build-essential debhelper devscripts equivs
+        sudo mk-build-deps --install debian/control
+    - name: Build .deb package
+      run: sudo dpkg-buildpackage -uc -us -b
+    - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: deb
+          path: ../*.deb
+
+  briefcase:
+    name: Build Windows and Mac with Briefcase
+    strategy:
+      max-parallel: 4
+      matrix:
+        file_type: [ msi, dmg ]
+        include:
+          - file_type: msi
+            op: windows-latest
+            output_dir: windows
+          - file_type: dmg
+            op: macos-latest
+            output_dir: macOS
+            package_args: --no-sign
+    runs-on: ${{ matrix.op }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install briefcase
+        run: |
+          python -m pip install --upgrade pip
+          pip install briefcase
+      - name: Briefcase create
+        run: |
+          briefcase create --no-input
+      - name: Briefcase package
+        run: |
+          briefcase package ${{ matrix.package_args }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.file_type }}
+          path: ${{ matrix.output_dir }}/*.${{ matrix.file_type }}

@@ -34,10 +34,10 @@ def port_in_use(port):
 def enough_memory():
     import psutil
     memory = round(psutil.virtual_memory().total / (1024.0 ** 3))
-    return memory > 1
+    return memory > 2
 
 
-def run(port=PORT, popup=False):
+def run(port=PORT, popup=True):
     if popup and enough_memory():
         webbrowser.open(f"http://localhost:{port}", new=1)
     if not port_in_use(port):

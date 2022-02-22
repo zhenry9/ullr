@@ -24,6 +24,7 @@ var/
 windows/msi
 ullr/resources
 *.wixpdb
+.pybuild/
 
 # Installer logs
 pip-log.txt
