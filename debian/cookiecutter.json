@@ -8,6 +8,6 @@
     "short_description": "A package to facilitate the wireless use of serial devices, specifically for sports timing.",
     "snake": "./.venv/bin/python3",
     "url": "https://github.com/zhenry9/ullr",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "year": "2022"
 }
