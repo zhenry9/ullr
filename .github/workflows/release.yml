@@ -54,8 +54,9 @@ jobs:
     - name: Prepare dh venv
       run: |
         sudo add-apt-repository "deb http://deb.debian.org/debian/ buster main"
+        sudo apt-get clean
         sudo apt-get update
-        sudo apt-get install dh-virtualenv build-essential debhelper devscripts equivs
+        sudo apt-get install --allow-unauthenticated dh-virtualenv build-essential debhelper devscripts equivs
     - name: Install Build Dependencies    
       run: |
         sudo mk-build-deps --install debian/control
