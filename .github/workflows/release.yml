@@ -42,10 +42,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@master
-      with:
-        exclude_assets: '**/.gitignore'
     - name: Disable .gitignore for build
-      run: find . -name ".gitignore" -delete
+      run: |
+        sudo rm ./.gitignore
+        sudo rm ./debian/.gitignore
+        sudo find . -name ".gitignore" -delete
     - name: Prepare dh venv
       run: |
         sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
