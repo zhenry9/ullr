@@ -65,7 +65,7 @@ jobs:
       working-directory: ..
       with:
         name: deb
-        path: *.deb
+        path: '*.deb'
 
   briefcase:
     name: Build Windows and Mac with Briefcase
