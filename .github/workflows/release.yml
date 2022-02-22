@@ -43,7 +43,6 @@ jobs:
     - name: Prepare dh venv
       run: |
         sudo apt install dh-virtualenv build-essential debhelper devscripts equivs
-        sudo mk-build-deps --install debian/control
     - name: Build .deb package
       run: sudo dpkg-buildpackage -uc -us -b
     - name: Upload artifact
@@ -78,6 +77,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install briefcase
+          pip install markupsafe==2.0.1
       - name: Briefcase create
         run: |
           briefcase create --no-input
