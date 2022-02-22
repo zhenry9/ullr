@@ -31,7 +31,9 @@ SDIST_DIR=debian/$(PACKAGE)-$(VERSION)
 clean:
 	test ! -d dist || rm -rf dist
 	test ! -d $(SDIST_DIR) || rm -rf $(SDIST_DIR)
-	dh $@ $(DH_VENV_ARGS) --buildsystem=pybuild
+	pwd
+	ls
+	dh $@ $(DH_VENV_ARGS) --buildsystem=pybuild -v
 
 build-arch:
 	$(SNAKE) setup.py sdist --formats tar
@@ -39,7 +41,7 @@ build-arch:
 	tar -x -C $(SDIST_DIR) --strip-components=1 --exclude '*.egg-info' -f dist/*.tar
 	pwd
 	ls
-	dh $@ $(DH_VENV_ARGS) --sourcedir $(SDIST_DIR) --buildsystem=pybuild
+	dh $@ $(DH_VENV_ARGS) --sourcedir $(SDIST_DIR) --buildsystem=pybuild -v
 	ls
 
 %:
