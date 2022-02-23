@@ -141,10 +141,13 @@ jobs:
         file_type: [ msi, dmg, deb ]
         include:
           - file_type: msi
+            artifact_name: msi
             output_dir: windows
           - file_type: dmg
+            artifact_name: dmg
             output_dir: macOS
           - file_type: deb
+            artifact_name: deb_64
             output_dir: deb_64
     runs-on: ubuntu-latest
     steps:
@@ -172,7 +175,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ env.RELEASE_URL }}
-        asset_path: ${{ matrix.output_dir }}/ullr-${{ env.RELEASE_VERSION }}.${{ matrix.file_type }}
+        asset_path: ${{ matrix.output_dir }}/Ullr-${{ env.RELEASE_VERSION }}.${{ matrix.file_type }}
         asset_name: ullr-${{ env.RELEASE_VERSION }}.${{ matrix.file_type }}
         asset_content_type: application/x-ole-storage
 
