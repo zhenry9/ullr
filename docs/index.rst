@@ -28,7 +28,10 @@ The simplest way to install Ullr is in a Python environment using pip. It is
 recommended, if possible, to install as superuser in Linux environments.
 
 An installer for the latest Windows release can be found here: 
-:xref:`windows`.
+:xref:`windows_latest`.
+
+The latest Debian(amd64) binary can be found here: 
+:xref:`deb_64_latest`. 
 
 An in-depth guide to installation on a Raspberry Pi can be found :ref:`here 
 <Installing on a Raspberry Pi>`.
