@@ -63,7 +63,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: deb
+        name: deb-64
         path: /home/runner/work/ullr/*.deb
 
   briefcase:
@@ -138,24 +138,27 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        file_type: [ msi, dmg, deb ]
+        version: [ windows, macOS, deb-64 ]
         include:
-          - file_type: msi
+          - version: windows
+            file_type: msi
             artifact_name: msi
-            output_dir: windows
-          - file_type: dmg
+            filename: Ullr-${GITHUB_REF/refs\/tags\//}.msi            
+          - version: macOS
+            file_type: dmg
             artifact_name: dmg
-            output_dir: macOS
-          - file_type: deb
-            artifact_name: deb_64
-            output_dir: deb_64
+            filename: Ullr-${GITHUB_REF/refs\/tags\//}.dmg            
+          - version: deb_64
+            file_type: deb
+            artifact_name: deb-64
+            filename: ullr_${GITHUB_REF/refs\/tags\//}_amd64.deb            
     runs-on: ubuntu-latest
     steps:
     - name: Download ${{ matrix.file_type }}
       uses: actions/download-artifact@v2
       with:
-        name: ${{ matrix.file_type }}
-        path: ${{ matrix.output_dir }}
+        name: ${{ matrix.artifact_name }}
+        path: ${{ matrix.version }}
     - name: Download release
       uses: actions/download-artifact@v2
       with:
@@ -175,7 +178,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ env.RELEASE_URL }}
-        asset_path: ${{ matrix.output_dir }}/Ullr-${{ env.RELEASE_VERSION }}.${{ matrix.file_type }}
+        asset_path: ${{ matrix.version }}/${{ matrix.filename }}
         asset_name: ullr-${{ env.RELEASE_VERSION }}.${{ matrix.file_type }}
         asset_content_type: application/x-ole-storage
 
