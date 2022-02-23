@@ -130,6 +130,11 @@ jobs:
         with:
           name: release
           path: release.txt
+      - name: Set Release Environment Variables
+        run: |
+          RELEASE_URL=`cat release.txt`
+          echo "RELEASE_URL=${RELEASE_URL}" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
   upload_release_artifacts:
     name: Upload Artifacts To Relase
@@ -138,20 +143,20 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        version: [ windows, macOS, deb-64 ]
+        version: [ windows, macOS, deb_64 ]
         include:
           - version: windows
             file_type: msi
             artifact_name: msi
-            filename: Ullr-${GITHUB_REF/refs\/tags\//}.msi            
+            filename: Ullr-${{ env.RELEASE_VERSION }}.msi            
           - version: macOS
             file_type: dmg
             artifact_name: dmg
-            filename: Ullr-${GITHUB_REF/refs\/tags\//}.dmg            
+            filename: Ullr-${{ env.RELEASE_VERSION }}.dmg            
           - version: deb_64
             file_type: deb
             artifact_name: deb-64
-            filename: ullr_${GITHUB_REF/refs\/tags\//}_amd64.deb            
+            filename: ullr_${{ env.RELEASE_VERSION }}_amd64.deb            
     runs-on: ubuntu-latest
     steps:
     - name: Download ${{ matrix.file_type }}
@@ -163,11 +168,6 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: release
-    - name: Set Release Environment Variables
-      run: |
-        RELEASE_URL=`cat release.txt`
-        echo "RELEASE_URL=${RELEASE_URL}" >> $GITHUB_ENV
-        echo "RELEASE_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
     - name: Troubleshooting info
       run: |
         pwd
