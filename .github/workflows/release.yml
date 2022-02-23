@@ -63,7 +63,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: deb-64
+        name: deb_64
         path: /home/runner/work/ullr/*.deb
 
   briefcase:
@@ -218,4 +218,3 @@ jobs:
         asset_path: ${{ matrix.version }}/ullr_${{ env.RELEASE_VERSION }}_${{ matrix.arch }}.${{ matrix.file_type }}
         asset_name: Ullr-${{ env.RELEASE_VERSION }}-${{ matrix.arch }}.${{ matrix.file_type }}
         asset_content_type: application/x-ole-storage
-        
