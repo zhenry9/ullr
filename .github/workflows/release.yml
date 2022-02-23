@@ -161,7 +161,7 @@ jobs:
       run: |
         RELEASE_URL=`cat release.txt`
         echo "RELEASE_URL=${RELEASE_URL}" >> $GITHUB_ENV
-        echo "RELEASE_VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
+        echo "RELEASE_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
     - name: Upload ${{ matrix.file_type }} Asset
       uses: actions/upload-release-asset@v1
       env:
