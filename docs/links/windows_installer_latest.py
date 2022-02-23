@@ -1,10 +1,9 @@
 import requests
-import json
 
 from . import link
 from . import vers
 
-latest_release_info = json.loads(requests.get('https://api.github.com/repos/zhenry9/ullr/releases/latest'))
+latest_release_info = requests.get('https://api.github.com/repos/zhenry9/ullr/releases/latest').json()
 url = 'https://github.com/zhenry9/ullr/releases/latest'
 for asset in latest_release_info['assets']:
     if asset['browser_download_url'].endswith('.msi'):
