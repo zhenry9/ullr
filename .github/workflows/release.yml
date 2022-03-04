@@ -116,7 +116,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - arch: arm6
+          - arch: armv6
             distro: bullseye
 
     steps:
