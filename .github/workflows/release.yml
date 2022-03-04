@@ -97,6 +97,7 @@ jobs:
         run: pip install markupsafe==2.0.1
       - name: Briefcase create
         run: |
+          ls
           briefcase create --no-input
       - name: Briefcase package
         run: |
@@ -131,10 +132,12 @@ jobs:
 
           # Create an artifacts directory
           setup: |
+            ls
             mkdir -p "${PWD}/linux"
           # Mount the artifacts directory as /artifacts in the container
           dockerRunArgs: |
             --volume "${PWD}/linux:/linux"
+            --volume "${PWD}/ullr:/ullr"
           # Pass some environment variables to the container
           env: | # YAML, but pipe character is necessary
             artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
@@ -150,7 +153,7 @@ jobs:
           # no secrets are present in the container state or logs.
           install: |
             apt-get update
-            apt-get install python3 python3-pip git
+            apt-get install python3 python3-pip git docker
             python3 -m pip install --upgrade pip
             pip3 install briefcase
             pip3 install markupsafe==2.0.1
