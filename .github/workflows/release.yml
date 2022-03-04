@@ -132,12 +132,11 @@ jobs:
 
           # Create an artifacts directory
           setup: |
-            ls
+            pwd
             mkdir -p "${PWD}/linux"
           # Mount the artifacts directory as /artifacts in the container
           dockerRunArgs: |
-            --volume "${PWD}/linux:/linux"
-            --volume "${PWD}/ullr:/ullr"
+            --volume "${PWD}:/repo"
           # Pass some environment variables to the container
           env: | # YAML, but pipe character is necessary
             artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
@@ -151,17 +150,25 @@ jobs:
           # builds don't have to re-install them. The image layer is cached
           # publicly in your project's package repository, so it is vital that
           # no secrets are present in the container state or logs.
+          # to install docker
+          # curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          # echo \
+          # "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
+          # $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          # apt-get update
+          # apt-get install docker-ce docker-ce-cli containerd.io
           install: |
             apt-get update
-            apt-get install python3 python3-pip git docker
+            apt-get install python3 python3-pip git ca-certificates curl gnupg lsb-release
             python3 -m pip install --upgrade pip
             pip3 install briefcase
             pip3 install markupsafe==2.0.1
 
           # Produce a binary artifact and place it in the mounted volume
           run: |
-            briefcase create --no-input
-            briefcase package ${{ matrix.package_args }}
+            cd /repo
+            briefcase create --no-input --no-docker
+            briefcase package --no-docker ${{ matrix.package_args }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
