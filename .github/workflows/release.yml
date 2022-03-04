@@ -151,9 +151,9 @@ jobs:
           install: |
             apt-get update
             apt-get install python3 python3-pip
-            python -m pip install --upgrade pip
-            pip install briefcase
-            pip install markupsafe==2.0.1
+            python3 -m pip install --upgrade pip
+            pip3 install briefcase
+            pip3 install markupsafe==2.0.1
 
           # Produce a binary artifact and place it in the mounted volume
           run: |
