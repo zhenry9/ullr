@@ -67,11 +67,11 @@ jobs:
         path: /home/runner/work/ullr/*.deb
 
   briefcase:
-    name: Build Windows and Mac with Briefcase
+    name: Build ${{ matrix.output_dir }} with Briefcase
     strategy:
       max-parallel: 4
       matrix:
-        file_type: [ msi, dmg, AppImage ]
+        file_type: [ msi, dmg ]
         include:
           - file_type: msi
             op: windows-latest
@@ -80,10 +80,6 @@ jobs:
             op: macos-latest
             output_dir: macOS
             package_args: --no-sign
-          - file_type: AppImage
-            op: ubuntu-latest
-            output_dir: linux
-            container: arm32v7/debian:latest
     runs-on: ${{ matrix.op }}
     container: ${{ matrix.container }}
     steps:
@@ -110,6 +106,64 @@ jobs:
         with:
           name: ${{ matrix.file_type }}
           path: ${{ matrix.output_dir }}/*.${{ matrix.file_type }}
+
+  cross_arch:
+    # The host should always be linux
+    runs-on: ubuntu-18.04
+    name: Cross build Linux image on ${{ matrix.arch }} ${{ matrix.distro }}
+
+    # Run steps on a matrix of 3 arch/distro combinations
+    strategy:
+      matrix:
+        include:
+          - arch: arm6
+            distro: bullseye
+
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: uraimo/run-on-arch-action@v2
+        name: Build artifact
+        id: build
+        with:
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.distro }}
+          githubToken: ${{ github.token }}
+
+          # Create an artifacts directory
+          setup: |
+            mkdir -p "${PWD}/artifacts"
+          # Mount the artifacts directory as /artifacts in the container
+          dockerRunArgs: |
+            --volume "${PWD}/artifacts:/artifacts"
+          # Pass some environment variables to the container
+          env: | # YAML, but pipe character is necessary
+            artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
+
+          # The shell to run commands with in the container
+          shell: /bin/sh
+
+          # Install some dependencies in the container. This speeds up builds if
+          # you are also using githubToken. Any dependencies installed here will
+          # be part of the container image that gets cached, so subsequent
+          # builds don't have to re-install them. The image layer is cached
+          # publicly in your project's package repository, so it is vital that
+          # no secrets are present in the container state or logs.
+          install: |
+            python -m pip install --upgrade pip
+            pip install briefcase
+            pip install markupsafe==2.0.1
+
+          # Produce a binary artifact and place it in the mounted volume
+          run: |
+            briefcase create --no-input
+            briefcase package ${{ matrix.package_args }}
+            cp linux/* /artifacts
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.distro }}-${{ matrix.arch }}
+          path: linux/*.AppImage
 
   create_release:
     name: Create Release
