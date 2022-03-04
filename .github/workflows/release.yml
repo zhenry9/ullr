@@ -131,10 +131,10 @@ jobs:
 
           # Create an artifacts directory
           setup: |
-            mkdir -p "${PWD}/artifacts"
+            mkdir -p "${PWD}/linux"
           # Mount the artifacts directory as /artifacts in the container
           dockerRunArgs: |
-            --volume "${PWD}/artifacts:/artifacts"
+            --volume "${PWD}/linux:/linux"
           # Pass some environment variables to the container
           env: | # YAML, but pipe character is necessary
             artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
@@ -157,7 +157,6 @@ jobs:
           run: |
             briefcase create --no-input
             briefcase package ${{ matrix.package_args }}
-            cp linux/* /artifacts
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
