@@ -58,7 +58,6 @@ setuptools.setup(
         "python-engineio~=4.3.0",
         "python-socketio~=5.5.0",
         "requests~=2.26.0",
-        "setuptools~=40.8.0",
         "six~=1.16.0",
         "termcolor~=1.1.0",
         "toml~=0.10.2",
