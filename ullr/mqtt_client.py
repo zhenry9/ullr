@@ -89,10 +89,11 @@ def subscribe_status(host_name, cb_function):
     add_subscription(host_name+"/status")
 
 
-def start_client(url: str, port: int, username: str, pw: str, client_id: str):
+def start_client(url: str, port: int, username: str, pw: str, client_id=CLIENT_ID):
     global CLIENT_ID, client, mqtt_broker_pw, mqtt_broker_url, mqtt_broker_user, mqtt_broker_port
     
-    CLIENT_ID = client_id
+    if client_id:
+        CLIENT_ID = client_id
     client = mqtt.Client(CLIENT_ID, clean_session=False)
     client.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
     client.will_set(CLIENT_ID+"/status", "offline", qos=1, retain=True)
