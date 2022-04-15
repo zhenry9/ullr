@@ -54,6 +54,7 @@ def _decode_timy(message):
 def _encode_timy(channel, tod):
     if channel[0] > 7 or channel[0] < 0:
         raise TranslationError(f"Channel {channel[0]} out of range for Timy.")
+    # only keep manual indicator for channels 0 and 1, as only those buttons exist on Timy
     if channel[1] and channel[0]<2:
         chan = f"c{channel[0]}M"
     else:
