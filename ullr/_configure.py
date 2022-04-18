@@ -17,16 +17,16 @@ class UllrConfiguration(object):
         self.parser = ConfigParser()
         self.bus = DeviceBus()
         self.config_file = utils.get_default_config_file()
-        self.update_client_id = False
+        self.save_client_id = True
 
     def _get_client_id(self):
         try:
             CLIENT_ID = get_mac_address().replace(":", "")
-            self.update_client_id = True
         except:
             time.sleep(1)
             utils.logger.warn("getmac process failed. Falling back on uuid.getnode().")
             CLIENT_ID = hex(uuid.getnode())[2:]
+            self.save_client_id = False
         return CLIENT_ID
 
     def add_devices_from_file(self, file=None):
@@ -173,7 +173,7 @@ class UllrConfiguration(object):
         self.parser["$mqtt"]["mqtt_broker_port"] = str(mqtt_client.mqtt_broker_port)
         self.parser["$mqtt"]["mqtt_broker_user"] = mqtt_client.mqtt_broker_user
         self.parser["$mqtt"]["mqtt_broker_pw"] = mqtt_client.mqtt_broker_pw
-        if self.update_client_id:
+        if self.save_client_id:
             self.parser["$mqtt"]["client_id"] = mqtt_client.CLIENT_ID
 
         os.makedirs(os.path.dirname(self.config_file), exist_ok=True)
