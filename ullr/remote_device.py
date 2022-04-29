@@ -68,21 +68,24 @@ class RemoteDevice(object):
 
     def _new_message(self, client, userdata, message):
         if self.listening:
-            payload = json.loads(message.payload.decode())
-            now_corrected = time.time() + mqtt_client.time_offset
-            message_transit_time = round(now_corrected - payload["timestamp"], 1)
-            self._update_transit_stats(message_transit_time)
-            message_data = payload["message"]
-            stripped_message = " ".join(message_data.split())
-            utils.logger.info(f"Message {stripped_message} transit time: {message_transit_time}.")
-            if self.on_time_max == 0 or message_transit_time < self.on_time_max:
-                self.message_queue.put(message_data.encode())
-            else:
-                self.late_message_list.append(message_data.encode())
-                utils.print_to_ui(f"Received message from {self.name} "
-                                f"after max on-time window of {self.on_time_max}s ({message_transit_time}s). "
-                                f"Adding to late message list.")
-                update_late_badge(self.sku, len(self.late_message_list))
+            try:
+                payload = json.loads(message.payload.decode())
+                now_corrected = time.time() + mqtt_client.time_offset
+                message_transit_time = round(now_corrected - payload["timestamp"], 1)
+                self._update_transit_stats(message_transit_time)
+                message_data = payload["message"]
+                stripped_message = " ".join(message_data.split())
+                utils.logger.info(f"Message {stripped_message} transit time: {message_transit_time}.")
+                if self.on_time_max == 0 or message_transit_time < self.on_time_max:
+                    self.message_queue.put(message_data.encode())
+                else:
+                    self.late_message_list.append(message_data.encode())
+                    utils.print_to_ui(f"Received message from {self.name} "
+                                    f"after max on-time window of {self.on_time_max}s ({message_transit_time}s). "
+                                    f"Adding to late message list.")
+                    update_late_badge(self.sku, len(self.late_message_list))
+            except Exception as e:
+                utils.print_to_ui(f"Error receiving remote message: {e}")
 
     def write(self, message):
         if self.accepts_incoming and self.remote_device_name != "+":
