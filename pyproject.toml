@@ -1,7 +1,7 @@
 [tool.briefcase]
 project_name = "Ullr"
 bundle = "com.zhenry9"
-version = "0.1.11"
+version = "0.1.12"
 url = "https://github.com/zhenry9/ullr"
 license = "GNU General Public License v3 or later (GPLv3+)"
 author = 'Zach Henry'
