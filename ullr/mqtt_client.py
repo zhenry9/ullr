@@ -4,6 +4,7 @@ import time
 
 import paho.mqtt.client as mqtt
 import ntplib
+import certifi
 
 from .utils import logger, print_to_ui, internet_connection
 from .webapp import socketing
@@ -95,7 +96,7 @@ def start_client(url: str, port: int, username: str, pw: str, client_id=CLIENT_I
     if client_id:
         CLIENT_ID = client_id
     client = mqtt.Client(CLIENT_ID, clean_session=False)
-    client.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
+    client.tls_set(certifi.where())
     client.will_set(CLIENT_ID+"/status", "offline", qos=1, retain=True)
     client.reconnect_delay_set(min_delay=1, max_delay=8)
     client.message_retry_set(5)
