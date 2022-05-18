@@ -76,8 +76,12 @@ class LocalDevice(object):
                     self.publish(message)
                 i = self.buffer.find(b"\r")
             time.sleep(.1)
-            i = max(1, min(2048, ser.in_waiting))
-            data = ser.read(i)
+            try:
+                i = max(1, min(2048, ser.in_waiting))
+                data = ser.read(i)
+            except Exception as e:
+                print_to_ui(f"Serial error or device {self.name} unplugged: {e}")
+                print_to_ui(f"Try restarting Ullr or adding serial device again.")
             self.buffer.extend(data)
 
         ser.close()
@@ -87,9 +91,12 @@ class LocalDevice(object):
     def publish(self, message):
         now = time.time()
         timestamp = now + mqtt_client.time_offset
-        payload = json.dumps({"message": message.decode(), "timestamp": timestamp})
-        mqtt_client.safe_publish(self.published_name+"/from_device", payload, qos=1)
-        print_to_ui("Published to MQTT.")
+        try:
+            payload = json.dumps({"message": message.decode(), "timestamp": timestamp})
+            mqtt_client.safe_publish(self.published_name+"/from_device", payload, qos=1)
+            print_to_ui("Published to MQTT.")
+        except Exception as e:
+            print_to_ui(f"Unable to publish serial message to MQTT: {e}")
 
     def kill_listen_stream(self):
         """

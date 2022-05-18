@@ -59,7 +59,8 @@ def _encode_timy(channel, tod):
         chan = f"c{channel[0]}M"
     else:
         chan = f"c{channel[0]} "
-    msg = f"      {chan} {tod}       \r"
+    # all zero bib number for better Vola compatibility
+    msg = f" 0000 {chan} {tod}       \r"
     return msg
 
 

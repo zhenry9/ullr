@@ -178,10 +178,13 @@ def update_device(id, data):
 
 @socketio.on("update_ota")
 def update_ota(id, data):
-    d = current_session.bus.find_device(id)
-    data = json.loads(data)
-    ota = int(data[0]["value"])
-    d.on_time_max = ota
+    try:
+        d = current_session.bus.find_device(id)
+        data = json.loads(data)
+        ota = int(data[0]["value"])
+        d.on_time_max = ota
+    except Exception as e:
+        utils.print_to_ui(f"Failed to update on-time-arrival: {e}")
     
 @socketio.on("send_late_messages")
 def send_late_messages(id, data):
