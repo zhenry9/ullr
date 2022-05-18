@@ -67,6 +67,8 @@ class UllrConfiguration(object):
                 name = d
                 if name[0] != "$":
                     translation = [False, None, None, 0]
+                    resequence = False
+                    device = None
                     location = self.parser[d]["location"]
                     dev_type = self.parser[d]["type"]
                     if self.parser[d]["mute"].upper().strip() == "TRUE":
@@ -86,6 +88,9 @@ class UllrConfiguration(object):
                         translation[1] = self.parser[d]["translated_from"]
                         translation[2] = self.parser[d]["translated_to"]
                         translation[3] = int(self.parser[d]["channel_shift"])
+                    if self.parser[d]["resequence"].upper().strip() == "TRUE":
+                        resequence = True
+                        device = self.parser[d]["device"]
                     if location == "local":
                         port = self.parser[d]["port"]
                         baudrate = int(self.parser[d]["baud"])
@@ -98,7 +103,9 @@ class UllrConfiguration(object):
                                 accepts_incoming=accepts_incoming,
                                 baudrate=baudrate,
                                 published=published,
-                                translation=translation)
+                                translation=translation,
+                                resequence=resequence,
+                                device=device)
                             self.bus.add_device(dev)
                             utils.print_to_ui(
                                 f"Added {location} {dev_type} device '{name}' from config.", sys=True)
@@ -145,6 +152,8 @@ class UllrConfiguration(object):
                 self.parser[dev.name]["port"] = dev.port_name
                 self.parser[dev.name]["baud"] = str(dev.baudrate)
                 self.parser[dev.name]["published"] = str(dev.published)
+                self.parser[dev.name]["resequence"] = str(dev.resequence)
+                self.parser[dev.name]["device"] = str(dev.device)
             if type(dev).__name__ == "RemoteDevice":
                 self.parser[dev.name]["location"] = "remote"
                 self.parser[dev.name]["topic_name"] = dev.topic_name

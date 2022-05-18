@@ -9,6 +9,7 @@ from serial.serialutil import SerialTimeoutException
 
 from .utils import print_to_ui
 from . import mqtt_client
+from .skiracetiming.resequence import resequence
 
 
 class LocalDevice(object):
@@ -16,7 +17,7 @@ class LocalDevice(object):
     A device connected to a serial port on the local machine.
     """
 
-    def __init__(self, port, mode, name="Local Device", mute=False, accepts_incoming=True, baudrate=9600, published=False, translation=[False, None, None, 0]):
+    def __init__(self, port, mode, name="Local Device", mute=False, accepts_incoming=True, baudrate=9600, published=False, translation=[False, None, None, 0], resequence=False, device=None):
         self.sku = id(self)
         if name[0] == "$":
             raise ValueError("Device name cannot start with '$'.")
@@ -40,6 +41,9 @@ class LocalDevice(object):
         self.mute = mute
         self.message_queue = Queue()
         self.translation = translation
+        self.resequence = resequence
+        self.device = device
+        self.sequence = 1
         self.exc = False
         self.listening = False
         self.listen_thread = threading.Thread(target=self.listen)
@@ -51,6 +55,12 @@ class LocalDevice(object):
         Receives a hex string, converts to bytes and writes to the serial port.
         """
         if self.accepts_incoming:
+            if self.resequence:
+                try:
+                    message = resequence(message.decode('latin-1'), self.device, self.sequence).encode()
+                    self.sequence += 1
+                except Exception as e:
+                    print_to_ui(f"Resequencing error: {e}")
             try:
                 self.serial_port.write(message)
                 return True
