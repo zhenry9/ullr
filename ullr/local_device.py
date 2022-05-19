@@ -50,6 +50,29 @@ class LocalDevice(object):
         self.listen_thread.daemon = True
         self.listen_thread.start()
 
+    def _restart_com_port(self):
+        print_to_ui(f'Attempting to reconnect serial device {self.name}...')
+        while self.exc:
+            try:
+                self.serial_port.close()
+                self.serial_port = serial.Serial(port=self.port_name,
+                                         baudrate=self.baudrate,
+                                         write_timeout=3)
+                print_to_ui(f'Succesfully reconnected to {self.port_name}.')
+                self.exc = False
+            except Exception as e:
+                try:
+                    port = self.port_name
+                    new_port = f'{port[:-1]}{int(port[-1])+1}'
+                    self.serial_port = serial.Serial(port=new_port,
+                                         baudrate=self.baudrate,
+                                         write_timeout=3)
+                    print_to_ui(f'Connected to replacement port {new_port}.')
+                    self.exc = False
+                except Exception:
+                    time.sleep(.1)
+
+
     def write(self, message: bytes):
         """
         Receives a hex string, converts to bytes and writes to the serial port.
@@ -70,10 +93,10 @@ class LocalDevice(object):
     def listen(self):
         """listens to serial port, yields what it hears
         """
-        ser = self.serial_port
         self.listening = True
 
         while self.listening:
+            ser = self.serial_port
             i = self.buffer.find(b"\r")
             while i >= 0:
                 if len(self.buffer) > (i+1) and self.buffer[i+1:i+2] == b"\n":
@@ -87,12 +110,14 @@ class LocalDevice(object):
                 i = self.buffer.find(b"\r")
             time.sleep(.1)
             try:
-                i = max(1, min(2048, ser.in_waiting))
-                data = ser.read(i)
+                if ser.in_waiting:
+                    i = max(1, min(2048, ser.in_waiting))
+                    data = ser.read(i)
+                    self.buffer.extend(data)
             except Exception as e:
                 print_to_ui(f"Serial error or device {self.name} unplugged: {e}")
-                print_to_ui(f"Try restarting Ullr or adding serial device again.")
-            self.buffer.extend(data)
+                self.exc = True
+                self._restart_com_port()
 
         ser.close()
 
