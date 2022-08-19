@@ -142,7 +142,7 @@
         </div>
         <div class="main_window">
             <div class="status">
-                <div class="title"><h1>ULLR</h1></div><h3><span id="version_number" {% if update_available %} style = "color: red;" {% endif %}><a href="https://github.com/zhenry9/ullr/releases/latest" style="color: inherit; text-decoration: none;">v{{ version }}</a></span></h3>
+                <div class="title"><h1>ULLR</h1></div><h3><a href="https://github.com/zhenry9/ullr/releases/latest" style="color: inherit; text-decoration: none;"><span id="version_number" {% if update_available %} style = "color: red;" {% endif %}>v{{ version }}</span></a></h3>
                 <div class="subtitle">Running on: {{ hostname }}({{ host_ip }})({{ client_id }})</div>
                 <button onclick="openMenuBar()" id="config_button">Configure</button>
 
