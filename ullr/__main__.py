@@ -59,6 +59,8 @@ def main():
     elif not args.empty:
         current_session.add_devices_from_file()
 
+    utils.check_for_updates_loop_start(60)
+
     if args.nowebui:
         cli.init(current_session)
         utils.set_ui("cli")

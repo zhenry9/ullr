@@ -1,4 +1,5 @@
 import datetime
+import time
 import os
 import uuid
 import socket
@@ -8,6 +9,7 @@ import glob
 import serial
 import logging
 import logging.handlers
+from threading import Thread
 
 from colorama import Fore, Style
 from colorama import init as colorama_init
@@ -15,14 +17,29 @@ from colorama import init as colorama_init
 from .settings import USER_SPECIFIED_DEFAULT_CONFIG_FILE, USER_SPECIFIED_LOG_FILE
 from .webapp import socketing
 from .cli import interface
+from .autoupdate import update_available as ua
 
 colorama_init()
 ui = "webapp"
+update_available = False
 
 def set_ui(user_int):
     global ui
     ui = user_int
 
+def check_for_updates(delay=0):
+    global update_available
+    update_available = ua()
+    if ui == "webapp":
+        socketing.update_notifier(update_available)
+    time.sleep(delay)
+    if delay>0:
+        check_for_updates(delay)
+
+def check_for_updates_loop_start(delay=300):
+    t = Thread(target=check_for_updates, args=[delay])
+    t.daemon = True
+    t.start()
 
 def get_default_config_file():
     if USER_SPECIFIED_DEFAULT_CONFIG_FILE is None:

@@ -94,6 +94,20 @@ function closeAdvancedMenu(id){
     document.getElementById(id).getElementsByClassName("modal")[0].style.display = "none";
 }
 
+function translationEnable(e){
+    form = e.parentElement.parentElement;
+    inputs = form.getElementsByTagName("input");
+    selects = form.getElementsByTagName("select");
+    els = []
+        .concat(Array.from(inputs))
+        .concat(Array.from(selects));
+    for (let i = 0; i < els.length; i++){
+        if (els[i] != e){
+            els[i].disabled = !e.checked;
+        }
+    }
+}
+
 function submitAdvancedMenu(id){
     var device_data = $("#" + id + " form:eq(0)").serializeArray();
     var translation_data = $("#" + id + " form:eq(1)").serializeArray();
@@ -131,6 +145,24 @@ socket.on("tape_feed", function(data){
     catch{}
     tape_cell.textContent = data["buffer"];
     tape_cell.scrollTop = tape_cell.scrollHeight;
+})
+
+socket.on("update_notifier", function(data){
+    var version_num = document.getElementById("version_number");
+    var vers = version_num.textContent;
+    console.log(vers)
+    console.log(version_num)
+    console.log(version_num.style.color)
+    console.log(data["available"])
+    if (data["available"] == "True") {
+        version_num.style.color = "red";
+        version_num.textContent = vers + "*"
+        console.log(version_num.style.color)
+    }
+    else {
+        version_num.style.color = "white";
+        version_num.textContent = vers
+    }
 })
 
 socket.on("update_online_dot", function(data){

@@ -24,6 +24,7 @@ def home():
     return render_template(
         "home.html",
         version=version,
+        update_available=utils.update_available,
         session=current_session,
         ports=utils.get_available_com_ports(),
         hostname=socket.gethostname(),
@@ -142,7 +143,7 @@ def update_mqtt(data):
 @socketio.on("update_translation")
 def update_translation(id, data):
     data = json.loads(data)
-    if data[0]["value"].upper() == "TRUE":
+    if len(data) > 0:
         translation = [
             True,
             data[1]["value"],

@@ -142,7 +142,7 @@
         </div>
         <div class="main_window">
             <div class="status">
-                <div class="title"><h1>ULLR</h1></div><h3>v{{ version }}</h3>
+                <div class="title"><h1>ULLR</h1></div><h3><span id="version_number" {% if update_available %} style = "color: red;" {% endif %}><a href="https://github.com/zhenry9/ullr/releases/latest" style="color: inherit; text-decoration: none;">v{{ version }}</a></span></h3>
                 <div class="subtitle">Running on: {{ hostname }}({{ host_ip }})({{ client_id }})</div>
                 <button onclick="openMenuBar()" id="config_button">Configure</button>
 
@@ -189,13 +189,10 @@
                                         <hr>
                                         <form name="translation_form">
                                             <label for="translate">Translated?
-                                            <select name="translate">
-                                                <option value="{{ d.translation[0] }}">{{ d.translation[0] }}</option>
-                                                <option value="{{ not d.translation[0] }}">{{ not d.translation[0] }}</option>
-                                            </select>
+                                                <input type="checkbox" name="translate" {% if d.translation[0] %} checked {% endif %} onchange="translationEnable(this)">
                                             </label>
                                             <label for="source">Source:
-                                            <select name="source">
+                                            <select name="source" {% if not d.translation[0] %} disabled {% endif %}>
                                                 {% if d.translation[1] %}
                                                 <option value="{{ d.translation[1] }}">{{ d.translation[1] }}</option>
                                                 {% endif %}
@@ -207,7 +204,7 @@
                                             </select>
                                             </label>
                                             <label for="destination">Destination:
-                                            <select name="destination">
+                                            <select name="destination" {% if not d.translation[0] %} disabled {% endif %}>
                                                 {% if d.translation[2] %}
                                                 <option value="{{ d.translation[2] }}">{{ d.translation[2] }}</option>
                                                 {% endif %}
@@ -219,7 +216,7 @@
                                             </select>
                                             </label>
                                             <label for="shift">Channel Shift:</label>
-                                            <input type="text" value="{{ d.translation[3] }}" name="shift" required>
+                                            <input type="text" value="{{ d.translation[3] }}" name="shift" required {% if not d.translation[0] %} disabled {% endif %}>
                                         </form>
                                         {% if d.type == "mqtt" %}
                                         <hr>

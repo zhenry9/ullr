@@ -35,6 +35,9 @@ def load_tapes():
         payload = {"target": tape, "buffer": TAPES[tape]}
         socketio.emit("tape_feed", payload)
 
+def update_notifier(available=False):
+    payload = {"available": str(available)}
+    socketio.emit("update_notifier", payload)
 
 def update_online_dot(device, online=False):
     payload = {"target": str(device), "online": str(online)}
