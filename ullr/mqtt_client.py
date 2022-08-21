@@ -6,6 +6,7 @@ import paho.mqtt.client as mqtt
 import ntplib
 import certifi
 
+from . import __version__ as ullr_version
 from .utils import logger, print_to_ui, internet_connection
 from .webapp import socketing
 
@@ -18,6 +19,7 @@ connected = False
 time_offset = 0
 
 status_functions = {}
+version_functions = {}
 subscriptions = []
 ntp_client = ntplib.NTPClient()
 publish_lock = Lock()
@@ -51,6 +53,7 @@ def on_connect(client, userdata, flags, rc):
     if rc == 0:
         connected = True
         safe_publish(CLIENT_ID+"/status", "online", qos=1, retain=True)
+        safe_publish(CLIENT_ID+"/version", ullr_version, qos=1, retain=True)
         for topic in subscriptions:
             client.subscribe(topic, qos=1)
         print_to_ui("Connected to MQTT broker.")
@@ -66,15 +69,26 @@ def on_disconnect(client, userdata, rc):
     print_to_ui("Disconnected from MQTT broker.")
     socketing.update_client_status(False)
 
+def _update_device_statuses(remote_client_name, message):
+    for client_name in status_functions.keys():
+        if remote_client_name == client_name:
+            for func in status_functions[client_name]:
+                func(message.payload)
+
+def _update_device_versions(remote_client_name, message):
+    for client_name in version_functions.keys():
+        if remote_client_name == client_name:
+            for func in version_functions[client_name]:
+                func(message.payload)
 
 def on_message(client, userdata, message):
     split_topic = message.topic.split("/")
-    if len(split_topic) > 1 and split_topic[1] == "status":
-        for client_name in status_functions.keys():
-            if split_topic[0] == client_name:
-                for func in status_functions[client_name]:
-                    func(message.payload)
-
+    if len(split_topic) > 1:
+        remote_client_name = split_topic[0]
+        if split_topic[1] == "status":
+            _update_device_statuses(remote_client_name, message)
+        if split_topic[1] == "version":
+            _update_device_versions(remote_client_name, message)
 
 def add_subscription(topic):
     global subscriptions
@@ -88,6 +102,13 @@ def subscribe_status(host_name, cb_function):
         status_functions[host_name] = []
     status_functions[host_name].append(cb_function)
     add_subscription(host_name+"/status")
+
+def subscribe_version(host_name, cb_function):
+    global version_functions
+    if version_functions.get(host_name) is None:
+        version_functions[host_name] = []
+    version_functions[host_name].append(cb_function)
+    add_subscription(host_name+"/version")
 
 
 def start_client(url: str, port: int, username: str, pw: str, client_id=CLIENT_ID):

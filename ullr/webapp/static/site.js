@@ -149,19 +149,16 @@ socket.on("tape_feed", function(data){
 
 socket.on("update_notifier", function(data){
     var version_num = document.getElementById("version_number");
-    var vers = version_num.textContent;
-    console.log(vers)
-    console.log(version_num)
-    console.log(version_num.style.color)
+    var vers = version_num.textContent.replace("*","");
+
     console.log(data["available"])
     if (data["available"] == "True") {
         version_num.style.color = "red";
-        version_num.textContent = vers + "*"
-        console.log(version_num.style.color)
+        version_num.textContent = vers + "*";
     }
     else {
         version_num.style.color = "white";
-        version_num.textContent = vers
+        version_num.textContent = vers;
     }
 })
 

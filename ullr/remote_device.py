@@ -40,6 +40,7 @@ class RemoteDevice(object):
         self.late_message_list= []
         self._last_message = ''
         self.online = False
+        self.remote_client_version = "unknown"
         self.listening = True
         self.remove_me = False
         self.translation = translation
@@ -47,6 +48,7 @@ class RemoteDevice(object):
         mqtt_client.client.message_callback_add(self.topic_name+"/from_device", self._new_message)
         mqtt_client.add_subscription(self.topic_name+"/#")
         mqtt_client.subscribe_status(self.remote_client, self._update_status)
+        mqtt_client.subscribe_version(self.remote_client, self._update_version)
         self.max_transit_time = 0
         self.min_transit_time = 9999
         self.average_transit_time = 0
@@ -58,6 +60,9 @@ class RemoteDevice(object):
         else:
             self.online = False
         update_online_dot(self.sku, self.online)
+
+    def _update_version(self, version):
+        self.version = version
     
     def _update_transit_stats(self, transit_time):
         self.min_transit_time = min(self.min_transit_time, transit_time)

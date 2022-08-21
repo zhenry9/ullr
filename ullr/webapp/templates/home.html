@@ -168,6 +168,9 @@
                                     <div class="advanced-header">
                                         <span class="close" onclick="closeAdvancedMenu('{{d.sku}}')">&times;</span>
                                         <h2>Advanced Options for {{ d.name }}</h2>
+                                        {% if d.type == 'mqtt'%}
+                                        <div class="subtitle">Remote client version: {{ d.remote_client_version }}</div>
+                                        {% endif %}
                                     </div>
                                     <div class="advanced-body">
                                         {% if d.type == "serial" %}

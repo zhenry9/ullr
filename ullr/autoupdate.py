@@ -10,8 +10,12 @@ def _get_newest_version_number_from_pypi():
     resp = requests.get('https://pypi.org/pypi/ullr/json')
     return resp.json()['info']['version']
 
+def _get_newest_version_number_from_github():
+    resp = requests.get('https://api.github.com/repos/zhenry9/ullr/releases/latest')
+    return resp.json()['tag_name']
+
 def update_available():
     try:
-        return _is_greater(_get_newest_version_number_from_pypi(), current_version)
+        return _is_greater(_get_newest_version_number_from_github(), current_version)
     except:
         return False
