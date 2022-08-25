@@ -62,7 +62,7 @@ class RemoteDevice(object):
         update_online_dot(self.sku, self.online)
 
     def _update_version(self, version):
-        self.version = version
+        self.remote_client_version = version.decode()
     
     def _update_transit_stats(self, transit_time):
         self.min_transit_time = min(self.min_transit_time, transit_time)

@@ -29,12 +29,13 @@ def set_ui(user_int):
 
 def check_for_updates(delay=0):
     global update_available
-    update_available = ua()
-    if ui == "webapp":
-        socketing.update_notifier(update_available)
-    time.sleep(delay)
-    if delay>0:
-        check_for_updates(delay)
+    while True:
+        update_available = ua()
+        if ui == "webapp":
+            socketing.update_notifier(update_available)
+        time.sleep(delay)
+        if delay == 0:
+            break
 
 def check_for_updates_loop_start(delay=300):
     t = Thread(target=check_for_updates, args=[delay])
