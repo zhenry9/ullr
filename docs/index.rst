@@ -59,6 +59,9 @@ Ullr is published under the GNU GPL 3 license.
 The source is always available on the :xref:`github repo` and available for 
 download :xref:`here <source>`.
 
+Operations Manual
+=================
+
 .. toctree::
     :maxdepth: 2
     :includehidden:
